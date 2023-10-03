@@ -24,10 +24,10 @@ SELECT pg_catalog.setval('public.ordersinprogress_orderid_seq',
 
 \COPY Cart FROM 'Cart.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.cart_cartid_seq',
-                         (SELECT MAX(orderid)+1 FROM Cart),
+                         (SELECT MAX(cartid)+1 FROM Cart),
                          false);      
 
 \COPY LineItem FROM 'LineItem.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.lineitem_lineid_seq',
-                         (SELECT MAX(orderid)+1 FROM LineItem),
+                         (SELECT MAX(lineid)+1 FROM LineItem),
                          false);
