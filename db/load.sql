@@ -25,12 +25,7 @@ SELECT pg_catalog.setval('public.ordersinprogress_orderid_seq',
 \COPY Cart FROM 'Cart.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.cart_cartid_seq',
                          (SELECT MAX(orderid)+1 FROM Cart),
-                         false);
-
-\COPY Seller FROM 'Seller.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.seller_uid_seq',
-                         (SELECT MAX(orderid)+1 FROM Seller),
-                         false);          
+                         false);      
 
 \COPY LineItem FROM 'LineItem.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.lineitem_lineid_seq',

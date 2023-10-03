@@ -1,6 +1,4 @@
-1,vanilla ice cream,2.99,true
-2,chocolate ice cream,2.99,true
-3,strawberry ice cream,2.99,true
-4,6-pack of paycheck pilsners,11.49,true
-5,seven fabergé easter eggs,1199000.00,true
-6,painting - the storm on the sea of galilee,44000000.00,true
+0, vanilla ice cream, 2.99, delicious ice cream, Food, 0, 0
+1, LED lights, 12.99, strip lights for room, Decoration, 0, 1
+2, Packing Tape, 8.99, tape for packing, Utilities, 1, 0
+3, Orange, 2.99, good for vitamin c, Food, 2, 1
