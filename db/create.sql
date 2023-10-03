@@ -31,7 +31,7 @@ CREATE TABLE Products (
     name VARCHAR(255) UNIQUE NOT NULL,
     price DECIMAL(12,2) NOT NULL,
     description VARCHAR(255),
-    category VARCHAR(255) UNIQUE NOT NULL,
+    category VARCHAR(255) NOT NULL,
     available BOOLEAN DEFAULT FALSE,
     avg_rating DECIMAL DEFAULT 0,
     seller_id INT REFERENCES Users (uid)
