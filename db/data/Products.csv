@@ -1,5 +1,5 @@
-0, vanilla ice cream, 2.99, delicious ice cream, Food, TRUE, 0, 2
-1, LED lights, 12.99, strip lights for room, Decoration, TRUE, 0, 2
-2, Packing Tape, 8.99, tape for packing, Utilities, TRUE, 1, 3
-3, Orange, 2.99, good for vitamin c, Food, TRUE, 2, 3
-4, Apple, 1.99, good for vitamin a, Food, TRUE, 5, 4
+0, vanilla ice cream, 2.99, TRUE
+1, LED lights, 12.99, TRUE
+2, Packing Tape, 8.99, TRUE
+3, Orange, 2.99, TRUE
+4, Apple, 1.99, TRUE
