@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+<body>
+    <div id="result">
+        <h2>Top K Products</h2>
+        <ul>
+            {% for product in top_k_products %}
+                <li>Name: {{ product.name }}, Price: {{ product.price }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
+
+
+{% endblock %}

@@ -16,13 +16,22 @@
   <tbody>
     {% for product in avail_products%}
       <tr>
-        <th scope="row">{{product.id}}</th>
+        <th scope="row">{{product.productid}}</th>
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<br><br>
+
+<h1>Enter K:</h1>
+<form method="post">
+    <input type="number" name="k" required>
+    <input type="submit" value="Get Top Products">
+</form>
+
 
 <br><br>
 {% if current_user.is_authenticated %}
