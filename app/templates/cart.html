@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h1>Cart</h1>
+<h1> <span style = "color:blue"> Your Mini Amazon Cart</span></h1>
 
 <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
@@ -23,8 +23,10 @@
 </tbody>
 </table>
 
-<div>
+<h3>
     Total Unique Items: {{singleCart.uniqueItemCount}}
-</div>
+<br/>
+    Total Cart Price: ${{singleCart.totalCartPrice}}
+</h3>
 
 {% endblock %}

@@ -20,6 +20,7 @@ def cart():
         # return render_template('wishlist.html',
         #                        wishlist=wishlist)
         allItemsInCart = LineItem.get_all_by_cartid_not_fulfilled(0,False)
+        updateCartFirst = Cart.update_total_cart_price(0) #replace 0's with current_user.id
         singleCart = Cart.get_cartID_from_buyerid(0)
         return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart)
         #return redirect(url_for('cart.cart')) 
