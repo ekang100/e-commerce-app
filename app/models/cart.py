@@ -10,7 +10,7 @@ class Cart:
     @staticmethod
     def get_cartID_from_buyerid(buyerid):
         rows = app.db.execute('''
-SELECT cartid
+SELECT cartid, buyerid, uniqueItemCount
 FROM Cart
 WHERE buyerid = :buyerid
 ''', 
