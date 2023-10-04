@@ -64,7 +64,7 @@ CREATE TABLE LineItem (
     cartid INT NOT NULL REFERENCES Cart(cartid),
     productid INT NOT NULL REFERENCES Products(productid),
     quantities INT NOT NULL,
-    totalPrice DECIMAL(65,2) NOT NULL,
+    unitPrice DECIMAL(65,2) NOT NULL,
     status BOOLEAN DEFAULT FALSE,
     date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
     -- PRIMARY KEY (lineid) -- updated
