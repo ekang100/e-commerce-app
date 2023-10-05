@@ -3,8 +3,8 @@
 -- for auto-generation so next INSERT will not clash with ids loaded above:
 
 -- also we might need to make one of these for every table
-SELECT pg_catalog.setval('public.users_uid_seq',
-                         (SELECT MAX(uid)+1 FROM Users),
+SELECT pg_catalog.setval('public.users_id_seq',
+                         (SELECT MAX(id)+1 FROM Users),
                          false);
 
 \COPY Products FROM 'Products.csv' WITH DELIMITER ',' NULL '' CSV

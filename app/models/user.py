@@ -6,8 +6,8 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, uid, address, email, firstname, lastname, balance, isSeller):
-        self.uid = uid
+    def __init__(self, id, address, email, firstname, lastname, balance, isSeller):
+        self.id = id
         self.address = address
         self.email = email
         self.firstname = firstname
@@ -18,7 +18,7 @@ class User(UserMixin):
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, uid, email, firstname, lastname, address, balance, isSeller
+SELECT password, id, email, firstname, lastname, address, balance, isSeller
 FROM Users
 WHERE email = :email
 """,
@@ -42,18 +42,18 @@ WHERE email = :email
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, firstname, lastname):
+    def register(address, email, password, firstname, lastname):
         try:
             rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname)
-VALUES(:email, :password, :firstname, :lastname)
-RETURNING uid
+INSERT INTO Users(address, email, password, firstname, lastname)
+VALUES(:address, :email, :password, :firstname, :lastname)
+RETURNING id
 """,
-                                  email=email,
+                                  address=address, email=email,
                                   password=generate_password_hash(password),
                                   firstname=firstname, lastname=lastname)
-            uid = rows[0][0]
-            return User.get(uid)
+            id = rows[0][0]
+            return User.get(id)
         except Exception as e:
             # likely email already in use; better error checking and reporting needed;
             # the following simply prints the error to the console:
@@ -62,11 +62,11 @@ RETURNING uid
 
     @staticmethod
     @login.user_loader
-    def get(uid):
+    def get(id):
         rows = app.db.execute("""
-SELECT uid, email, firstname, lastname
+SELECT id, email, firstname, lastname, address, balance, isSeller
 FROM Users
-WHERE uid = :uid
+WHERE id = :id
 """,
-                              uid=uid)
+                              id=id)
         return User(*(rows[0])) if rows else None
