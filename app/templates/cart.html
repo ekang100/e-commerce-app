@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1> <span style = "color:blue"> Your Mini Amazon Cart</span></h1>
+
+<table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+        <tr>
+          <th scope="col">Product Name</th>
+          <th scope="col">Quantities</th>
+          <th scope="col">Unit Price</th>
+        </tr>
+      </thead>
+<tbody>
+    {% for lineitem in ItemsInCart%}
+      <tr>
+        <th scope="row">{{lineitem.name}}</th>
+        <td>{{lineitem.quantities}}</td>
+        <td>{{lineitem.price}}</td>
+      </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+<h3>
+    Total Unique Items: {{singleCart.uniqueItemCount}}
+<br/>
+    Total Cart Price: ${{singleCart.totalCartPrice}}
+</h3>
+
+{% endblock %}
