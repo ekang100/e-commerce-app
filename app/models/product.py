@@ -2,10 +2,11 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, productid, name, price, category, available, avg_rating, seller_id):
+    def __init__(self, productid, name, price, description, category, available, avg_rating, seller_id):
         self.productid = productid
         self.name = name
         self.price = price
+        self.description = category
         self.category = category
         self.available = available
         self.avg_rating = avg_rating
@@ -14,7 +15,7 @@ class Product:
     @staticmethod
     def get(productid):
         rows = app.db.execute('''
-SELECT productid, name, price, category, available, avg_rating, seller_id
+SELECT productid, name, price, description, category, available, avg_rating, seller_id
 FROM Products
 WHERE productid = :productid
 ''',
@@ -24,7 +25,7 @@ WHERE productid = :productid
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
-SELECT productid, name, price, category, available, avg_rating, seller_id
+SELECT productid, name, price, description, category, available, avg_rating, seller_id
 FROM Products
 WHERE available = :available
 ''',

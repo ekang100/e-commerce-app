@@ -1,14 +1,15 @@
 from flask import current_app as app
+from .product import Product
+
 
 class Seller:
 
     def __init__(self, uid):
         self.uid = uid
 
-    @staticmethod
     def get_products(self):
         rows = app.db.execute('''
-SELECT id, name, price, description, category, available, avg_rating, seller_id
+SELECT productid, name, price, description, category, available, avg_rating, seller_id
 FROM Products
 WHERE seller_id = :seller_id
 ''',

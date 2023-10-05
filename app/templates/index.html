@@ -34,8 +34,8 @@
 
 <br><br>
 <h1>Enter Seller ID:</h1>
-<form method="post">
-    <input type="number" name="id" required>
+<form method="post" action="{{ url_for('sellers.get_seller_inventory') }}">
+    <input type="number" name="seller_id" required>
     <input type="submit" value="Get Seller Products">
 </form>
 
