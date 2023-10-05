@@ -42,14 +42,14 @@ WHERE email = :email
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, firstname, lastname):
+    def register(address, email, password, firstname, lastname):
         try:
             rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname)
-VALUES(:email, :password, :firstname, :lastname)
+INSERT INTO Users(address, email, password, firstname, lastname)
+VALUES(:address, :email, :password, :firstname, :lastname)
 RETURNING uid
 """,
-                                  email=email,
+                                  address=address, email=email,
                                   password=generate_password_hash(password),
                                   firstname=firstname, lastname=lastname)
             uid = rows[0][0]
@@ -64,7 +64,7 @@ RETURNING uid
     @login.user_loader
     def get(uid):
         rows = app.db.execute("""
-SELECT uid, email, firstname, lastname
+SELECT uid, email, firstname, lastname, address, balance, isSeller
 FROM Users
 WHERE uid = :uid
 """,
