@@ -31,3 +31,14 @@ SELECT pg_catalog.setval('public.lineitem_lineid_seq',
 SELECT pg_catalog.setval('public.ordersinprogress_orderid_seq',
                          (SELECT MAX(orderid)+1 FROM OrdersInProgress),
                          false);
+
+
+\COPY ProductReviews FROM 'ProductReview.csv' WITH DELIMITER ',' NULL '' CSV
+
+
+
+-- \COPY SellerReviews FROM 'SellerReview.csv' WITH DELIMITER ',' NULL '' CSV
+-- SELECT pg_catalog.setval('public.sellerreviews_sellerid_uid_seq',
+--                          (SELECT COALESCE(MAX(sellerid), 0) + 1 FROM SellerReviews),
+--                          false);
+

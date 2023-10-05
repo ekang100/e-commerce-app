@@ -89,11 +89,11 @@ CREATE TABLE ProductReviews (
     PRIMARY KEY (productid, uid)
 );
 
-CREATE TABLE SellerReviews (
-    sellerid INT NOT NULL REFERENCES Seller(uid),
-    uid INT NOT NULL REFERENCES Users(id),
-    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
-    comments VARCHAR(255),
-    date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
-    PRIMARY KEY (sellerid, uid)
-);
+-- CREATE TABLE SellerReviews (
+--     sellerid INT NOT NULL REFERENCES Seller(uid),
+--     uid INT NOT NULL REFERENCES Users(id),
+--     rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+--     comments VARCHAR(255),
+--     date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+--     PRIMARY KEY (sellerid, uid)
+-- );
