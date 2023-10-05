@@ -6,6 +6,7 @@ from .models.product import Product
 @bp.route('/', methods=['GET', 'POST'])
 def top_products():
     if request.method == 'POST':
+        print("postellie")
         try:
             k = int(request.form['k'])
             products = Product.get_all(True)

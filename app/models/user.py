@@ -7,7 +7,7 @@ from .. import login
 
 class User(UserMixin):
     def __init__(self, id, address, email, firstname, lastname, balance, isSeller):
-        self.id = id
+        self.uid = id
         self.address = address
         self.email = email
         self.firstname = firstname
@@ -18,7 +18,7 @@ class User(UserMixin):
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, address, balance, isSeller
+SELECT password, uid, email, firstname, lastname, address, balance, isSeller
 FROM Users
 WHERE email = :email
 """,
@@ -47,13 +47,13 @@ WHERE email = :email
             rows = app.db.execute("""
 INSERT INTO Users(address, email, password, firstname, lastname)
 VALUES(:address, :email, :password, :firstname, :lastname)
-RETURNING id
+RETURNING uid
 """,
                                   address=address, email=email,
                                   password=generate_password_hash(password),
                                   firstname=firstname, lastname=lastname)
-            id = rows[0][0]
-            return User.get(id)
+            uid = rows[0][0]
+            return User.get(uid)
         except Exception as e:
             # likely email already in use; better error checking and reporting needed;
             # the following simply prints the error to the console:
@@ -62,11 +62,11 @@ RETURNING id
 
     @staticmethod
     @login.user_loader
-    def get(id):
+    def get(uid):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname, address, balance, isSeller
+SELECT uid, email, firstname, lastname, address, balance, isSeller
 FROM Users
-WHERE id = :id
+WHERE uid = :uid
 """,
-                              id=id)
+                              uid=uid)
         return User(*(rows[0])) if rows else None
