@@ -45,6 +45,15 @@
     {% endfor %}
   </tbody>
 </table>
+
+<br/>
+<form action = "cart">
+  <button type = "submit" class = "button">
+    Click to View Cart
+  </button>
+</form>
+<br/>
+
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}
