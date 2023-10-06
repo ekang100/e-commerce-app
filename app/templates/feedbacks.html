@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+    <form action="/feedbacks" method="post">
+        <label for="user_id">Enter User ID:</label>
+        <input type="text" name="user_id" required>
+        <input type="submit" value="Get Feedbacks">
+    </form>
+
+    {% if feedbacks %}
+    <h2>Feedbacks:</h2>
+    <ul>
+        {% for feedback in feedbacks %}
+        <li><strong>Type:</strong> {{ feedback.type }} | <strong>Entity ID:</strong> {{ feedback.entity_id }} | <strong>Rating:</strong> {{ feedback.rating }} | <strong>Comment:</strong> {{ feedback.comments }} | <strong>Date:</strong> {{ feedback.date }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>
+
+{% endblock %}

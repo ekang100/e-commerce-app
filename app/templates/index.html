@@ -32,6 +32,12 @@
     <input type="submit" value="Get Top Products">
 </form>
 
+<br><br>
+<h1>Enter User ID:</h1>
+<form method="post" action="{{ url_for('feedback.get_feedbacks') }}"> 
+    <input type="number" name="user_id" required>
+    <input type="submit" value="Get User Feedbacks">
+</form>
 
 <br><br>
 {% if current_user.is_authenticated %}
