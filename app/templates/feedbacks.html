@@ -16,7 +16,7 @@
     <h2>Feedbacks:</h2>
     <ul>
         {% for feedback in feedbacks %}
-        <li><strong>Product ID:</strong> {{ feedback.productid }} | <strong>Comment:</strong> {{ feedback.comments }} | <strong>Date:</strong> {{ feedback.date }}</li>
+        <li><strong>Type:</strong> {{ feedback.type }} | <strong>Entity ID:</strong> {{ feedback.entity_id }} | <strong>Rating:</strong> {{ feedback.rating }} | <strong>Comment:</strong> {{ feedback.comments }} | <strong>Date:</strong> {{ feedback.date }}</li>
         {% endfor %}
     </ul>
     {% endif %}

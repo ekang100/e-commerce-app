@@ -80,20 +80,21 @@ CREATE TABLE OrdersInProgress (
     --get status, date, quantities from lineItem
 );
 
-CREATE TABLE ProductReviews (
-    productid INT NOT NULL REFERENCES Products(productid),
-    uid INT NOT NULL REFERENCES Users(id),
-    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
-    comments VARCHAR(255),
-    date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
-    PRIMARY KEY (productid, uid)
-);
-
--- CREATE TABLE SellerReviews (
---     sellerid INT NOT NULL REFERENCES Seller(uid),
+-- CREATE TABLE ProductReviews (
+--     productid INT NOT NULL REFERENCES Products(productid),
 --     uid INT NOT NULL REFERENCES Users(id),
 --     rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
 --     comments VARCHAR(255),
 --     date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
---     PRIMARY KEY (sellerid, uid)
+--     PRIMARY KEY (productid, uid)
 -- );
+
+CREATE TABLE Reviews (
+    entity_id INT NOT NULL, -- This can be either a product ID or a seller ID, based on the type.
+    uid INT NOT NULL REFERENCES Users(id),
+    type VARCHAR(10) CHECK (type IN ('product', 'seller')), -- Type can be 'product' or 'seller'.
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    comments VARCHAR(255),
+    date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    PRIMARY KEY (entity_id, uid, type)
+);
