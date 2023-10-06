@@ -1,0 +1,791 @@
+[33mcommit fd58be2125271694101bd322c739af4027dcb944[m[33m ([m[1;36mHEAD -> [m[1;32mbryant-sellers[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/bryant-sellers[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Bryant Chung <bjc61@duke.edu>
+Date:   Thu Oct 5 16:25:52 2023 -0400
+
+    Revert "Resolve Merge"
+    
+    This reverts commit 867b7190f849316b63e99b6dbb6f543ec1493d2e, reversing
+    changes made to bc768f06fdd2f406ad35cb13fd3f8a34d0dfe14b.
+
+[33mcommit 867b7190f849316b63e99b6dbb6f543ec1493d2e[m
+Merge: bc768f0 6ce907a
+Author: Bryant Chung <bjc61@duke.edu>
+Date:   Thu Oct 5 15:59:28 2023 -0400
+
+    Resolve Merge
+
+[33mcommit 6ce907ababef76de0ccb16cfd164b8f2d3e2ba04[m
+Author: Bryant Chung <bjc61@duke.edu>
+Date:   Thu Oct 5 12:30:47 2023 -0400
+
+    fully functional
+
+[33mcommit bc768f06fdd2f406ad35cb13fd3f8a34d0dfe14b[m
+Author: tony cui <ac727@duke.edu>
+Date:   Thu Oct 5 01:23:36 2023 -0400
+
+    manually merged + fixing some changes. cart milestone endpoint is complete
+
+[33mcommit 4a2e27a58833b055f4beb273816146ef21ddcf60[m
+Author: Bryant Chung <bjc61@duke.edu>
+Date:   Thu Oct 5 00:24:42 2023 -0400
+
+    Frontend + endpoints
+
+[33mcommit 9e1a53391dbd0fec0168ed59217729ae20e22145[m
+Merge: 54e10ac d788c32
+Author: ek199 <ek199@duke.edu>
+Date:   Wed Oct 4 22:36:35 2023 -0400
+
+    Merge branch 'ellie-productguru' into 'main'
+    
+    Ellie productguru
+    
+    See merge request rtd22/mini-amazon-skeleton!3
+
+[33mcommit d788c3271659c67e21e081a0577fad6d0980831f[m[33m ([m[1;31morigin/ellie-productguru[m[33m)[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Wed Oct 4 22:33:31 2023 -0400
+
+    box fixed
+
+[33mcommit f5b846fe7a4ecd293fba7cbc55a760103edc0e27[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Wed Oct 4 21:56:28 2023 -0400
+
+    ryan endpoint
+
+[33mcommit 54e10ac807a268de4c147acb7839c3e3e004a95e[m
+Merge: 309c91d 8cdd9aa
+Author: ek199 <ek199@duke.edu>
+Date:   Wed Oct 4 12:16:27 2023 -0400
+
+    Merge branch 'ellie-productguru' into 'main'
+    
+    Ellie productguru milestone 3 api
+    
+    See merge request rtd22/mini-amazon-skeleton!2
+
+[33mcommit 8cdd9aa1799f19c12d212ca80a79c5c213abd11b[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Wed Oct 4 12:15:18 2023 -0400
+
+    fix productid typo
+
+[33mcommit 5fc54a039aded13d6caf6176f0943ca1ef15a09c[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Tue Oct 3 23:06:05 2023 -0400
+
+    put link back in home page oops
+
+[33mcommit cf3c3afdbf62cbdcb241c0deb41d30277ebb0ac5[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Tue Oct 3 22:53:32 2023 -0400
+
+    product guru endpoint
+
+[33mcommit 309c91d2e9ea902b19e74bb3c5812988cad8bb49[m
+Merge: 3414f4b 1f519ee
+Author: ek199 <ek199@duke.edu>
+Date:   Tue Oct 3 20:54:24 2023 -0400
+
+    Merge branch 'ellie-productguru' into 'main'
+    
+    attempting to fix the models
+    
+    See merge request rtd22/mini-amazon-skeleton!1
+
+[33mcommit 1f519ee6e436c3669cdfbadd0ef5303fe726346e[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Tue Oct 3 20:52:27 2023 -0400
+
+    attempting to fix the models
+
+[33mcommit 3414f4be098ff248586f71136445e59223daf72e[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Tue Oct 3 14:06:58 2023 -0400
+
+    changed csv
+
+[33mcommit 2ca34d0f17f9022b69e7822784895c5d129c6eea[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Tue Oct 3 14:06:05 2023 -0400
+
+    no errors in bash
+
+[33mcommit f49997c0454c119821327f71679aad36db34229d[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Tue Oct 3 13:57:47 2023 -0400
+
+    no extra spaces in csv
+
+[33mcommit 694af823d33959e1e8cb717997e7cba2f584bd3b[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Tue Oct 3 13:48:14 2023 -0400
+
+    product fix
+
+[33mcommit 49a840eff5525ad4e387d3bc59e3d0a5ca0e03eb[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Tue Oct 3 13:40:13 2023 -0400
+
+    fix tony bot
+
+[33mcommit d2f5e62933df69c900480bbdbd8e8f9b15096de5[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Tue Oct 3 13:37:02 2023 -0400
+
+    uh oh
+
+[33mcommit 850bd8d8681a0c81ebcfec71bc107a4228ce4bf9[m
+Author: David Yao <dy95@duke.edu>
+Date:   Tue Oct 3 13:31:54 2023 -0400
+
+    changes lineitems to lineitem'
+
+[33mcommit f64e1bc0b7530ba7a2ecff8afadee620e9a2ec5b[m
+Author: David Yao <dy95@duke.edu>
+Date:   Tue Oct 3 13:30:08 2023 -0400
+
+    pushes lineitems
+
+[33mcommit 6b2c6121c8e3e591139d8534cd22e0bb94f7f138[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Tue Oct 3 13:28:16 2023 -0400
+
+    csv for orderinprog and products
+
+[33mcommit 90e46091bab61628b640a24a62c1143f29db3456[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Tue Oct 3 13:27:17 2023 -0400
+
+    cart test csv
+
+[33mcommit 02053e039429acf7b16184a57f076d56e28e8aa9[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Tue Oct 3 13:19:24 2023 -0400
+
+    remove seller
+
+[33mcommit 23030f8c8fcaaf86499e0612e8d7aecf86127e1a[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Tue Oct 3 13:12:15 2023 -0400
+
+    database done! i think
+
+[33mcommit 893ecc0c561229446eed580b6ef2903e3e548333[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Tue Oct 3 13:00:31 2023 -0400
+
+    load works for Users
+
+[33mcommit e9bba23beb72fb23df8c4ace1a5a4135988a6f2b[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Tue Oct 3 12:51:14 2023 -0400
+
+    create compiles
+
+[33mcommit 0a89517fe5fe0de2c4782a613a61cf818dc165e7[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Tue Oct 3 12:34:01 2023 -0400
+
+    another attempt
+
+[33mcommit 00e823e9486487226f084fdba7fef9af2dbec815[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Tue Oct 3 02:25:40 2023 -0400
+
+    fixing the database
+
+[33mcommit 74829775b14f7a4fe454e860f165bf89bfb5edce[m
+Author: tony cui <ac727@duke.edu>
+Date:   Tue Oct 3 00:02:35 2023 -0400
+
+    attempt at fixing database
+
+[33mcommit a873b9f7e8fc478689e575bf392143c8a5db8c5b[m
+Author: tony cui <ac727@duke.edu>
+Date:   Mon Oct 2 23:38:31 2023 -0400
+
+    fixing load.sql
+
+[33mcommit c4aff71fe45f25a7ac8ee9e5eec02c1d2b72fe83[m
+Author: Ellie_Kang <ek199@duke.edu>
+Date:   Mon Oct 2 23:30:24 2023 -0400
+
+    debugging database
+
+[33mcommit c24bdca1a24ad6ba45254003f76fa517b11342c2[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Sun Oct 1 21:25:33 2023 -0400
+
+    fix load.sql
+
+[33mcommit fe951716a03a8bfe2738c470dece956c66161da5[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Sun Oct 1 17:38:40 2023 -0400
+
+    first iteration db
+
+[33mcommit 4d40124309a6b49d31acb6da19597ddc1c793318[m[33m ([m[1;31morigin/social-guru-testing[m[33m)[m
+Author: Ryan DCunha <rtd22@duke.edu>
+Date:   Sun Sep 24 16:30:18 2023 -0400
+
+    first push
+
+[33mcommit 613f6e07999142f6c88338be05079c855e95aeb5[m
+Author: Jun Yang <junyang@gmail.com>
+Date:   Wed Sep 20 19:45:32 2023 -0400
+
+    developing tutorial...
+
+[33mcommit 9c7465c54344ebf8c57ee5acab6dd5863805ded4[m
+Author: Jun Yang <junyang@gmail.com>
+Date:   Mon Sep 18 02:02:17 2023 -0400
+
+    adding more tutorial
+
+[33mcommit 33dde2d45d4369ee84dd22da757e4f138a698dac[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Mon Sep 18 00:14:10 2023 -0400
+
+    added VSCode support
+
+[33mcommit 0966b916946d807f90be4f16dba5afc98c28d172[m
+Author: Jun Yang <junyang@gmail.com>
+Date:   Mon Sep 18 00:10:54 2023 -0400
+
+    updated README
+
+[33mcommit 2f7695fd6eee411edb9c4ccf7085efa9533a8e77[m
+Author: Jun Yang <junyang@gmail.com>
+Date:   Mon Sep 11 11:26:21 2023 -0400
+
+    starting a tutorial
+
+[33mcommit 2880827337c024ad47e71f1cf843f6bb3df000fb[m
+Author: Jun Yang <junyang@gmail.com>
+Date:   Wed Sep 6 19:15:01 2023 -0400
+
+    fixed db login & flask upgrade
+
+[33mcommit f430d8d09a62b4ceed8d690b1ed456f340212799[m
+Author: Jun Yang <junyang@gmail.com>
+Date:   Wed Sep 6 19:03:42 2023 -0400
+
+    2023 refresh: moving to containers and poetry
+
+[33mcommit 20a4f09c477152610152b2293efb7093e9ed51db[m
+Merge: 65c6fcb d3478bb
+Author: ac590 <ac590@duke.edu>
+Date:   Wed Oct 12 11:21:13 2022 -0400
+
+    Merge branch 'zhe-dev' into 'main'
+    
+    add Cart, Inventory and Review classes
+    
+    See merge request compsci316/mini-amazon-skeleton!52
+
+[33mcommit 65c6fcb8ca1a63e85392e8ec029a9db9fac6f74d[m
+Merge: ab710eb ab171b3
+Author: ac590 <ac590@duke.edu>
+Date:   Wed Oct 12 11:20:53 2022 -0400
+
+    Merge branch 'test' into 'main'
+    
+    add a new file
+    
+    See merge request compsci316/mini-amazon-skeleton!53
+
+[33mcommit ab171b34e883c7620f39c131f19ed61ad4f3b1f7[m
+Author: Zhe Wang <zhe.wang1998@duke.edu>
+Date:   Fri Oct 7 14:04:41 2022 -0400
+
+    add a new file
+
+[33mcommit d3478bbac3f6d87684b0aa7919005b2f802d2f92[m
+Author: Zhe Wang <zhe.wang1998@duke.edu>
+Date:   Thu Oct 6 20:28:05 2022 -0400
+
+    add comments for indicating this is template
+
+[33mcommit 5360e7cff68f2c8eddd56216190b16cd02171e16[m[33m ([m[1;31morigin/zhe-dev[m[33m)[m
+Author: Zhe Wang <zhe.wang1998@duke.edu>
+Date:   Thu Oct 6 20:16:23 2022 -0400
+
+    add Cart, Inventory and Review classes
+
+[33mcommit ab710eb43ef2a346eeed0f8ad513e1020f1b4fc7[m
+Merge: 1a88ec0 ab8cf37
+Author: yl762 <yl762@duke.edu>
+Date:   Thu Sep 8 15:27:04 2022 -0400
+
+    Merge branch 'f2022' into 'main'
+    
+    edit readme for f2022
+    
+    See merge request compsci316/mini-amazon-skeleton!51
+
+[33mcommit ab8cf37f39166290a9550cd91f2fb5d4acef000e[m
+Author: Joon Young Lee <joonyoung,lee@duke.edu>
+Date:   Tue Sep 6 14:59:32 2022 -0400
+
+    edit readme
+
+[33mcommit 1a88ec050422f715cdba59cd7a3b4b49667b89d7[m[33m ([m[1;33mtag: f2021[m[33m)[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Tue Dec 7 17:35:14 2021 -0500
+
+    updated engine.connect() to begin(); fixed bug in register
+
+[33mcommit b41a1beada21cc331d85e4ff6433ee449cb5f61b[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Sat Nov 20 19:54:33 2021 -0500
+
+    formatting tweaks
+
+[33mcommit aedd1d2100a5898d93fc7bc3c1da46e7cba71f74[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Sat Nov 20 19:50:01 2021 -0500
+
+    refresh
+
+[33mcommit cda0759551eb214ac376f89ada4bded5f6ebc9b0[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Tue Nov 2 00:17:26 2021 -0400
+
+    fixed a minor bug in data generation
+
+[33mcommit 21a31a03b0ea3b4cc35b755ae5fdb36f845e7be1[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Tue Nov 2 00:05:21 2021 -0400
+
+    added fake data generation example
+
+[33mcommit 7278de65bcd86025aee9be1fd398079fef2122b5[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Thu Oct 21 21:55:20 2021 -0400
+
+    even more fixes to README.md
+
+[33mcommit 5dfbcea9b5a0c064b4d46ff199c8b0a57599c9fb[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Thu Oct 21 21:53:57 2021 -0400
+
+    more fixes to README.md
+
+[33mcommit 2cd0290ec0319deee750e1530a47da7e9d19fd25[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Thu Oct 21 21:46:50 2021 -0400
+
+    fixes to README
+
+[33mcommit 21df411b4a59d9982072e9b676f0692c12da2be9[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Thu Oct 21 19:51:11 2021 -0400
+
+    add setting of sequence after loading database
+
+[33mcommit 3fba6e2088ded06f0e0f2ae5e6d1c1db64e51c33[m
+Author: Jun Yang <junyang@duke.edu>
+Date:   Tue Sep 21 17:40:26 2021 -0400
+
+    made incorrect password/non-existent user indistinguishable
+
+[33mcommit 1a3bd8f2a08b1765671fd9a82271326663c1ad8d[m
+Merge: 0e15710 b111116
+Author: Jun Yang <junyang@cs.duke.edu>
+Date:   Tue Sep 21 17:24:44 2021 -0400
+
+    Merge branch 'frontend-update' into 'main'
+    
+    Frontend update
+    
+    See merge request compsci316/mini-amazon-skeleton!5
+
+[33mcommit b11111622b759030d2ca7f5b06e16863e29acf06[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Tue Sep 21 13:26:15 2021 -0400
+
+    fixed incorrect credentials bug
+
+[33mcommit 8e0d914cb1d3f847dd6e83cc9289e1014c6e9cca[m
+Author: Yihao Hu <yh218@duke.edu>
+Date:   Tue Sep 21 12:34:26 2021 -0400
+
+    styling update, still need to fix the bug when using wrong password to log in
+
+[33mcommit 3b6148f6806d4cbdb86ebb8773f920e1bc8fedca[m
+Author: Andrew Lee <aj188@duke.edu>
+Date:   Tue Sep 21 12:18:25 2021 -0400
+
+    update styling, issue remain: exception when login with wrong credentials
+
+[33mcommit 0e15710fad97d1900d85b32af3654d3695ac29bf[m
+Author: Jun Yang <junyang@cs.duke.edu>
+Date:   Sun Sep 19 19:54:40 2021 -0400
+
+    cosmetic changes; removed remember me option
+
+[33mcommit c549b1d440e2cf1d6c8dcaff8af7442706374d79[m
+Author: Jun Yang <junyang@cs.duke.edu>
+Date:   Sun Sep 19 19:38:58 2021 -0400
+
+    changed to newer sqlalchemy calling standard; fixed register problem
+
+[33mcommit e2d29d34ce347ec8fe225f1d262dbcc370801ced[m
+Author: Jun Yang <junyang@cs.duke.edu>
+Date:   Sun Sep 19 15:39:18 2021 -0400
+
+    doc update + more clean up
+
+[33mcommit f61e1358d251ac2bc646a2eaf4bf5c094542202d[m
+Author: Jun Yang <junyang@cs.duke.edu>
+Date:   Sun Sep 19 15:15:11 2021 -0400
+
+    simplify structure
+
+[33mcommit 8965e8f090bae525303c0e22cb39d1fa72fe34c8[m
+Author: Jun Yang <junyang@cs.duke.edu>
+Date:   Sun Sep 19 15:00:59 2021 -0400
+
+    massive reorganization
+
+[33mcommit f5955f6c27bd443554f6e0daae22e4a3d8ab3c8f[m
+Merge: 11d0a3c acc1db5
+Author: Jun Yang <junyang@cs.duke.edu>
+Date:   Sat Sep 18 19:12:59 2021 -0400
+
+    Merge branch 'orm-free' into 'main'
+    
+    Orm free
+    
+    See merge request compsci316/mini-amazon-skeleton!3
+
+[33mcommit 11d0a3cb140bcae1c82d9c023b5eea0a0815448e[m
+Merge: e486989 f4c73a8
+Author: Jun Yang <junyang@cs.duke.edu>
+Date:   Sat Sep 18 08:39:13 2021 -0400
+
+    Merge branch 'rs541-main-patch-36833' into 'main'
+    
+    Update README.md
+    
+    See merge request compsci316/mini-amazon-skeleton!1
+
+[33mcommit acc1db5fcdb20dba52bf54ada6996195077606a5[m
+Author: yihaoh <yihaoh@bu.edu>
+Date:   Sat Sep 18 00:09:06 2021 -0400
+
+    update init_amazon.sh
+
+[33mcommit ee03a485af9e3455f80ded4b661ae9d6b918255e[m
+Author: yihaoh <yihaoh@bu.edu>
+Date:   Sat Sep 18 00:05:06 2021 -0400
+
+    add comments
+
+[33mcommit b2b43468c1045cc1550d59e066e9cd43532a5e0f[m
+Author: yihaoh <yihaoh@bu.edu>
+Date:   Fri Sep 17 23:59:42 2021 -0400
+
+    update init_amazon.sh so that it works on Google Cloud
+
+[33mcommit fb859664e10d9c5685210203286eecc88102c262[m
+Author: yihaoh <yihaoh@bu.edu>
+Date:   Fri Sep 17 23:50:41 2021 -0400
+
+    orm-free version of skeleton project
+
+[33mcommit e486989ea79da996a1294d6098c351d7e3920c53[m
+Merge: e2d0eeb 869b2cd
+Author: Jun Yang <junyang@cs.duke.edu>
+Date:   Wed Sep 15 23:57:12 2021 -0400
+
+    Merge branch 'products-display' into 'main'
+    
+    Minimum skeleton as described in standard project description
+    
+    See merge request compsci316/mini-amazon-skeleton!2
+
+[33mcommit 869b2cd07773bb7a2e36f84bfb9cd1dc3c1357b4[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Wed Sep 15 00:47:51 2021 -0400
+
+    reformatted query output to nice printable tables
+
+[33mcommit 9d043ea4f33d93c1b43bbe1ff289a30720476ab8[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Wed Sep 15 00:29:20 2021 -0400
+
+    fixed bug due to $ being misinterpreted by shell
+
+[33mcommit 4e17acf56c47e7863a0d52a8181fffacd8cfe2bb[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Wed Sep 15 00:23:04 2021 -0400
+
+    improvements to setup scripts
+
+[33mcommit ae4e9c5ccc7c3da32a001525734dfa0ee3724821[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Wed Sep 15 00:22:33 2021 -0400
+
+    front end support for front of website
+
+[33mcommit c5644480e90a479dcfe7307f1e79e2b9fce7acec[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Wed Sep 15 00:21:15 2021 -0400
+
+    added tables and support for basic product/purchases
+
+[33mcommit 755dc9e29d50753abf9ff9e4bc5ad1d27aea18a3[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Tue Sep 14 22:27:58 2021 -0400
+
+    added tables and queries for products/history
+
+[33mcommit 083842884915d38dc139242ed44530cfdc056118[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Tue Sep 14 22:26:07 2021 -0400
+
+    added files for students to complete
+
+[33mcommit 90cf27d3a4c2d7ab2cff85ce4f84a39b40e76a00[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Tue Sep 14 21:25:21 2021 -0400
+
+    added instructions on python environment
+
+[33mcommit 6156f53ca46070295c1cea2b3ee9e4ddffc41418[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Tue Sep 14 21:18:56 2021 -0400
+
+    built out transactions function as an example
+
+[33mcommit 6c40f7ea3187660e747bcbbaa241b8786f14f1ca[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Tue Sep 14 20:53:42 2021 -0400
+
+    added link to google VM firewall instructions
+
+[33mcommit eae59fee41ab1df16b940c2ac4c65bd6b8ff1a87[m
+Author: Rickard Stureborg <rs541@duke.edu>
+Date:   Tue Sep 14 20:46:44 2021 -0400
+
+    implemented all db setup in single setup script
+
+[33mcommit f4c73a8e03a3590976e0d3f1b018eb91b3a0f5d7[m
+Author: rs541 <rs541@duke.edu>
+Date:   Mon Sep 13 21:29:10 2021 -0400
+
+    Update README.md
+
+[33mcommit e2d0eeb194c290c096f3983620893b36428aaeac[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Mon Sep 13 13:32:10 2021 -0400
+
+    fixed typos
+
+[33mcommit e2d966ae66ac6a93d0fb8c8b520d1d06bcf646ea[m
+Merge: 9ff39b2 5aaf41c
+Author: Rickard Stureborg <rickard.stureborg@duke.edu>
+Date:   Mon Sep 13 17:29:22 2021 +0000
+
+    Merge branch 'student-setup' into 'main'
+    
+    Student setup
+    
+    See merge request rickard.stureborg/mini-amazon-skeleton!7
+
+[33mcommit 5aaf41cf984d55af4138fceebd6f19e1efc24c46[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Mon Sep 13 13:28:50 2021 -0400
+
+    automated more of setup in the init script
+
+[33mcommit 89ac61c72bcff6fc575b1463caf7b3c182e4a6e6[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Mon Sep 13 13:26:12 2021 -0400
+
+    shortened instructions to reduce fluff
+
+[33mcommit cef95119b161d5c20fbe7ce4f70c464655f27d6c[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Mon Sep 13 13:22:24 2021 -0400
+
+    added instructions to get app up and running
+
+[33mcommit 079dce38414c334fc0922c52d8997febba333c1c[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Mon Sep 13 11:26:41 2021 -0400
+
+    renaming to avoid confusion with VM init.sh
+
+[33mcommit 1918264be89b4b936ab61a93aff2c0d3c97bc8a5[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Mon Sep 13 11:26:21 2021 -0400
+
+    removed old code
+
+[33mcommit 3e2f2524d0a559440cd84453616f9beb60171bd1[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Mon Sep 13 11:26:07 2021 -0400
+
+    renaming to avoid confusion with VM init.sh
+
+[33mcommit 9ff39b2861cc293e7c53fed807b1dfe8997c525e[m
+Merge: d59aa1c 9f3431d
+Author: Rickard Stureborg <rickard.stureborg@duke.edu>
+Date:   Mon Sep 13 13:31:49 2021 +0000
+
+    Merge branch 'user-auth' into 'main'
+    
+    User authentication
+    
+    See merge request rickard.stureborg/mini-amazon-skeleton!6
+
+[33mcommit 9f3431d35ed3eb39ae62f0566505a78527ac63bd[m
+Author: yihaoh <yihaoh@bu.edu>
+Date:   Mon Sep 13 03:50:38 2021 -0400
+
+    fix style
+
+[33mcommit fecfff4020c84e7d867ed49cb08db9d5f9ca3a5b[m
+Author: yihaoh <yihaoh@bu.edu>
+Date:   Mon Sep 13 01:53:22 2021 -0400
+
+    add virtualenv to init.sh
+
+[33mcommit 7977b825feae5fd88cb012d620c50030cf1c39f1[m
+Author: yihaoh <yihaoh@bu.edu>
+Date:   Mon Sep 13 01:32:00 2021 -0400
+
+    finish init script to install postgres and create database
+
+[33mcommit 6435035933d37ed57698ae01a29536fda49299c9[m
+Author: yihaoh <yihaoh@bu.edu>
+Date:   Mon Sep 13 01:10:03 2021 -0400
+
+    user auth works
+
+[33mcommit d59aa1c92d33b54de7b8784e59b1afaa1b909abe[m
+Author: Rickard Stureborg <rickard.stureborg@duke.edu>
+Date:   Sun Sep 12 21:47:11 2021 +0000
+
+    Add LICENSE
+
+[33mcommit d2901ea9f270a840b91ffbea33acc8b83101cef2[m
+Merge: 70f5600 7e3ca23
+Author: Rickard Stureborg <rickard.stureborg@duke.edu>
+Date:   Sun Sep 12 21:42:35 2021 +0000
+
+    Merge branch 'instructions' into 'main'
+    
+    complete tutorial to set up VS Code on the google cloud VM
+    
+    See merge request rickard.stureborg/mini-amazon-skeleton!5
+
+[33mcommit 7e3ca2351b17f5fc13e7504b92817c50e51ee3e1[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Sun Sep 12 17:42:04 2021 -0400
+
+    complete tutorial to set up VS Code on the google cloud VM
+
+[33mcommit 70f560034c9149164c0b69016a44cabc513e5d61[m
+Merge: 4598373 f3f82af
+Author: Rickard Stureborg <rickard.stureborg@duke.edu>
+Date:   Sun Sep 12 20:07:40 2021 +0000
+
+    Merge branch 'instructions' into 'main'
+    
+    tutorial for how to use gitlab
+    
+    See merge request rickard.stureborg/mini-amazon-skeleton!4
+
+[33mcommit f3f82af82043df7ffd4934cd35fe99a0d0b77de7[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Sun Sep 12 16:06:10 2021 -0400
+
+    complete tutorial for how to use gitlab with merge requests
+
+[33mcommit 45983731a7b1cfe9bef88a53f3c003edc83e69f1[m
+Merge: 86985fd baac0c6
+Author: Rickard Stureborg <rickard.stureborg@duke.edu>
+Date:   Sun Sep 12 15:08:29 2021 +0000
+
+    Merge branch 'query-example' into 'main'
+    
+    improved query functions
+    
+    See merge request rickard.stureborg/mini-amazon-skeleton!2
+
+[33mcommit baac0c64fd74a7074d0004a602b76059322ecc2f[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Sun Sep 12 11:07:47 2021 -0400
+
+    added instructions for where to add new queries
+
+[33mcommit afaa55d00962e676e16d12911e1c63c707375e03[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Sun Sep 12 11:07:11 2021 -0400
+
+    improved database functions and started example queries
+
+[33mcommit 86985fdd305a3bb62e5433dbde3810b540a4e739[m
+Merge: 81faad1 b9629a3
+Author: Rickard Stureborg <rickard.stureborg@duke.edu>
+Date:   Sun Sep 12 14:42:16 2021 +0000
+
+    Merge branch 'rich' into 'main'
+    
+    beginnings of intro tutorial and files for passwords
+    
+    See merge request rickard.stureborg/mini-amazon-skeleton!1
+
+[33mcommit b9629a392467edef65f88adfdcf39decd604071e[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Sun Sep 12 10:40:37 2021 -0400
+
+    added instruction to remove passwords.py from tracking after adding real passwords
+
+[33mcommit a3b4e9138b395a896635ec820598095aa74e1070[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Sun Sep 12 10:39:58 2021 -0400
+
+    added some comments
+
+[33mcommit 0ddca0c27926b26d4fee01e2bce8cc7836fedece[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Sun Sep 12 10:39:38 2021 -0400
+
+    removed gitkeep
+
+[33mcommit c146efe098b6a36b8da8dba277b9bc4d536e484e[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Sun Sep 12 10:39:18 2021 -0400
+
+    created and allowed tracking for passwords.py
+
+[33mcommit 3feab7acf3e85a7ed3ea630e699ca6518fda9a04[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Sun Sep 12 10:38:07 2021 -0400
+
+    moved passwords into separate file
+
+[33mcommit 81faad19b5c2ef8191b926a369cbe928a5acdd67[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Tue Sep 7 20:20:30 2021 -0400
+
+    adding routes and app file structure
+
+[33mcommit bc1dc507b73ab68bbc55f526426b70b1520481f8[m
+Author: MBP-rich <rickardstureborg@gmail.com>
+Date:   Tue Sep 7 10:50:53 2021 -0400
+
+    initial setup
+
+[33mcommit 0f60be35d6fe3ffe06f08e576b4d18fe3e4a0f0c[m
+Author: Rickard Stureborg <rickard.stureborg@duke.edu>
+Date:   Tue Sep 7 14:43:09 2021 +0000
+
+    Initial commit
