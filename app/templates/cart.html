@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{% if ItemsInCart %}
+
 <h1> <span style = "color:blue"> Your Mini Amazon Cart</span></h1>
 
 <table class='table table-hover table-bordered container'>
@@ -18,6 +20,7 @@
         <th scope="row">{{lineitem.name}}</th>
         <td>{{lineitem.quantities}}</td>
         <td>{{lineitem.price}}</td>
+        <td ><button type="button"> Remove lineitem.</button> </td>
       </tr>
     {% endfor %}
 </tbody>
@@ -28,5 +31,10 @@
 <br/>
     Total Cart Price: ${{singleCart.totalCartPrice}}
 </h3>
+
+{% else %}
+<h3 style = "color:blue"> Cart is empty! Go Shop! </h3>
+
+{% endif %}
 
 {% endblock %}
