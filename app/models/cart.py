@@ -63,6 +63,3 @@ WHERE cartid = :cartid
 ''', 
                               cartid = cartid)
         return None
-
-
-

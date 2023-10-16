@@ -20,11 +20,19 @@
         <th scope="row">{{lineitem.name}}</th>
         <td>{{lineitem.quantities}}</td>
         <td>{{lineitem.price}}</td>
-        <td ><button type="button"> Remove lineitem.</button> </td>
+        <!-- <td ><button type="button"> Remove lineitem.</button> </td> -->
+            <td>
+            <form method="post" action="{{ url_for('cart.cart')}}">
+              <input type = 'hidden' name = lineitem_id value = {{lineitem.lineid}}>
+              <input type="submit" value="Remove Item">
+            </form>
+          </td>
       </tr>
     {% endfor %}
 </tbody>
 </table>
+
+
 
 <h3>
     Total Unique Items: {{singleCart.uniqueItemCount}}

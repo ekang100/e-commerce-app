@@ -8,13 +8,17 @@ from .models.purchase import Purchase
 from .models.cart import Cart
 from .models.lineitem import LineItem
 
-from flask import Blueprint
+from flask import Blueprint, request
 bp = Blueprint('cart', __name__)
 
 
-@bp.route('/cart')
+@bp.route('/cart', methods=['GET', 'POST'])
 def cart():
     #currentUID = current_user.id
+    if request.method == 'POST':
+        lineitem_id = request.form.get('lineitem_id')
+        LineItem.remove_lineitem(lineitem_id)
+
     if current_user.is_authenticated:
         #totalItemCount = Cart.get_unique_item_count(current_user.id)  #this will have to use cart and lineitem
         # return render_template('wishlist.html',
@@ -31,6 +35,15 @@ def cart():
 
     else:
          return jsonify({}), 404
+    
+# @bp.route('/cart/remove/<int:lineid>', methods = ['POST'])
+# def cart_remove(lineid):
+#     if request.method == 'POST':
+#         seller_id = request.form.get('lineitem_id')
 
-    #return jsonify([item.__dict__ for item in wishlist])
+#     if current_user.is_authenticated: #also need to check if the item is in the cart
+#         LineItem.remove_lineitem(lineid)
+
+#     return render_template('cart.html')
+#     #return jsonify([item.__dict__ for item in wishlist])
 

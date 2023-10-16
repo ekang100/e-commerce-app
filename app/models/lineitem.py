@@ -49,10 +49,20 @@ WHERE productid = :productid
     @staticmethod
     def get_all_by_cartid(cartid,status = False):
         rows = app.db.execute('''
-SELECT  P.name, unitPrice, quantities
+SELECT P.name, unitPrice, quantities,  LineItem.lineid
 FROM LineItem, Products P
 WHERE P.productid = LineItem.productid
 AND LineItem.cartid = :cartid
 ''',
                               cartid=cartid)
-        return [{"name": row[0], "price": row[1], "quantities": row[2]} for row in rows]
+        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3]} for row in rows]
+    
+
+    @staticmethod
+    def remove_lineitem(lineid): 
+        rows = app.db.execute('''
+DELETE FROM LineItem 
+WHERE lineid = :lineid 
+''',
+            lineid = lineid)
+        return None
