@@ -42,6 +42,7 @@
         background-color: #000 !important;
         color: #fff;
     }
+
   </style>
 </head>
 
@@ -51,8 +52,20 @@
       <h1 style="color:aliceblue">Welcome!!!!!!!!!</h1>
       <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}
-          Hello {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
-        {% else %}
+
+          Hello {{current_user.firstname}}!      
+  
+          <a href="cart" type="button" style="border: 0; background: transparent">   
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA6klEQVR4nO3WPw4BQRSA8S00tCQoxRFUKoWGSLQSCSfQqDmAuIRE5QbbU+h0ellqEsUm/n5CntCZsbMjwle/zC9vmhnH+cmACY8WQO0T8LUDkLWC3wOGNxq6js2AqsBT23AM8IETkLSNu7J10zbcIpzGr+BMSPBKZet5CPBABe6HANdV4IJh9AykVOAIsDEIz16iT/jIINzTgRsG4aIOnACOBlAfiCrDgk8NwK4WKnDHANx+B04D2wDoGohrw4Ln5cr3GuBOPhi5t9DfDahcXxdgCZSDziknB93zgs59BVyWQz2gFHTun2OrC5cJ2RlZbetpAAAAAElFTkSuQmCC"style="width:45px;height:40px;" >
+                      </a>          
+          
+          <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+                <!-- <img src="{{url_for('static', filename='ui-files/icons8-cart-30.png')}}" > -->
+
+
+                {% else %}
+
+
           <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
         {% endif %}
       </div>
