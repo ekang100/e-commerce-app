@@ -15,10 +15,42 @@ bp = Blueprint('cart', __name__)
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart():
     #currentUID = current_user.id
-    if request.method == 'POST':
-        lineitem_id = request.form.get('lineitem_id')
-        LineItem.remove_lineitem(lineitem_id)
 
+    if request.method == 'POST': 
+        action_type = request.form.get('action')
+        print(action_type)
+        if action_type == "delete": #this is not working right now for some reason
+            try:
+                lineitem_id = request.form.get('lineitem_id')
+                LineItem.remove_lineitem(lineitem_id)
+            except ValueError: #might have to modify this
+                return "Failed"
+            
+        elif action_type == "updateQuantity": 
+            try:
+                newQuantity = request.form.get('newQuantity')
+                lineitem_id = request.form.get('lineitem_id')
+                LineItem.change_quantity(lineitem_id,newQuantity)
+            except ValueError: #might have to modify this
+                return "Failed"
+
+    # if request.method == 'POST' and request.form.get('action') == "delete":
+    #     try:
+    #         lineitem_id = request.form.get('lineitem_id')
+    #         LineItem.remove_lineitem(lineitem_id)
+
+    #     except ValueError: #might have to modify this
+    #         return "Failed"
+
+    # elif request.method == 'POST':
+    #     try:
+    #         newQuantity = request.form.get('newQuantity')
+    #         lineitem_id = request.form.get('lineitem_id')
+    #         LineItem.change_quantity(lineitem_id,newQuantity)
+    #     except ValueError: #might have to modify this
+    #         return "Failed"
+    
+        
     if current_user.is_authenticated:
         #totalItemCount = Cart.get_unique_item_count(current_user.id)  #this will have to use cart and lineitem
         # return render_template('wishlist.html',
@@ -35,6 +67,8 @@ def cart():
 
     else:
          return jsonify({}), 404
+
+# @bp.route('/buyer-order',methods = ['GET', 'POST'])
     
 # @bp.route('/cart/remove/<int:lineid>', methods = ['POST'])
 # def cart_remove(lineid):

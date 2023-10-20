@@ -66,3 +66,14 @@ WHERE lineid = :lineid
 ''',
             lineid = lineid)
         return None
+    
+    @staticmethod
+    def change_quantity(lineid, newquantity):
+        rows = app.db.execute('''
+UPDATE LineItem 
+SET quantities = :newquantity
+WHERE lineid = :lineid 
+''',
+            newquantity = newquantity,
+            lineid = lineid)
+        return None
