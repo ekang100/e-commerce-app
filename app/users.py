@@ -74,3 +74,7 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('index.index'))
+
+@bp.route('/account')
+def account():
+    return render_template('account.html')
