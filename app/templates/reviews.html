@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>User Feedbacks:</h2>
+
+{% if feedbacks %}
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Type</th>
+      <th scope="col">Entity ID</th> 
+      <th scope="col">Rating</th> 
+      <th scope="col">Comment</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for feedback in feedbacks %}
+      <tr>
+        <td>{{ feedback.type }}</td> 
+        <td>{{ feedback.entity_id }}</td> 
+        <td>{{ feedback.rating }}</td>
+        <td>{{ feedback.comments }}</td>
+        <td>{{ feedback.date }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No feedbacks available for the provided user ID.</p>
+{% endif %}
+{% endblock %}
