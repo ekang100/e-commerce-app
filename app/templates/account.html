@@ -2,15 +2,32 @@
 
 {% block content %}
 
-<h1> <span style = "color:red"> My Account</span></h1>
+<h1> <span style = "color:#00aaff"> {{current_user.firstname}}'s Account</span></h1>
 
-<table class='table table-hover table-bordered container'>
-    <thead class="thead-dark">
-        <tr>
-          <th scope="col">Test1</th>
-          <th scope="col">Test2</th>
-          <th scope="col">Test3 Price</th>
-        </tr>
-      </thead>
+<table class='table table-bordered container'>
+  <thead class="thead-dark">
+      <tr style="background-color: black; color: white;">
+          <th scope="col">My Info</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr style="background-color: white; color: black;">
+          <td>Email: {{current_user.email}}
+              <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button>
+          </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
+          <td>Name: {{current_user.firstname}} {{current_user.lastname}}
+              <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button>
+          </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
+          <td>Address: {{current_user.address}}
+              <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button>
+          </td>
+      </tr>
+  </tbody>
 </table>
+<button class="btn btn-primary" style="margin-top: 10px; background-color: #00aaff;">Update Password</button>
+
 {% endblock %}
