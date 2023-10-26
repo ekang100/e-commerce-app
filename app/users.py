@@ -122,3 +122,23 @@ def change_password():
                         form.password.data):
             return redirect(url_for('users.account'))
     return render_template('change_password.html', title='Change Password', form=form)
+
+class BalanceForm(FlaskForm):
+    balance = StringField('Balance', validators=[DataRequired()])
+    submit = SubmitField('Update')
+
+    def validate_balance(self, balance):
+        if float(balance.data) <= 0.0:
+            raise ValidationError('Must add a positive value!')
+
+@bp.route('/balance', methods=['GET', 'POST'])
+def add_balance():
+    form = BalanceForm()
+    # if request.method == 'POST':
+    if form.validate_on_submit():
+        # form.validate_balance(form.balance.data) #fix this to throw error on html page
+        new_balance = float(form.balance.data) + float(current_user.balance)
+        if User.add_balance(current_user.id,
+                        new_balance):
+            return redirect(url_for('users.account'))
+    return render_template('balance.html', title='Add Balance', form=form)

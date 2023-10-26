@@ -17,6 +17,11 @@
         </td>
       </tr>
       <tr style="background-color: white; color: black;">
+          <td>Balance: {{current_user.balance}}
+              <a href="{{ url_for('users.add_balance') }}" class="btn btn-primary" style="float: right; background-color: #00aaff;" role="'button">Add Balance</a>
+          </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
           <td>Email: {{current_user.email}}
               <!-- <button href='\'class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
           </td>

@@ -98,6 +98,19 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
+    
+    @staticmethod
+    def add_balance(user_id, balance):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET balance = :balance
+                WHERE id = :user_id
+            """, user_id=user_id, balance=balance)
+            return User.get(user_id)
+        except Exception as e:
+            print(str(e))
+            return None
         
     @staticmethod
     @login.user_loader
