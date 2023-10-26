@@ -59,7 +59,20 @@ RETURNING id
             # the following simply prints the error to the console:
             print(str(e))
             return None
-
+        
+    @staticmethod
+    def update_name_address(user_id, address, firstname, lastname):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET address = :address, firstname = :firstname, lastname = :lastname
+                WHERE id = :user_id
+            """, address=address, firstname=firstname, lastname=lastname, user_id=user_id)
+            return True
+        except Exception as e:
+            print(str(e))
+            return None
+        
     @staticmethod
     @login.user_loader
     def get(id):

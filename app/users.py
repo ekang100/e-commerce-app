@@ -78,3 +78,27 @@ def logout():
 @bp.route('/account')
 def account():
     return render_template('account.html')
+
+class UpdateForm(FlaskForm):
+    firstname = StringField('First Name', validators=[DataRequired()])
+    lastname = StringField('Last Name', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Update')
+
+    def validate_email(self, email):
+        if User.email_exists(email.data):
+            raise ValidationError('Already a user with this email.')
+
+@bp.route('/update_name_address', methods=['GET', 'POST'])
+def update_name_address():
+    form = UpdateForm()
+    if request.method == 'POST':
+        if User.update_name_address(current_user.id,
+                        form.address.data,
+                        form.firstname.data,
+                        form.lastname.data):
+            flash('Congratulations, name and address has been updated!')
+            return redirect(url_for('users.account'))
+    # return render_template('update_name_address.html', title='Update Name and Address', form=form)
+    return render_template('update_name_address.html', title='Update Name and Address', form=form)
