@@ -68,7 +68,7 @@ RETURNING id
                 SET address = :address, firstname = :firstname, lastname = :lastname
                 WHERE id = :user_id
             """, address=address, firstname=firstname, lastname=lastname, user_id=user_id)
-            return True
+            return User.get(user_id)
         except Exception as e:
             print(str(e))
             return None
