@@ -84,10 +84,7 @@ class UpdateForm(FlaskForm):
     lastname = StringField('Last Name', validators=[DataRequired()])
     address = StringField('Address', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(),
-                                       EqualTo('password')])
+
     submit = SubmitField('Update')
 
     def validate_email(self, email):
@@ -114,10 +111,18 @@ def change_email():
             return redirect(url_for('users.account'))
     return render_template('change_email.html', title='Change Email', form=form)
 
+class PasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(),
+                                       EqualTo('password')])
+    submit = SubmitField('Update')
+    
 @bp.route('/change_password', methods=['GET', 'POST'])
 def change_password():
-    form = UpdateForm()
-    if request.method == 'POST':
+    form = PasswordForm()
+    # if request.method == 'POST':
+    if form.validate_on_submit():
         if User.change_password(current_user.id,
                         form.password.data):
             return redirect(url_for('users.account'))
