@@ -84,6 +84,10 @@ class UpdateForm(FlaskForm):
     lastname = StringField('Last Name', validators=[DataRequired()])
     address = StringField('Address', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(),
+                                       EqualTo('password')])
     submit = SubmitField('Update')
 
     def validate_email(self, email):
@@ -98,7 +102,23 @@ def update_name_address():
                         form.address.data,
                         form.firstname.data,
                         form.lastname.data):
-            flash('Congratulations, name and address has been updated!')
             return redirect(url_for('users.account'))
-    # return render_template('update_name_address.html', title='Update Name and Address', form=form)
     return render_template('update_name_address.html', title='Update Name and Address', form=form)
+
+@bp.route('/change_email', methods=['GET', 'POST'])
+def change_email():
+    form = UpdateForm()
+    if request.method == 'POST':
+        if User.change_email(current_user.id,
+                        form.email.data):
+            return redirect(url_for('users.account'))
+    return render_template('change_email.html', title='Change Email', form=form)
+
+@bp.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    form = UpdateForm()
+    if request.method == 'POST':
+        if User.change_password(current_user.id,
+                        form.password.data):
+            return redirect(url_for('users.account'))
+    return render_template('change_password.html', title='Change Password', form=form)

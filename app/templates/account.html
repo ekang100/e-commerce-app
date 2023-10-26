@@ -41,8 +41,11 @@
   </tbody>
 </table>
 <a href="{{ url_for('users.update_name_address') }}" class="btn btn-primary" style="float: left; margin-right: 10px; background-color: #00aaff;" role="'button">Update Name/Address</a>
-<a href='/' class="btn btn-primary" style="float: left; margin-right: 10px; background-color: #00aaff;" role="'button">Change Email</a>
-<a class="btn btn-primary" href="cart" style="float: left; background-color: #00aaff;" role="button">Change Password</a>
+<a href="{{ url_for('users.change_email') }}" class="btn btn-primary" style="float: left; margin-right: 10px; background-color: #00aaff;" role="'button">Change Email</a>
+<a href="{{ url_for('users.change_password') }}" class="btn btn-primary" href="cart" style="float: left; background-color: #00aaff;" role="button">Change Password</a>
 
+{% if current_user.isSeller %}
+<h1> <span style = "color:#00aaff"> {{current_user.firstname}}'s Seller Profile</span></h1>
+{% endif %}
 {% endblock %}
 {% endif %}
