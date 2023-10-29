@@ -22,10 +22,11 @@ WHERE id = :id
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
 SELECT P.name, P.price, Pu.time_purchased
-FROM Purchases Pu, Products P
+FROM Purchases Pu, Products P, LineItem L
 WHERE Pu.uid = :uid
 AND Pu.time_purchased >= :since
-AND Pu.pid = P.productid
+AND Pu.lineid = L.lineid
+AND L.productid = P.productid
 ORDER BY Pu.time_purchased DESC
 ''',
                               uid=uid,
