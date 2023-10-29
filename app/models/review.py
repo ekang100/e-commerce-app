@@ -1,5 +1,3 @@
-
-
 from flask import current_app as app
 
 class Reviews:
@@ -13,25 +11,33 @@ class Reviews:
 
     @staticmethod
     def get(type, entity_id, uid):
-        rows = app.db.execute('''
+        try:
+            rows = app.db.execute('''
 SELECT type, entity_id, uid, rating, comments, date
 FROM Reviews
 WHERE type = :type AND entity_id = :entity_id AND uid = :uid
 ''',
-                              type=type,
-                              entity_id=entity_id,
-                              uid=uid)
-        return Reviews(*(rows[0])) if rows else None
-
+                                  type=type,
+                                  entity_id=entity_id,
+                                  uid=uid)
+            return Reviews(*(rows[0])) if rows else None
+        except Exception as e:
+            # You can log the error here for further debugging
+            raise ValueError(f"Error fetching review: {str(e)}") from e
+        
     @staticmethod
     def get_most_recent_by_uid(uid, limit=5):
-        rows = app.db.execute('''
-SELECT type, entity_id, uid, rating, comments, date
-FROM Reviews
-WHERE uid = :uid
-ORDER BY date DESC
-LIMIT :limit
-''',
-                              uid=uid,
-                              limit=limit)
-        return [Reviews(*row) for row in rows]
+            rows = app.db.execute('''
+    SELECT type, entity_id, uid, rating, comments, date
+    FROM Reviews
+    WHERE uid = :uid
+    ORDER BY date DESC
+    LIMIT :limit
+    ''',
+                                uid=uid,
+                                limit=limit)
+            if not rows:
+                raise ValueError(f"No reviews found for user_id: {uid}")
+            return [Reviews(*row) for row in rows]
+
+
