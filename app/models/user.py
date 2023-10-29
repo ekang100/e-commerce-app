@@ -111,6 +111,19 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
+    
+    @staticmethod
+    def become_seller(user_id):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET isSeller = TRUE
+                WHERE id = :user_id
+            """, user_id=user_id)
+            return User.get(user_id)
+        except Exception as e:
+            print(str(e))
+            return None
         
     @staticmethod
     @login.user_loader

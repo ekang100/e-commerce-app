@@ -147,3 +147,10 @@ def add_balance():
                         new_balance):
             return redirect(url_for('users.account'))
     return render_template('balance.html', title='Add Balance', form=form)
+
+@bp.route('/account', methods=['GET', 'POST'])
+def become_seller():
+    if request.method == 'POST':
+        if User.become_seller(current_user.id):
+            return redirect(url_for('users.account'))
+    return redirect(url_for('users.account'))

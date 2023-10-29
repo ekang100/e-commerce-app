@@ -39,7 +39,7 @@
       <tr style="background-color: white; color: black;">
         <td>Seller Status: {{current_user.isSeller}}
             {% if not current_user.isSeller %}
-                <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Become a Seller</button>
+                <a href="{{ url_for('users.become_seller') }}" class="btn btn-primary" style="float: right; background-color: #00aaff;" role="button">Become a Seller</a>
             {% endif %}       
         </td>
       </tr>
@@ -50,7 +50,8 @@
 <a href="{{ url_for('users.change_password') }}" class="btn btn-primary" href="cart" style="float: left; background-color: #00aaff;" role="button">Change Password</a>
 
 {% if current_user.isSeller %}
-<h1> <span style = "color:#00aaff"> {{current_user.firstname}}'s Seller Profile</span></h1>
+<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 100px;">
+<h1><span style="color: #00aaff;">{{current_user.firstname}}'s Seller Profile</span></h1>
 {% endif %}
 {% endblock %}
 {% endif %}
