@@ -1,3 +1,4 @@
+{% if current_user.is_authenticated %}
 {% extends "base.html" %}
 
 {% block content %}
@@ -12,22 +13,47 @@
   </thead>
   <tbody>
       <tr style="background-color: white; color: black;">
+        <td>Account ID: {{current_user.id}}
+        </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
+          <td>Balance: {{current_user.balance}}
+              <a href="{{ url_for('users.add_balance') }}" class="btn btn-primary" style="float: right; background-color: #00aaff;" role="'button">Add Balance</a>
+          </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
           <td>Email: {{current_user.email}}
-              <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button>
+              <!-- <button href='\'class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
           </td>
       </tr>
       <tr style="background-color: white; color: black;">
           <td>Name: {{current_user.firstname}} {{current_user.lastname}}
-              <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button>
+              <!-- <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
           </td>
       </tr>
       <tr style="background-color: white; color: black;">
           <td>Address: {{current_user.address}}
-              <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button>
+              <!-- <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
           </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
+        <td>Seller Status: {{current_user.isSeller}}
+            {% if not current_user.isSeller %}
+            <form method="POST" action="{{ url_for('users.become_seller') }}">
+                <button type="submit" class="btn btn-primary" style="float: right; background-color: #00aaff;" role="button">Become a Seller</button>
+            </form>            
+            {% endif %}       
+        </td>
       </tr>
   </tbody>
 </table>
-<button class="btn btn-primary" style="margin-top: 10px; background-color: #00aaff;">Update Password</button>
+<a href="{{ url_for('users.update_name_address') }}" class="btn btn-primary" style="float: left; margin-right: 10px; background-color: #00aaff;" role="'button">Update Name/Address</a>
+<a href="{{ url_for('users.change_email') }}" class="btn btn-primary" style="float: left; margin-right: 10px; background-color: #00aaff;" role="'button">Change Email</a>
+<a href="{{ url_for('users.change_password') }}" class="btn btn-primary" href="cart" style="float: left; background-color: #00aaff;" role="button">Change Password</a>
 
+{% if current_user.isSeller %}
+<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 100px;">
+<h1><span style="color: #00aaff;">{{current_user.firstname}}'s Seller Profile</span></h1>
+{% endif %}
 {% endblock %}
+{% endif %}
