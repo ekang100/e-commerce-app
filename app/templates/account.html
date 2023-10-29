@@ -39,7 +39,9 @@
       <tr style="background-color: white; color: black;">
         <td>Seller Status: {{current_user.isSeller}}
             {% if not current_user.isSeller %}
-                <a href="{{ url_for('users.become_seller') }}" class="btn btn-primary" style="float: right; background-color: #00aaff;" role="button">Become a Seller</a>
+            <form method="POST" action="{{ url_for('users.become_seller') }}">
+                <button type="submit" class="btn btn-primary" style="float: right; background-color: #00aaff;" role="button">Become a Seller</button>
+            </form>            
             {% endif %}       
         </td>
       </tr>

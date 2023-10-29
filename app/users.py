@@ -153,4 +153,4 @@ def become_seller():
     if request.method == 'POST':
         if User.become_seller(current_user.id):
             return redirect(url_for('users.account'))
-    return redirect(url_for('users.account'))
+    return render_template('account.html')
