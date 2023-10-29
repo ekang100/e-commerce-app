@@ -67,5 +67,5 @@ def gen_purchases(num_purchases, available_pids):
 
 
 gen_users(num_users)
-available_pids = gen_products(num_products)
-gen_purchases(num_purchases, available_pids)
+# available_pids = gen_products(num_products)
+# gen_purchases(num_purchases, available_pids)
