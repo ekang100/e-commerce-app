@@ -47,6 +47,7 @@ def gen_users(num_users):
 
     return
 
+
 # def gen_products(num_products):
 #     available_pids = []
 #     with open('Products.csv', 'w') as f:

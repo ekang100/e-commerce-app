@@ -52,28 +52,33 @@
 <a href="{{ url_for('users.change_password') }}" class="btn btn-primary" href="cart" style="float: left; background-color: #00aaff;" role="button">Change Password</a>
 
 <br><br>
-<h1 style = "color: #00aaff; margin-top: 70px;">{{current_user.firstname}}'s Recent Purchases:</h1>
+<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
+<h1 style = "color: #00aaff;">{{current_user.firstname}}'s Recent Purchases:</h1>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
+      <th scope="col">Number of Items</th>
+      <th scope="col">Total Price</th>
       <th scope="col">Date Purchased</th>
+      <th scope="col">Order Fullfilled</th>
     </tr>
   </thead>
   <tbody>
     {% for purchase in purchase_history%}
       <tr>
         <th scope="row">{{purchase.name}}</th>
-        <td>{{purchase.price}}</td>
+        <td>{{purchase.quantities}}</td>
+        <td>{{ purchase.quantities * purchase.price }}</td>
         <td>{{purchase.time_purchased}}</td>
+        <td>{{purchase.fulfilledStatus}}</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
 
 {% if current_user.isSeller %}
-<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 100px;">
+<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
 <h1><span style="color: #00aaff;">{{current_user.firstname}}'s Seller Profile</span></h1>
 {% endif %}
 {% endblock %}
