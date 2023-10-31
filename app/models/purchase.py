@@ -21,13 +21,14 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT P.name, P.price, Pu.time_purchased
-FROM Purchases Pu, Products P
+SELECT P.name, L.quantities, P.price, Pu.time_purchased, L.fulfilledStatus
+FROM Purchases Pu, Products P, LineItem L
 WHERE Pu.uid = :uid
 AND Pu.time_purchased >= :since
-AND Pu.pid = P.productid
+AND Pu.lineid = L.lineid
+AND L.productid = P.productid
 ORDER BY Pu.time_purchased DESC
 ''',
                               uid=uid,
                               since=since)
-        return [{"name": row[0], "price": row[1], "time_purchased": row[2]} for row in rows]
+        return [{"name": row[0], "quantities": row[1], "price": row[2], "time_purchased": row[3], "fulfilledStatus": row[4]} for row in rows]

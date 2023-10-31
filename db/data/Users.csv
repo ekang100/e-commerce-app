@@ -1,5 +1,5 @@
-0, 407 Smith Drive,icecream@tastes.good,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb, ellie, kang, 10.00, FALSE
-1, 406 Smith Drive,bbb@gmail.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb, elli, kang, 10.00, FALSE
-2, 405 Smith Drive,ccc@gmail.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb, ell, kang, 10.00, TRUE
-3, 404 Smith Drive,ddd@gmail.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb, el, kang, 10.00, TRUE
-4, 403 Smith Drive,eee@gmail.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb, e, kang, 10.00, TRUE
+0, 407 Smith Drive,icecream@tastes.good,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,ellie,kang, 10.00, FALSE
+1, 406 Smith Drive,bbb@gmail.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,elli,kang, 10.00, FALSE
+2, 405 Smith Drive,ccc@gmail.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,ell,kang, 10.00, TRUE
+3, 404 Smith Drive,ddd@gmail.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,el,kang, 10.00, TRUE
+4, 403 Smith Drive,eee@gmail.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,e,kang, 10.00, TRU

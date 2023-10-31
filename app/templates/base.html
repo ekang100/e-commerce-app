@@ -49,8 +49,7 @@
   <div class="sidenav">
     {% block msg %}
       <h1 style="color:aliceblue">Welcome to BoxML!</h1>
-      <div style="color: aliceblue; text-align: left; position: relative; bottom: -50px; right: -25px;";>
-        {% if current_user.is_authenticated %}
+      <div style="color: aliceblue; text-align: left; bottom: -50px; right: -25px;";>
           <a href="/" type="button" style="border: 0; background: transparent">
             <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBYWFRgWFRUYGRgaGBgcHBoaHBoeGh8eJRoeGiUaGh4eIS4lISErIRwaJjgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8PEQ8PGDEdGB0xPzExMTExMTQxMTExPzQxMTExMTExNDExMTExNDExMTExMTExMTExMTExMTExMTExNP/AABEIAOAA4QMBIgACEQEDEQH/xAAbAAEBAAMBAQEAAAAAAAAAAAABAAIEBQMGB//EAEgQAAEBBAUHCQYFAgUDBQAAAAECABEhMQMSIkFxBDJCUWGBoRMjM1JikbHB8AUUQ2Oi4QZyc4LxNNEVFlSys1N00iRkkrTD/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAH/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD9X6Xs1d8/4ZJ5SzKrfPY0TymbZdPfhg0TXspgRM67rmAfWsSq363Qky+tzcnX4bGia1kQKZnW6DT61gQUL8OLAP8AhfV9Umnu5rjxk0/4el1uOMmXusaXW44sA+rzc61+MJMg1LE618pw8mn1bBioyOMGgatlUSZHU+DBDm7M627YwOa7VbdL+WQakFWiZeF7A5vOtPlsdjiwQHJRzn7mnVLc610pxaAqRVafL0WQKtpUQZDjewAFTnJ1rsYzac7nNd2MJtCzbMUmQ1Piy51s5p0ceDAO+L9P0zadW5zVdhta+Zo9X6cJsztjNGjhwYAivblVuwjNoivblVum90WjatiCUzGt0WSK1pMAJjjcwBHKxzXb2jzsrNXfP+GiK8U2XT9Bo85m2XT34YMCecsyq79jBNexKrfhDzZJrwTZIn4XNE1rKYFMzrdBgH1ubk6/CEmnv5rjxkyTWsCChM4NPfY
             0utxxYB7ua+r6pMvq83N9+Oxp/wAPS63HGTQNWwYqN+PFgH1bE61+p8JbmQeTszrXy2NPq2TFSpHU+DQNSyqJMjquvYMf8P7XD7tNe5r6/i0wJt5ll07vBomtBECJmT94ZNro4Ondh5tGMEQVfd6iwGdZTBQmZPdAxEZsvfZEFCavGM2jGCYKGcZYxxaMbKc+8+MWA7Gn1uM5yZfoHP63Gc5Mdn4mvjPBnsnP1/fBgHusmKjJU3PlExZBq2VRUZGbrhExm1KCs+4+EWBCC4qOaZ4RxewINWC7RMjN3ewLPSWnyvdrniGRZ6SJMr2BZ6WOq/HyYICrFdoGV/i1KKopMhN18jCTQs9JEXXsiEVxSZCeEMGDGVpUUmQm58RAwk2SQXvmkyT9pNil5MXFNwuGqGDZgOkwIAe+7q6PdxYUkvrCCRNP2k2jQe1qJdMqgSrnEpCqpBTWSdJBIctIkSl7b7+7V/dg8zG0mCRNMnuiYCEmQHxTZSJiT75CEmypEl70wSM4eMMGJxRBImJcMGAIrZlkCd3g0bfR2XTufqlvZNro4C+5g2uihruw82BJrQRZImZP7mDaspgoTMnugYiM2SXwo4G+5oxgmChnGWMcXMA99kQUJqk904zafoDP63Gc5MmNlOfefGLXZGfr++DBP0NPrcZzkw91kxUZKxlGbI6p6TXxng0IWVZ9x8IsBm2VRUZGbnwETGbINWC7RMjN28tCEFRUc0zwji0IQXFV1/qLBj7tSdb6lf2aa5Kl63FpgT8rf5Z29o/LztL0YTZMOijrvwnvaMOjztK/x2sB+TP0vOcJua/L0l/nODJhFOfpec4Tc1tTn3+cJMB/yet0msek9bpNbfierpSZ2npPV0pMB+fPu8pQm0O3n6PlKE3sjWrPu8oSaEYrztHyltewQ+ZO70GB839vnm7mRHpJ3XeDSY9L+27GW5g
@@ -65,7 +64,6 @@
             Su8WM6CoJEjJ90zCTIPKQVZd6vZBr2TAJvwgwYzsqgkSMnugImEmynZOZ1vvJgWrBgEyOt0GXv5u4aWEWA7Gh1uM5Tg1KyIpOl95NfL0et9TL3c3MG/FgxlZTFJmZufAxEJMvqwTaSZmeyY2NGzYEQqZ1PgyTUsiIVfwYAmpBFp87/Bo2My0+d7nSliWSeTgm0/1cwebzbT/LDFgSKsU2iZibu5giraTFRmJufEwEZskVIpi+7Ve0RVtCJVdqfHyYAh1oRUZp1PnCbJDrYzurwlOTTqtsRJuxac7nL+rwYJ2np9XhKcmAH2jBQknCUJsu+JpdXg06tbMCLsGAArWlQUJCT3REDGbIFaKrJEhJ/e0BWtmBTIa3RaAr2jAi7iwY+9L6nBTTXvyur4tMH//Z" 
             style="width:70px;height:60px;" >
           </a>
-        {% endif %}
       </div>
       <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}
