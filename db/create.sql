@@ -35,6 +35,7 @@ CREATE TABLE Products (
     available BOOLEAN DEFAULT FALSE,
     avg_rating DECIMAL DEFAULT 0,
     seller_id INT REFERENCES Users(id)
+    CONSTRAINT same_product_different_sellers UNIQUE (name, description)
 );
 
 CREATE TABLE Purchases (
