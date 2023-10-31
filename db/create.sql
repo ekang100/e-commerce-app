@@ -106,3 +106,7 @@ CREATE TABLE Reviews (
 
 ---------------------Triggers---------------------------
 
+---------------------Views------------------------------
+CREATE VIEW PubProfile AS
+SELECT id AS account_id, firstname || ' ' || lastname AS name, email, address, isSeller
+FROM Users;
