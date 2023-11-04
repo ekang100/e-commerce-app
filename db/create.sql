@@ -32,10 +32,11 @@ CREATE TABLE Products (
     price DECIMAL(12,2) NOT NULL,
     description VARCHAR(255),
     category VARCHAR(255) NOT NULL,
+    image_path VARCHAR(255) DEFAULT NULL,
     available BOOLEAN DEFAULT FALSE,
     avg_rating DECIMAL DEFAULT 0,
     seller_id INT REFERENCES Users(id)
-    CONSTRAINT same_product_different_sellers UNIQUE (name, description)
+    --CONSTRAINT same_product_different_sellers UNIQUE (name, description)
 );
 
 CREATE TABLE ProductsForSale ( -- do we need price here
