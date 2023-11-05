@@ -3,6 +3,8 @@ import csv
 import os
 from faker import Faker
 from PIL import Image, ImageDraw, ImageFont
+import requests
+from io import BytesIO
 
 num_users = 50
 num_products = 2000
@@ -48,8 +50,39 @@ def gen_users(num_users):
 
     return
 
+
+
+def gen_product_image(image_path, productid, product_name):
+    # Download the image from the URL
+    response = requests.get(image_path)
+    static_path = os.path.abspath('app/static/')
+
+    if response.status_code == 200:
+        image_data = response.content
+        image = Image.open(BytesIO(image_data))
+        new_path = os.path.join(static_path, str(productid) + '.png')
+        image.save(new_path)
+        return new_path
+
+    else:
+        img = Image.new('RGB', size=(500, 500), color='white')
+        draw = ImageDraw.Draw(img)
+
+        # Set up the font
+        font = ImageFont.load_default()
+
+        # Draw the product name in the center of the image
+        x = (300) / 2
+        y = (300) / 2
+        draw.text((x, y), product_name, fill='black', font=font)
+        # Save the image
+        new_path = os.path.join(static_path, str(productid) + '.png')
+        img.save(new_path)
+        return new_path
+
 def gen_products(num_products):
-    columns = ['product_id', 'product_name', 'category', 'about_product', 'img_link', 'product_link']
+    # columns = ['product_id', 'product_name', 'category', 'category_original', 'about_product', 'img_link', 'product_link']
+    static_path = os.path.abspath('app/static/')
     # Open the source file and the output file
     with open(csv_path('ProductSource.csv'), 'r') as source_path, open(csv_path('Products.csv'), 'w') as output_path:
         reader = csv.DictReader(source_path)
@@ -69,7 +102,9 @@ def gen_products(num_products):
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             description = row['about_product']
             category = row['category']
-            image_path = row['product_link']
+            image_path = os.path.join(static_path, str(productid) + '.png')
+            if not os.path.isfile(image_path):
+                image_path = gen_product_image(row['img_link'], productid, name)
             available = available = fake.random_element(elements=('true', 'false'))
             avg_rating = fake.random_int(min=0, max=500) / 100
             seller_id = fake.random_int(min=0, max=num_users)
