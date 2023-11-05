@@ -2,18 +2,18 @@
 
 {% block content %}
 
-<h1> <span style = "color:blue"> Your Mini Amazon Cart</span></h1>
+<h1> <span style="color: #FFD700">Your Galactic Market Cart</span></h1>
 
-<table class='table table-hover table-bordered container'>
+<table class='table table-bordered container'>
     <thead class="thead-dark">
         <tr>
-          <th scope="col">Product Name</th>
+          <th scope="col">Star Product</th>
           <th scope="col">Quantities</th>
           <th scope="col">Unit Price</th>
         </tr>
       </thead>
 <tbody>
-    {% for lineitem in ItemsInCart%}
+    {% for lineitem in ItemsInCart %}
       <tr>
         <th scope="row">{{lineitem.name}}</th>
         <td>{{lineitem.quantities}}</td>
@@ -23,10 +23,10 @@
 </tbody>
 </table>
 
-<h3>
-    Total Unique Items: {{singleCart.uniqueItemCount}}
-<br/>
-    Total Cart Price: ${{singleCart.totalCartPrice}}
+<h3 style="color: #FFD700; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);">
+    Total Star Items: {{singleCart.uniqueItemCount}}
+    <br/>
+    Total Galactic Cost: ${{singleCart.totalCartPrice}}
 </h3>
 
 {% endblock %}

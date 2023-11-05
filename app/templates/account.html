@@ -2,32 +2,36 @@
 
 {% block content %}
 
-<h1> <span style = "color:#00aaff"> {{current_user.firstname}}'s Account</span></h1>
+<h1> <span style="color: #FFD700">{{current_user.firstname}}'s Cosmic Dashboard</span></h1>
 
 <table class='table table-bordered container'>
   <thead class="thead-dark">
-      <tr style="background-color: black; color: white;">
-          <th scope="col">My Info</th>
+      <tr>
+          <th scope="col">Galactic Info</th>
       </tr>
   </thead>
   <tbody>
-      <tr style="background-color: white; color: black;">
-          <td>Email: {{current_user.email}}
-              <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button>
+      <tr>
+          <td>
+              <strong style="color: #FFD700">Email:</strong> <span style="color: #eee">{{current_user.email}}</span>
+              <button class="btn" style="float: right; border: 2px solid #FFD700; color: #FFD700;">Update</button>
           </td>
       </tr>
-      <tr style="background-color: white; color: black;">
-          <td>Name: {{current_user.firstname}} {{current_user.lastname}}
-              <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button>
+      <tr>
+          <td>
+              <strong style="color: #FFD700">Name:</strong> <span style="color: #eee">{{current_user.firstname}} {{current_user.lastname}}</span>
+              <button class="btn" style="float: right; border: 2px solid #FFD700; color: #FFD700;">Update</button>
           </td>
       </tr>
-      <tr style="background-color: white; color: black;">
-          <td>Address: {{current_user.address}}
-              <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button>
+      <tr>
+          <td>
+              <strong style="color: #FFD700">Address:</strong> <span style="color: #eee">{{current_user.address}}</span>
+              <button class="btn" style="float: right; border: 2px solid #FFD700; color: #FFD700;">Update</button>
           </td>
       </tr>
   </tbody>
 </table>
-<button class="btn btn-primary" style="margin-top: 10px; background-color: #00aaff;">Update Password</button>
+
+<button class="btn" style="margin-top: 10px; border: 2px solid #FFD700; color: #FFD700;">Update Star Password</button>
 
 {% endblock %}

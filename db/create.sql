@@ -82,11 +82,19 @@ CREATE TABLE OrdersInProgress (
 );
 
 CREATE TABLE Reviews (
-    entity_id INT NOT NULL, -- product ID or seller ID, based on the type.
-    uid INT NOT NULL REFERENCES Users(id),
-    type VARCHAR(10) CHECK (type IN ('product', 'seller')), --'product' or 'seller'.
+    entity_id SERIAL PRIMARY KEY,         -- A unique identifier for each review.
+    product_id INT REFERENCES Products(productid),
+    seller_id INT REFERENCES Seller(uid),
+    uid INT NOT NULL REFERENCES Users(id),   -- FK to Users table.
+    type VARCHAR(10) CHECK (type IN ('product', 'seller')) NOT NULL,
     rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
     comments VARCHAR(255),
     date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
-    PRIMARY KEY (entity_id, uid, type)
+    CHECK (
+        (type = 'product' AND product_id IS NOT NULL AND seller_id IS NULL) OR
+        (type = 'seller' AND seller_id IS NOT NULL AND product_id IS NULL)
+    ),
+    UNIQUE(uid, product_id, type),   -- Ensure user can only review a product once.
+    UNIQUE(uid, seller_id, type)     -- Ensure user can only review a seller once.
 );
+
