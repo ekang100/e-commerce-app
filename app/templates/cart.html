@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{% if ItemsInCart %}
+
 <h1> <span style = "color:blue"> Your Mini Amazon Cart</span></h1>
 
 <table class='table table-hover table-bordered container'>
@@ -16,12 +18,30 @@
     {% for lineitem in ItemsInCart%}
       <tr>
         <th scope="row">{{lineitem.name}}</th>
-        <td>{{lineitem.quantities}}</td>
+        <td>{{lineitem.quantities}}
+              <form method="post" action="{{ url_for('cart.cart')}}">
+              <input type = 'number' name = newQuantity>
+              <input type = 'hidden' name = lineitem_id value = {{lineitem.lineid}}>
+              <input type = 'hidden' name = action value = "update">
+              <input type="submit" value="Modify Quantity">
+              </form>
+        </td>
         <td>{{lineitem.price}}</td>
+        <!-- <td ><button type="button"> Remove lineitem.</button> </td> -->
+        <td>
+            <form method="post" action="{{ url_for('cart.cart')}}">
+              <input type = 'hidden' name = lineitem_id value = {{lineitem.lineid}}>
+              <input type = 'hidden' name = action value = "delete">
+              <input type="submit" value="Remove Item">
+            </form>
+          </td>
+
       </tr>
     {% endfor %}
 </tbody>
 </table>
+
+
 
 <h3>
     Total Unique Items: {{singleCart.uniqueItemCount}}
@@ -29,4 +49,16 @@
     Total Cart Price: ${{singleCart.totalCartPrice}}
 </h3>
 
+<form method = "post" action = "{{url_for('cart.buyerOrder')}}">
+<input type = 'hidden' name = action value = "order_all">
+<input type = "submit" value = "Order yo whole as Cart">
+</form>
+
+
+{% else %}
+<h3 style = "color:blue"> Cart is empty! Go Shop! </h3>
+
+{% endif %}
+
 {% endblock %}
+
