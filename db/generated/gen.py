@@ -15,6 +15,10 @@ fake = Faker()
 
 generated_path = os.path.join(os.getcwd(), 'db/generated')
 
+seller_list = []
+product_list = []
+sellers_with_products = set()
+
 def csv_path(csv_name):
     return os.path.join(generated_path, csv_name)
 
@@ -43,6 +47,8 @@ def gen_users(num_users):
             lastname = name_components[-1]
             balance = fake.pyint(0, 9999)
             isSeller = fake.pybool()
+            if isSeller:
+                seller_list.append(uid)
             users_writer.writerow([uid, address, email, password, firstname, lastname, balance, isSeller])
             passwords_writer.writerow([uid, plain_password])
 
@@ -84,9 +90,9 @@ def gen_products(num_products):
     # columns = ['product_id', 'product_name', 'category', 'category_original', 'about_product', 'img_link', 'product_link']
     static_path = os.path.abspath('app/static/')
     # Open the source file and the output file
-    with open(csv_path('ProductSource.csv'), 'r') as source_path, open(csv_path('Products.csv'), 'w') as output_path:
+    with open(csv_path('ProductSource.csv'), 'r') as source_path, open(csv_path('Products.csv'), 'w') as product_path:
         reader = csv.DictReader(source_path)
-        writer = get_csv_writer(output_path)
+        product_writer = get_csv_writer(product_path)
 
         print('Products...', end=' ', flush=True)
 
@@ -107,11 +113,15 @@ def gen_products(num_products):
                 image_path = gen_product_image(row['img_link'], productid, name)
             available = available = fake.random_element(elements=('true', 'false'))
             avg_rating = fake.random_int(min=0, max=500) / 100
-            seller_id = fake.random_int(min=0, max=num_users)
+            seller_id = fake.random_element(seller_list)
 
-            #if available == 'true':
-                #available_pids.append(pid)
-            writer.writerow([productid, name, price, description, category, image_path, available, avg_rating, seller_id])
+            if available == 'true':
+                product_list.append(productid)
+
+            # Add to seller set if seller has products
+            sellers_with_products.add(seller_id)
+
+            product_writer.writerow([productid, name, price, description, category, image_path, available, avg_rating, seller_id])
         print(f'{num_products} generated')
     return
 
