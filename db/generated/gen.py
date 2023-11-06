@@ -119,7 +119,7 @@ def gen_products(num_products):
             seller_id = fake.random_element(seller_list)
 
             if available == 'true':
-                product_list.append(productid)
+                product_list.append([productid, name])
 
             # Add to seller set if seller has products
             sellers_with_products.add(seller_id)
