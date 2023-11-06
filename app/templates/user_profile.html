@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<html>
+<body>
+    {% if user %}
+    <h1>{{ user[0]['name'] }}'s Public Profile</h1>
+    <ul>
+        <li><strong>Name:</strong> {{ user[0]['name'] }}</li>
+        <li><strong>Email:</strong> {{ user[0]['email'] }}</li>
+        <li><strong>Address:</strong> {{ user[0]['address'] }}</li>
+        <li><strong>Seller Status:</strong> {{ user[0]['isSeller'] }}</li>
+        <li><a href="{{ url_for('users.search_user') }}">Back to Search Results</a></li>
+    </ul>
+    {% else %}
+        <p>No user found</p>
+    {% endif %}
+</body>
+</html>
+{% endblock %}

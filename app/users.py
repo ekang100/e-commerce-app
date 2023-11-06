@@ -159,18 +159,24 @@ def become_seller():
 def search_user():
     ##add nonetype error handling
     user_to_search = request.form['query']
-    user_to_search_arr = user_to_search.split()
-    if len(user_to_search_arr) == 1:
-        if User.search_user_firstname(user_to_search) is not None: 
-            users = User.search_user_firstname(user_to_search)
-            return render_template('search_user_results.html', users=users)
-        elif User.search_user_lastname(user_to_search) is not None:
-            users = User.search_user_lastname(user_to_search)
-            return render_template('search_user_results.html', users=users)
-    else:
-        try:
-            users = User.search_user(user_to_search_arr[0], user_to_search_arr[1])
-        except Exception:
-            return 'No names found'
-        return render_template('search_user_results.html', users=users)
-    return redirect(url_for('index.index'))
+    try:
+        # users = User.search_user(user_to_search_arr[0], user_to_search_arr[1])
+        users = User.search_user(user_to_search)
+        if len(users) == 0:
+            return render_template('search_user_results.html')
+    except Exception:
+        return 'No names found'
+    return render_template('search_user_results.html', users=users)
+
+# Route for displaying public profile
+# FIXXXXX
+@bp.route('/user_profile/<int:account_id>', methods=['GET', 'POST'])
+def public_profile(account_id):
+    if request.method == 'POST':
+    # try:
+        info = User.pubprofile_search(account_id)
+        print(info)
+        return render_template('user_profile.html', user=info)
+    # except:
+    #     print('ERORRRRRR')
+    return redirect(url_for('users.account'))

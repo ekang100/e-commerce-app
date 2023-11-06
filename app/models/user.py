@@ -136,40 +136,68 @@ WHERE id = :id
                               id=id)
         return User(*(rows[0])) if rows else None
     
-    @staticmethod
-    def search_user_firstname(user_to_search):
-        try:
-            results = app.db.execute("""
-                SELECT * FROM PubProfile
-                WHERE firstname LIKE :search_query
-            """, search_query='%' + user_to_search + '%').fetchall()
-            return results
-        except Exception as e:
-            print(str(e))
-            return None
+    # @staticmethod
+    # def search_user_firstname(user_to_search):
+    #     try:
+    #         results = app.db.execute("""
+    #             SELECT account_id 
+    #             FROM PubProfile
+    #             WHERE firstname LIKE :search_query
+    #         """, search_query='%' + user_to_search + '%').fetchall()
+    #         return results
+    #     except Exception as e:
+    #         print(str(e))
+    #         return None
         
-    @staticmethod
-    def search_user_lastname(user_to_search):
-        try:
-            results = app.db.execute("""
-                SELECT * FROM PubProfile
-                WHERE lastname LIKE :search_query
-            """, search_query='%' + user_to_search + '%').fetchall()
-            return results
-        except Exception as e:
-            print(str(e))
-            return None
+    # @staticmethod
+    # def search_user_lastname(user_to_search):
+    #     try:
+    #         results = app.db.execute("""
+    #             SELECT account_id 
+    #             FROM PubProfile
+    #             WHERE lastname LIKE :search_query
+    #         """, search_query='%' + user_to_search + '%').fetchall()
+    #         return results
+    #     except Exception as e:
+    #         print(str(e))
+    #         return None
         
+    # @staticmethod
+    # def search_user(firstname_enter, lastname_enter):
+    #     try:
+    #         results = app.db.execute("""
+    #             SELECT account_id
+    #             FROM PubProfile
+    #             WHERE firstname LIKE :firstname
+    #             AND lastname LIKE :lastname
+    #         """, firstname='%' + firstname_enter + '%', lastname='%' + lastname_enter + '%')
+    #         return results
+    #     except Exception as e:
+    #         print(str(e))
+    #         return None
+
     @staticmethod
-    def search_user(firstname_enter, lastname_enter):
+    def search_user(name):
         try:
             results = app.db.execute("""
-                SELECT * FROM PubProfile
-                WHERE firstname LIKE :firstname
-                AND lastname LIKE :lastname
-            """, firstname='%' + firstname_enter + '%', lastname='%' + lastname_enter + '%')
+                SELECT *
+                FROM PubProfile
+                WHERE name LIKE :name
+            """, name='%' + name + '%')
             return results
         except Exception as e:
             print(str(e))
             return None
 
+    @staticmethod
+    def pubprofile_search(account_id):
+        try:
+            results = app.db.execute("""
+                SELECT *
+                FROM PubProfile
+                WHERE account_id = :account_id
+            """, account_id=account_id)
+            return results
+        except Exception as e:
+            print(str(e))
+            return None
