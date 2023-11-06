@@ -21,13 +21,13 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT P.name, L.quantities, P.price, Pu.time_purchased, L.fulfilledStatus
-FROM Purchases Pu, Products P, LineItem L
-WHERE Pu.uid = :uid
-AND Pu.time_purchased >= :since
-AND Pu.lineid = L.lineid
+SELECT P.name, L.quantities, P.price, L.time_purchased, L.fulfilledStatus
+FROM Cart C, Products P, LineItem L
+WHERE C.buyerid = :uid
+AND L.time_purchased >= :since
+AND C.cartid = L.cartid
 AND L.productid = P.productid
-ORDER BY Pu.time_purchased DESC
+ORDER BY L.time_purchased DESC
 ''',
                               uid=uid,
                               since=since)

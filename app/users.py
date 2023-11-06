@@ -154,3 +154,23 @@ def become_seller():
         if User.become_seller(current_user.id):
             return redirect(url_for('users.account'))
     return render_template('account.html')
+
+@bp.route('/search_user_results', methods=['GET', 'POST'])
+def search_user():
+    ##add nonetype error handling
+    user_to_search = request.form['query']
+    user_to_search_arr = user_to_search.split()
+    if len(user_to_search_arr) == 1:
+        if User.search_user_firstname(user_to_search) is not None: 
+            users = User.search_user_firstname(user_to_search)
+            return render_template('search_user_results.html', users=users)
+        elif User.search_user_lastname(user_to_search) is not None:
+            users = User.search_user_lastname(user_to_search)
+            return render_template('search_user_results.html', users=users)
+    else:
+        try:
+            users = User.search_user(user_to_search_arr[0], user_to_search_arr[1])
+        except Exception:
+            return 'No names found'
+        return render_template('search_user_results.html', users=users)
+    return redirect(url_for('index.index'))

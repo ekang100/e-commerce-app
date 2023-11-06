@@ -22,7 +22,6 @@ def gen_users(num_users):
     with open(csv_path('Users.csv'), 'w') as f_users, open(csv_path('Password.csv'), 'w') as f_passwords:
         users_writer = get_csv_writer(f_users)
         passwords_writer = get_csv_writer(f_passwords)
-
         print('Users...', end=' ', flush=True)
         for uid in range(num_users):
             if uid % 10 == 0:
@@ -40,11 +39,10 @@ def gen_users(num_users):
             lastname = name_components[-1]
             balance = fake.pyint(0, 9999)
             isSeller = fake.pybool()
+
             users_writer.writerow([uid, address, email, password, firstname, lastname, balance, isSeller])
             passwords_writer.writerow([uid, plain_password])
-
         print(f'{num_users} generated')
-
     return
 
 

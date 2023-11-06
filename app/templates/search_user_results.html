@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results:</h1>
+    <ul>
+        {% for user in users %}
+        <li>{{user}}</li>
+            <!-- <li>{{ user['firstname'] + user['lastname'] }}</li> -->
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+{% endblock %}
+
+<!-- <li><a href="{{ url_for('user_profile', account_id=user['account_id']) }}">{{ user['firstname'] + user['lastname'] }}</a></li> -->
