@@ -8,6 +8,7 @@ from io import BytesIO
 
 num_users = 50
 num_products = 2000
+num_products_for_sale = 2500
 num_purchases = 2500
 
 Faker.seed(0)
@@ -85,7 +86,9 @@ def gen_product_image(image_path, productid, product_name):
         new_path = os.path.join(static_path, str(productid) + '.png')
         img.save(new_path)
         return new_path
+    
 
+# generate product data and sellers with products
 def gen_products(num_products):
     # columns = ['product_id', 'product_name', 'category', 'category_original', 'about_product', 'img_link', 'product_link']
     static_path = os.path.abspath('app/static/')
@@ -116,7 +119,7 @@ def gen_products(num_products):
             seller_id = fake.random_element(seller_list)
 
             if available == 'true':
-                product_list.append(productid)
+                product_list.append([productid, name])
 
             # Add to seller set if seller has products
             sellers_with_products.add(seller_id)
@@ -124,6 +127,22 @@ def gen_products(num_products):
             product_writer.writerow([productid, name, price, description, category, image_path, available, avg_rating, seller_id])
         print(f'{num_products} generated')
     return
+
+# generate inventory
+def gen_products_for_sale(seller_set, product_list):
+    with open(csv_path('ProductsForSale.csv'), 'w') as f:
+        for i in range(num_products_for_sale):
+            writer = get_csv_writer(f)
+            productid = fake.random_element(product_list)
+            uid = fake.random_element(seller_list)
+            quantity = fake.random_int(min=0, max=50)
+            writer.writerow([productid, uid, quantity])
+        print('inventory generated')
+
+    return
+
+
+        
 
 
 # def gen_purchases(num_purchases, available_pids):
@@ -143,5 +162,6 @@ def gen_products(num_products):
 
 gen_users(num_users)
 gen_products(num_products)
+gen_products_for_sale(num_products_for_sale, product_list)
 # available_pids = gen_products(num_products)
 # gen_purchases(num_purchases, available_pids)
