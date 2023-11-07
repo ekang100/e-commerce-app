@@ -169,14 +169,11 @@ def search_user():
     return render_template('search_user_results.html', users=users)
 
 # Route for displaying public profile
-# FIXXXXX
 @bp.route('/user_profile/<int:account_id>', methods=['GET', 'POST'])
 def public_profile(account_id):
     if request.method == 'POST':
     # try:
         info = User.pubprofile_search(account_id)
-        print(info)
-        return render_template('user_profile.html', user=info)
-    # except:
-    #     print('ERORRRRRR')
+        sell_stat = info[0][-1]
+        return render_template('user_profile.html', user=info, sell_stat=sell_stat)
     return redirect(url_for('users.account'))
