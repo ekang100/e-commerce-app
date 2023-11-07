@@ -80,6 +80,28 @@
 {% if current_user.isSeller %}
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
 <h1><span style="color: #00aaff;">{{current_user.firstname}}'s Seller Profile</span></h1>
+
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Description</th>
+      <!-- Add more columns as needed -->
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in inventory %}
+      <tr>
+        <th scope="row">{{ product.name }}</th>
+        <td>${{ product.price }}</td>
+        <td>{{ product.description }}</td>
+        <!-- Add more cells for other product details -->
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% endif %}
 {% endblock %}
 {% endif %}
