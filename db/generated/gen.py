@@ -9,14 +9,10 @@ from io import BytesIO
 num_users = 50
 num_products = 2000
 num_products_for_sale = 2500
-<<<<<<< HEAD
-num_purchases = 2500
-=======
 # num_purchases = 2500
 
 num_lineitems = 500
 num_orders = 100
->>>>>>> 918f954 (fix to tony????)
 
 Faker.seed(0)
 fake = Faker()
@@ -26,11 +22,8 @@ generated_path = os.path.join(os.getcwd(), 'db/generated')
 seller_list = []
 product_list = []
 sellers_with_products = set()
-<<<<<<< HEAD
-=======
 productid_to_price = {}
 productid_to_sellerid = {}
->>>>>>> 918f954 (fix to tony????)
 
 def csv_path(csv_name):
     return os.path.join(generated_path, csv_name)
@@ -121,12 +114,9 @@ def gen_products(num_products):
             productid = pid
             name = row['product_name']
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
-<<<<<<< HEAD
-=======
 
             productid_to_price[pid] = price
 
->>>>>>> 918f954 (fix to tony????)
             description = row['about_product']
             category = row['category']
             image_path = os.path.join(static_path, str(productid) + '.png')
