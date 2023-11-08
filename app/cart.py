@@ -7,7 +7,6 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
 from .models.lineitem import LineItem
-from .models.orders import Orders
 
 from flask import Blueprint, request
 bp = Blueprint('cart', __name__)
@@ -60,17 +59,8 @@ def cart():
 def buyerOrder():
     if current_user.is_authenticated:
         allItemsBought = LineItem.get_all_by_cartid_bought(Cart.get_cartID_from_buyerid(current_user.id),True)
-        # allOrderIDs = Orders.get_all_orderIDs_by_buyerid(current_user.id)
-        #this will be correct later
 
-        # for order in allOrderIDs:
-        #     LineItem.get_all_lineitems_by_orderid(order)
-
-
-
-
-
-        return render_template('buyer-order.html', allItemsBought = allItemsBought)
+        return render_template('buyer-order.html')
     else:
         return jsonify({}), 404
 
