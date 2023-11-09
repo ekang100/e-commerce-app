@@ -14,6 +14,11 @@ SELECT pg_catalog.setval('public.products_productid_seq',
                          (SELECT MAX(productid)+1 FROM Products),
                          false);
 
+\COPY ProductsForSale FROM 'ProductsForSale.csv' WITH DELIMITER ',' NULL '' CSV
+SELECT pg_catalog.setval('public.productsforsale_productid_seq',
+                         (SELECT MAX(productid)+1 FROM ProductsForSale),
+                         false);
+
 
 \COPY Cart FROM 'Cart.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.cart_cartid_seq',

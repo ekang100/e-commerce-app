@@ -146,6 +146,7 @@ def gen_products_for_sale(seller_set, product_list):
     with open(csv_path('ProductsForSale.csv'), 'w') as f:
         for i in range(num_products_for_sale):
             writer = get_csv_writer(f)
+            print(product_list)
             productid = fake.random_element(product_list)
             uid = fake.random_element(seller_list)
             quantity = fake.random_int(min=0, max=50)

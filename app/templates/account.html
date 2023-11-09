@@ -77,31 +77,43 @@
   </tbody>
 </table>
 
-{% if current_user.isSeller %}
-<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
-<h1><span style="color: #00aaff;">{{current_user.firstname}}'s Seller Profile</span></h1>
+  <!-- Check if the current user is a seller -->
+  {% if current_user.isSeller %}
+    <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
+    <h1><span style="color: #00aaff;">{{current_user.firstname}}'s Seller Profile</span></h1>
 
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
-      <th scope="col">Description</th>
-      <!-- Add more columns as needed -->
-    </tr>
-  </thead>
-  <tbody>
-    {% for product in inventory %}
-      <tr>
-        <th scope="row">{{ product.name }}</th>
-        <td>${{ product.price }}</td>
-        <td>{{ product.description }}</td>
-        <!-- Add more cells for other product details -->
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    <!-- Button to add a new product -->
+    <a href="{{ url_for('add_product') }}" class="btn btn-primary mb-2">Add Product</a>
 
-{% endif %}
+    <!-- Table to display the inventory -->
+    <table class='table table-hover table-bordered container'>
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Product Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Price</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in current_user.get_products_for_sale() %}
+          <tr>
+            <th scope="row">{{ product.name }}</th>
+            <td>{{ product.description }}</td>
+            <td>${{ product.price }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>
+              <!-- Button to modify the quantity -->
+              <a href="{{ url_for('modify_quantity', product_id=product.id) }}" class="btn btn-info btn-sm">Modify</a>
+              
+              <!-- Button to remove the product -->
+              <a href="{{ url_for('remove_product', product_id=product.id) }}" class="btn btn-danger btn-sm">Remove</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
 {% endblock %}
 {% endif %}
