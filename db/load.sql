@@ -33,4 +33,5 @@ SELECT pg_catalog.setval('public.lineitem_lineid_seq',
 
 \COPY ProductsForSale FROM 'ProductsForSale.csv' WITH DELIMITER ',' NULL '' CSV
 
+
 \COPY Reviews FROM 'Review.csv' WITH DELIMITER ',' NULL '' CSV
