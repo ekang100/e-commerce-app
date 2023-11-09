@@ -2,9 +2,10 @@ from flask import current_app as app
 
 
 class Orders:
-    def __init__(self, orderid, buyerid):
+    def __init__(self, orderid, buyerid, entireOrderFulfillmentStatus):
         self.orderid = orderid
         self.buyerid = buyerid
+        self.entireOrderFulfillmentStatus = entireOrderFulfillmentStatus
 
 
     @staticmethod
