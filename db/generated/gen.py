@@ -67,12 +67,13 @@ def gen_users(num_users):
 def gen_product_image(image_path, productid, product_name):
     # Download the image from the URL
     response = requests.get(image_path)
-    static_path = os.path.abspath('app/static/')
+    static_path = 'app/static/'
 
     if response.status_code == 200:
         image_data = response.content
         image = Image.open(BytesIO(image_data))
         new_path = os.path.join(static_path, str(productid) + '.png')
+        #os.mkdir(new_path)
         image.save(new_path)
         return new_path
 
@@ -89,6 +90,7 @@ def gen_product_image(image_path, productid, product_name):
         draw.text((x, y), product_name, fill='black', font=font)
         # Save the image
         new_path = os.path.join(static_path, str(productid) + '.png')
+        #os.mkdir(new_path)
         img.save(new_path)
         return new_path
     
@@ -96,7 +98,8 @@ def gen_product_image(image_path, productid, product_name):
 # generate product data and sellers with products
 def gen_products(num_products):
     # columns = ['product_id', 'product_name', 'category', 'category_original', 'about_product', 'img_link', 'product_link']
-    static_path = os.path.abspath('app/static/')
+    static_path = 'app/static/'
+    #os.mkdir(static_path)
     # Open the source file and the output file
     with open(csv_path('ProductSource.csv'), 'r') as source_path, open(csv_path('Products.csv'), 'w') as product_path:
         reader = csv.DictReader(source_path)
@@ -119,7 +122,7 @@ def gen_products(num_products):
 
             description = row['about_product']
             category = row['category']
-            image_path = os.path.join(static_path, str(productid) + '.png')
+            image_path = os.path.join(static_path, str(pid) + '.png')
             if not os.path.isfile(image_path):
                 image_path = gen_product_image(row['img_link'], productid, name)
             available = available = fake.random_element(elements=('true', 'false'))
