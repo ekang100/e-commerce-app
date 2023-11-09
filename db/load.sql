@@ -31,4 +31,6 @@ SELECT pg_catalog.setval('public.lineitem_lineid_seq',
                          (SELECT MAX(lineid)+1 FROM LineItem),
                          false);
 
+\COPY ProductsForSale FROM 'ProductsForSale.csv' WITH DELIMITER ',' NULL '' CSV
+
 \COPY Reviews FROM 'Review.csv' WITH DELIMITER ',' NULL '' CSV

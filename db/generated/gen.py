@@ -21,7 +21,9 @@ generated_path = os.path.join(os.getcwd(), 'db/generated')
 
 seller_list = []
 product_list = []
+product_id_list = []
 sellers_with_products = set()
+test = list(sellers_with_products)
 productid_to_price = {}
 productid_to_sellerid = {}
 
@@ -127,12 +129,13 @@ def gen_products(num_products):
                 image_path = gen_product_image(row['img_link'], productid, name)
             available = available = fake.random_element(elements=('true', 'false'))
             avg_rating = fake.random_int(min=0, max=500) / 100
-            seller_id = fake.random_element(seller_list)
+            # seller_id = fake.random_element(seller_list)
 
             productid_to_sellerid[productid] = seller_id
 
             if available == 'true':
                 product_list.append([productid, name])
+                product_id_list.append(productid)
 
             # Add to seller set if seller has products
             sellers_with_products.add(seller_id)
@@ -142,14 +145,16 @@ def gen_products(num_products):
     return
 
 # generate inventory
-def gen_products_for_sale(seller_set, product_list):
+def gen_products_for_sale(num_products_for_sale, product_id_list, sellers):
     with open(csv_path('ProductsForSale.csv'), 'w') as f:
+        writer = get_csv_writer(f)
+        check = set()
         for i in range(num_products_for_sale):
-            writer = get_csv_writer(f)
-            productid = fake.random_element(product_list)
-            uid = fake.random_element(seller_list)
+            productid = fake.random_element(product_id_list)
+            uid = fake.random_element(sellers)
             quantity = fake.random_int(min=0, max=50)
-            writer.writerow([productid, uid, quantity])
+            if check.add((productid, uid)):
+                writer.writerow([productid, uid, quantity])
         print('inventory generated')
 
     return
@@ -298,7 +303,7 @@ def gen_orders_in_progress(num_orders):
 
 gen_users(num_users)
 gen_products(num_products)
-gen_products_for_sale(num_products_for_sale, product_list)
+gen_products_for_sale(num_products_for_sale, product_id_list, sellers_with_products)
 gen_carts(num_users)
 gen_lineitems(num_lineitems)
 removeQuotationsFromLineItem()
