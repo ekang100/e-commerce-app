@@ -26,6 +26,7 @@ productid_to_price = {}
 productid_to_sellerid = {}
 orderid_cartid_map = {}  # dictionary to track the mapping from orderid to cartid
 orderid_fulfillmentStatus = {}
+product_id_list = []
 
 
 def csv_path(csv_name):
@@ -136,6 +137,7 @@ def gen_products(num_products):
 
             if available == 'true':
                 product_list.append([productid, name])
+                product_id_list.append(productid)
 
             # Add to seller set if seller has products
             sellers_with_products.add(seller_id)
@@ -145,14 +147,16 @@ def gen_products(num_products):
     return
 
 # generate inventory
-def gen_products_for_sale(seller_set, product_list):
+def gen_products_for_sale(num_products_for_sale, product_id_list, sellers):
     with open(csv_path('ProductsForSale.csv'), 'w') as f:
+        writer = get_csv_writer(f)
+        check = set()
         for i in range(num_products_for_sale):
-            writer = get_csv_writer(f)
-            productid = fake.random_element(product_list)
-            uid = fake.random_element(seller_list)
-            quantity = fake.random_int(min=0, max=50)
-            writer.writerow([productid, uid, quantity])
+            productid = fake.random_element(product_id_list)
+            uid = fake.random_element(sellers)
+            quantity = fake.random_int(min=1, max=50)
+            if check.add((productid, uid)):
+                writer.writerow([productid, uid, quantity])
         print('inventory generated')
 
     return
@@ -322,7 +326,7 @@ def gen_orders_in_progress(num_orders):
 
 gen_users(num_users)
 gen_products(num_products)
-gen_products_for_sale(num_products_for_sale, product_list)
+gen_products_for_sale(num_products_for_sale, product_id_list, sellers_with_products)
 gen_carts(num_users)
 gen_lineitems(num_lineitems)
 removeQuotations('db/generated/LineItem-PreProcess.csv', 'db/generated/LineItem.csv')
