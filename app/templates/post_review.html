@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <h2>Post a Review</h2>
+    <form action="/post_review" method="post">
+        <div>
+            <label for="type">Review Type:</label>
+            <select name="type" required>
+                <option value="product">Product</option>
+                <option value="seller">Seller</option>
+            </select>
+        </div>
+        <div>
+            {% if product_id %}
+                <input type="hidden" name="entity_id" value="{{ product_id }}">
+            {% else %}
+                <label for="entity_id">Entity ID:</label>
+                <input type="text" name="entity_id" required>
+            {% endif %}
+        </div>
+        <div>
+            <label for="uid">User ID:</label>
+            <input type="text" name="uid" required>
+        </div>
+        <div>
+            <label for="rating">Rating:</label>
+            <select name="rating" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <div>
+            <label for="comments">Comments:</label>
+            <textarea name="comments"></textarea>
+        </div>
+        <input type="submit" value="Post Review">
+    </form>
+    
+</body>
+</html>
+
+{% endblock %}
