@@ -24,6 +24,10 @@ product_list = []
 sellers_with_products = set()
 productid_to_price = {}
 productid_to_sellerid = {}
+orderid_cartid_map = {}  # dictionary to track the mapping from orderid to cartid
+orderid_fulfillmentStatus = {}
+product_id_list = []
+
 
 def csv_path(csv_name):
     return os.path.join(generated_path, csv_name)
@@ -133,6 +137,7 @@ def gen_products(num_products):
 
             if available == 'true':
                 product_list.append([productid, name])
+                product_id_list.append(productid)
 
             # Add to seller set if seller has products
             sellers_with_products.add(seller_id)
@@ -142,14 +147,16 @@ def gen_products(num_products):
     return
 
 # generate inventory
-def gen_products_for_sale(seller_set, product_list):
+def gen_products_for_sale(num_products_for_sale, product_id_list, sellers):
     with open(csv_path('ProductsForSale.csv'), 'w') as f:
+        writer = get_csv_writer(f)
+        check = set()
         for i in range(num_products_for_sale):
-            writer = get_csv_writer(f)
-            productid = fake.random_element(product_list)
-            uid = fake.random_element(seller_list)
-            quantity = fake.random_int(min=0, max=50)
-            writer.writerow([productid, uid, quantity])
+            productid = fake.random_element(product_id_list)
+            uid = fake.random_element(sellers)
+            quantity = fake.random_int(min=1, max=50)
+            if check.add((productid, uid)):
+                writer.writerow([productid, uid, quantity])
         print('inventory generated')
 
     return
@@ -184,10 +191,11 @@ def gen_lineitems(num_lineitems):
 
     #productID to sellersID
     #lineitemID to orderID
-    #orderID to sellersID
+    # #orderID to sellersID
 
-    orderid_cartid_map = {}  # dictionary to track the mapping from orderid to cartid
+    # orderid_cartid_map = {}  # dictionary to track the mapping from orderid to cartid
     orderid_time_purchased_map = {}  # dictionary to track the mapping from orderid to time_purchased
+    orderid_productid_map = {} 
 
     with open(csv_path('LineItem-PreProcess.csv'), 'w') as f:
         writer = get_csv_writer(f)
@@ -215,12 +223,23 @@ def gen_lineitems(num_lineitems):
                 else:
                     time_purchased = fake.date_time_this_decade()
                     orderid_time_purchased_map[orderid] = time_purchased
+                
+                if orderid in orderid_productid_map:
+                    productid = fake.random_int(min=0, max=len(product_list)-1)
+                    while productid in orderid_productid_map[orderid]:  # Ensure unique productid for the orderid
+                        productid = fake.random_int(min=0, max=len(product_list)-1)
+                    orderid_productid_map[orderid].append(productid)
+                else:
+                    productid = fake.random_int(min=0, max=len(product_list)-1)
+                    orderid_productid_map[orderid] = [productid]
             else:
                 orderid = None
                 cartid = fake.random_int(min=0, max=num_users-1)  # Generate a cartid for cases where buyStatus is False
                 time_purchased = fake.date_time_this_decade()
+                productid = fake.random_int(min=0, max=len(product_list)-1)  # Assume productid exists in Products table
 
-            productid = fake.random_int(min=0, max=len(product_list)-1)  # Assume productid exists in Products table
+
+            # productid = fake.random_int(min=0, max=len(product_list)-1)  # Assume productid exists in Products table
             quantities = fake.random_int(min=1, max=20)
             unitPrice = productid_to_price.get(productid)
             # round(fake.random_int(min=1, max=1000) + fake.random.random(), 2) #doesn't this have to get from products ????
@@ -228,6 +247,12 @@ def gen_lineitems(num_lineitems):
             # gen fulfilledStatus only if buyStatus is True
             if buyStatus:
                 fulfilledStatus = fake.pybool()
+                if orderid in orderid_fulfillmentStatus:
+                    if orderid_fulfillmentStatus.get(orderid) and fulfilledStatus==False: #if order is true but false dont change 
+                        orderid_fulfillmentStatus[orderid] = False
+                else:
+                    orderid_fulfillmentStatus[orderid] = fulfilledStatus
+
             else:
                 fulfilledStatus = False
 
@@ -244,10 +269,10 @@ def gen_lineitems(num_lineitems):
         print(f'{num_lineitems} generated')
 
 
-def removeQuotationsFromLineItem():
+def removeQuotations(input_csv_path, output_csv_path):
             # Open the input and output CSV files
-        input_csv_path = 'db/generated/LineItem-PreProcess.csv'  # Update with the correct file path
-        output_csv_path = 'db/generated/LineItem.csv'  # Update with the desired output file path
+        # input_csv_path = 'db/generated/LineItem-PreProcess.csv'  # Update with the correct file path
+        # output_csv_path = 'db/generated/LineItem.csv'  # Update with the desired output file path
         with open(input_csv_path, 'r', newline='') as input_file, open(output_csv_path, 'w', newline='') as output_file:
             csv_reader = csv.reader(input_file)
             csv_writer = csv.writer(output_file)
@@ -260,8 +285,9 @@ def removeQuotationsFromLineItem():
         print(f'Delete all quotation marks in {output_csv_path}')
 
 
+
 def gen_orders_in_progress(num_orders):
-    with open(csv_path('OrdersInProgress.csv'), 'w') as f:
+    with open(csv_path('OrdersInProgress-PreProcess.csv'), 'w') as f:
         writer = get_csv_writer(f)
 
         print('Generating OrdersInProgress...', end=' ', flush=True)
@@ -272,9 +298,11 @@ def gen_orders_in_progress(num_orders):
             # Randomly select a sellerid from the list of possible seller IDs
             # sellerid = fake.random_element(elements=list(sellers_with_products)) #have to change this, seller_ids should be an array with all seller_ids
             
-            buyerid = fake.random_int(min=0, max=num_users-1)  # Assume num_users is defined
+            buyerid = orderid_cartid_map.get(orderid)  # Assume num_users is defined
+            entireOrderFulfillmentStatus = orderid_fulfillmentStatus.get(orderid)
 
-            writer.writerow([orderid, buyerid])
+
+            writer.writerow([orderid, buyerid, entireOrderFulfillmentStatus])
 
         print(f'{num_orders} generated')
 
@@ -298,11 +326,12 @@ def gen_orders_in_progress(num_orders):
 
 gen_users(num_users)
 gen_products(num_products)
-gen_products_for_sale(num_products_for_sale, product_list)
+gen_products_for_sale(num_products_for_sale, product_id_list, sellers_with_products)
 gen_carts(num_users)
 gen_lineitems(num_lineitems)
-removeQuotationsFromLineItem()
+removeQuotations('db/generated/LineItem-PreProcess.csv', 'db/generated/LineItem.csv')
 gen_orders_in_progress(num_orders)
+removeQuotations('db/generated/OrdersInProgress-PreProcess.csv','db/generated/OrdersInProgress.csv')
 
 # gen_users(num_users)
 # gen_products(num_products)
