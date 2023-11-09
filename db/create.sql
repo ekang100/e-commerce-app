@@ -80,20 +80,72 @@ CREATE TABLE LineItem (
     -- PRIMARY KEY (lineid) -- updated
 );
 
+
+-- Not having sellers table has thrown a wrench into things
 CREATE TABLE Reviews (
-    entity_id INT NOT NULL, -- product ID or seller ID, based on the type.
-    uid INT NOT NULL REFERENCES Users(id),
-    type VARCHAR(10) CHECK (type IN ('product', 'seller')), --'product' or 'seller'.
+    entity_id SERIAL PRIMARY KEY,       
+    product_id INT REFERENCES Products(productid),
+    uid INT NOT NULL REFERENCES Users(id),  
+    seller_id INT REFERENCES Users(id),      
+    type VARCHAR(10) CHECK (type IN ('product', 'seller')) NOT NULL,
     rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
-    comments VARCHAR(255),
+    comments TEXT,
     date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
-    PRIMARY KEY (entity_id, uid, type)
+    CHECK (
+        (type = 'product' AND product_id IS NOT NULL AND seller_id IS NULL) OR
+        (type = 'seller' AND product_id IS NULL AND seller_id IS NOT NULL)
+    ),
+    UNIQUE(uid, product_id, type),
+    UNIQUE(uid, seller_id, type)  
 );
 
 
+
+
 ---------------------Triggers---------------------------
+-- CREATE OR REPLACE FUNCTION ensure_one_review_per_seller()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--   IF EXISTS (
+--     SELECT 1 FROM Reviews
+--     WHERE uid = NEW.uid
+--       AND seller_id = NEW.seller_id
+--       AND type = 'seller'
+--   ) THEN
+--     RAISE EXCEPTION 'This user has already reviewed this seller.';
+--   END IF;
+--   RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE TRIGGER trg_ensure_one_review_per_seller
+-- BEFORE INSERT OR UPDATE ON Reviews
+-- FOR EACH ROW
+-- WHEN (NEW.type = 'seller')
+-- EXECUTE FUNCTION ensure_one_review_per_seller();
+
+
+CREATE OR REPLACE FUNCTION check_reviewee_is_seller()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.type = 'seller' THEN
+    IF (SELECT isSeller FROM Users WHERE id = NEW.seller_id) = FALSE THEN
+      RAISE EXCEPTION 'Cannot add a seller review for a user who is not a seller.';
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_check_reviewee_is_seller
+BEFORE INSERT OR UPDATE ON Reviews
+FOR EACH ROW
+EXECUTE FUNCTION check_reviewee_is_seller();
+
 
 ---------------------Views------------------------------
 CREATE VIEW PubProfile AS
 SELECT id AS account_id, firstname || ' ' || lastname AS name, email, address, isSeller
 FROM Users;
+
+
