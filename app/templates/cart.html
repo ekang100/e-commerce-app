@@ -22,12 +22,13 @@
               <form method="post" action="{{ url_for('cart.cart')}}">
               <input type = 'number' name = newQuantity>
               <input type = 'hidden' name = lineitem_id value = {{lineitem.lineid}}>
-              <input type = 'hidden' name = action value = "updateQuantity">
+              <input type = 'hidden' name = action value = "update">
               <input type="submit" value="Modify Quantity">
+              </form>
         </td>
         <td>{{lineitem.price}}</td>
         <!-- <td ><button type="button"> Remove lineitem.</button> </td> -->
-            <td>
+        <td>
             <form method="post" action="{{ url_for('cart.cart')}}">
               <input type = 'hidden' name = lineitem_id value = {{lineitem.lineid}}>
               <input type = 'hidden' name = action value = "delete">
@@ -48,9 +49,16 @@
     Total Cart Price: ${{singleCart.totalCartPrice}}
 </h3>
 
+<form method = "post" action = "{{url_for('cart.buyerOrder')}}">
+<input type = 'hidden' name = action value = "order_all">
+<input type = "submit" value = "Order Entire Cart">
+</form>
+
+
 {% else %}
 <h3 style = "color:blue"> Cart is empty! Go Shop! </h3>
 
 {% endif %}
 
 {% endblock %}
+

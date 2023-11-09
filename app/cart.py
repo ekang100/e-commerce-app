@@ -7,6 +7,7 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
 from .models.lineitem import LineItem
+from .models.orders import Orders
 
 from flask import Blueprint, request
 bp = Blueprint('cart', __name__)
@@ -14,61 +15,66 @@ bp = Blueprint('cart', __name__)
 
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart():
-    #currentUID = current_user.id
 
     if request.method == 'POST': 
         action_type = request.form.get('action')
-        print(action_type)
-        if action_type == "delete": #this is not working right now for some reason
-            try:
-                lineitem_id = request.form.get('lineitem_id')
-                LineItem.remove_lineitem(lineitem_id)
-            except ValueError: #might have to modify this
-                return "Failed"
-            
-        elif action_type == "updateQuantity": 
+        print(action_type) #this is implemented for testing
+
+        if action_type == "update": 
             try:
                 newQuantity = request.form.get('newQuantity')
                 lineitem_id = request.form.get('lineitem_id')
                 LineItem.change_quantity(lineitem_id,newQuantity)
             except ValueError: #might have to modify this
                 return "Failed"
-
-    # if request.method == 'POST' and request.form.get('action') == "delete":
-    #     try:
-    #         lineitem_id = request.form.get('lineitem_id')
-    #         LineItem.remove_lineitem(lineitem_id)
-
-    #     except ValueError: #might have to modify this
-    #         return "Failed"
-
-    # elif request.method == 'POST':
-    #     try:
-    #         newQuantity = request.form.get('newQuantity')
-    #         lineitem_id = request.form.get('lineitem_id')
-    #         LineItem.change_quantity(lineitem_id,newQuantity)
-    #     except ValueError: #might have to modify this
-    #         return "Failed"
-    
+        
+        elif action_type == "delete": 
+            try:
+                lineitem_id = request.form.get('lineitem_id')
+                LineItem.remove_lineitem(lineitem_id)
+            except ValueError: #might have to modify this
+                return "Failed"
+        
+        elif action_type == "order_all":
+            #do all checking code here
+            # check available balances and inventories
+            # update inventories and balances at time of submission
+            # The buyer’s balance will be decremented, and the sellers’ balances will be incremented and inventories decremented.
+            # cart becomes empty
+            print('haha')
+            
+            
         
     if current_user.is_authenticated:
-        #totalItemCount = Cart.get_unique_item_count(current_user.id)  #this will have to use cart and lineitem
-        # return render_template('wishlist.html',
-        #                        wishlist=wishlist)
-        allItemsInCart = LineItem.get_all_by_cartid(Cart.get_cartID_from_buyerid(current_user.id),False)
-        # allNamesOfProducts = []
-        # for lineitem in LineItem:
-        #     allNamesOfProducts.append(LineItem.get_productName(lineitem.productid))
+
+        allItemsInCart = LineItem.get_all_by_cartid_not_bought(Cart.get_cartID_from_buyerid(current_user.id),False)
         updateCartFirst = Cart.update_total_cart_price(Cart.get_cartID_from_buyerid(current_user.id)) #replace 0's with current_user.id
         updateCartQuantity = Cart.update_number_unique_items(Cart.get_cartID_from_buyerid(current_user.id))
         singleCart = Cart.get_cart_from_buyerid(current_user.id)
         return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart)
-        #return redirect(url_for('cart.cart')) 
-
     else:
          return jsonify({}), 404
+    
 
-# @bp.route('/buyer-order',methods = ['GET', 'POST'])
+@bp.route('/buyer-order',methods = ['GET', 'POST'])
+def buyerOrder():
+    if current_user.is_authenticated:
+        allItemsBought = LineItem.get_all_by_cartid_bought(Cart.get_cartID_from_buyerid(current_user.id),True)
+        # allOrderIDs = Orders.get_all_orderIDs_by_buyerid(current_user.id)
+        #this will be correct later
+
+        # for order in allOrderIDs:
+        #     LineItem.get_all_lineitems_by_orderid(order)
+
+
+
+
+
+        return render_template('buyer-order.html', allItemsBought = allItemsBought)
+    else:
+        return jsonify({}), 404
+
+        
     
 # @bp.route('/cart/remove/<int:lineid>', methods = ['POST'])
 # def cart_remove(lineid):
@@ -80,4 +86,3 @@ def cart():
 
 #     return render_template('cart.html')
 #     #return jsonify([item.__dict__ for item in wishlist])
-

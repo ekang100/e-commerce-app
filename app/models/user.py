@@ -59,12 +59,77 @@ RETURNING id
             # the following simply prints the error to the console:
             print(str(e))
             return None
-
+        
+    @staticmethod
+    def update_name_address(user_id, address, firstname, lastname):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET address = :address, firstname = :firstname, lastname = :lastname
+                WHERE id = :user_id
+            """, address=address, firstname=firstname, lastname=lastname, user_id=user_id)
+            return User.get(user_id)
+        except Exception as e:
+            print(str(e))
+            return None
+        
+    @staticmethod
+    def change_email(user_id, email):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET email = :email
+                WHERE id = :user_id
+            """, user_id=user_id, email=email)
+            return User.get(user_id)
+        except Exception as e:
+            print(str(e))
+            return None
+        
+    @staticmethod
+    def change_password(user_id, password):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET password = :password
+                WHERE id = :user_id
+            """, user_id=user_id, password=generate_password_hash(password))
+            return User.get(user_id)
+        except Exception as e:
+            print(str(e))
+            return None
+    
+    @staticmethod
+    def add_balance(user_id, balance):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET balance = :balance
+                WHERE id = :user_id
+            """, user_id=user_id, balance=balance)
+            return User.get(user_id)
+        except Exception as e:
+            print(str(e))
+            return None
+    
+    @staticmethod
+    def become_seller(user_id):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET isSeller = TRUE
+                WHERE id = :user_id
+            """, user_id=user_id)
+            return User.get(user_id)
+        except Exception as e:
+            print(str(e))
+            return None
+        
     @staticmethod
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname, address, balance, isSeller
+SELECT id, address, email, firstname, lastname, balance, isSeller
 FROM Users
 WHERE id = :id
 """,

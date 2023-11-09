@@ -43,9 +43,9 @@ WHERE cartid = :cartid
     def update_total_cart_price(cartid): #going to need to add a constraint here
         rows = app.db.execute('''
 UPDATE Cart
-SET totalCartPrice = (SELECT SUM(quantities * unitPrice)
+SET totalCartPrice = (SELECT COALESCE(SUM(quantities * unitPrice),0)
                             FROM LineItem
-                            WHERE cartid = :cartid AND status = FALSE)
+                            WHERE cartid = :cartid AND buyStatus = FALSE)
 WHERE cartid = :cartid
 ''', 
                               cartid = cartid)
@@ -58,7 +58,7 @@ WHERE cartid = :cartid
 UPDATE Cart
 SET uniqueItemCount = (SELECT Count(LineItem.cartid)
                             FROM LineItem
-                            WHERE LineItem.cartid = :cartid AND LineItem.status = FALSE)
+                            WHERE LineItem.cartid = :cartid AND LineItem.buyStatus = FALSE)
 WHERE cartid = :cartid
 ''', 
                               cartid = cartid)

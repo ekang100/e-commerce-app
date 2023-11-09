@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if allItemsBought %}
+<h1></h1>
+
+<table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+        <tr>
+          <th scope="col">Product Name</th>
+          <th scope="col">Quantities</th>
+          <th scope="col">Unit Price</th>
+          <th scope = "col"> OrderID </th>
+          <th scope = "col">Lineitem Fulfilled</th>
+        </tr>
+      </thead>
+<tbody>
+    {% for lineitem in allItemsBought%}
+      <tr>
+        <th scope="row">{{lineitem.name}}</th>
+        <td>{{lineitem.quantities}}</td>
+        <td>{{lineitem.price}}</td>
+        <td> {{lineitem.orderid}}</td>
+        <td> {{lineitem.fulfilledStatus}}</td>
+        <!-- <td ><button type="button"> Remove lineitem.</button> </td> -->
+
+      </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+
+
+{% else %}
+<h3 style = "color:blue"> Imagine being so broke you bought nothing.</h3>
+
+{% endif %}
+
+
+{% endblock %}

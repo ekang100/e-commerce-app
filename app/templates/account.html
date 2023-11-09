@@ -1,0 +1,107 @@
+{% if current_user.is_authenticated %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1> <span style = "color:#00aaff"> {{current_user.firstname}}'s Account</span></h1>
+
+<table class='table table-bordered container'>
+  <thead class="thead-dark">
+      <tr style="background-color: black; color: white;">
+          <th scope="col">My Info</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr style="background-color: white; color: black;">
+        <td>Account ID: {{current_user.id}}
+        </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
+          <td>Balance: {{current_user.balance}}
+              <a href="{{ url_for('users.add_balance') }}" class="btn btn-primary" style="float: right; background-color: #00aaff;" role="'button">Add Balance</a>
+          </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
+          <td>Email: {{current_user.email}}
+              <!-- <button href='\'class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
+          </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
+          <td>Name: {{current_user.firstname}} {{current_user.lastname}}
+              <!-- <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
+          </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
+          <td>Address: {{current_user.address}}
+              <!-- <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
+          </td>
+      </tr>
+      <tr style="background-color: white; color: black;">
+        <td>Seller Status: {{current_user.isSeller}}
+            {% if not current_user.isSeller %}
+            <form method="POST" action="{{ url_for('users.become_seller') }}">
+                <button type="submit" class="btn btn-primary" style="float: right; background-color: #00aaff;" role="button">Become a Seller</button>
+            </form>            
+            {% endif %}       
+        </td>
+      </tr>
+  </tbody>
+</table>
+<a href="{{ url_for('users.update_name_address') }}" class="btn btn-primary" style="float: left; margin-right: 10px; background-color: #00aaff;" role="'button">Update Name/Address</a>
+<a href="{{ url_for('users.change_email') }}" class="btn btn-primary" style="float: left; margin-right: 10px; background-color: #00aaff;" role="'button">Change Email</a>
+<a href="{{ url_for('users.change_password') }}" class="btn btn-primary" href="cart" style="float: left; background-color: #00aaff;" role="button">Change Password</a>
+
+<br><br>
+<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
+<h1 style = "color: #00aaff;">{{current_user.firstname}}'s Recent Purchases:</h1>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product Name</th>
+      <th scope="col">Number of Items</th>
+      <th scope="col">Total Price</th>
+      <th scope="col">Date Purchased</th>
+      <th scope="col">Order Fullfilled</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for purchase in purchase_history%}
+      <tr>
+        <th scope="row">{{purchase.name}}</th>
+        <td>{{purchase.quantities}}</td>
+        <td>{{ purchase.quantities * purchase.price }}</td>
+        <td>{{purchase.time_purchased}}</td>
+        <td>{{purchase.fulfilledStatus}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if current_user.isSeller %}
+<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
+<h1><span style="color: #00aaff;">{{current_user.firstname}}'s Seller Profile</span></h1>
+
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Description</th>
+      <!-- Add more columns as needed -->
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in inventory %}
+      <tr>
+        <th scope="row">{{ product.name }}</th>
+        <td>${{ product.price }}</td>
+        <td>{{ product.description }}</td>
+        <!-- Add more cells for other product details -->
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endif %}
+{% endblock %}
+{% endif %}

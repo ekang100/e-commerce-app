@@ -9,8 +9,11 @@ def top_products():
         try:
             k = int(request.form['k'])
             products = Product.get_all(True)
-            sorted_products = sorted(products, key=lambda x: x.price, reverse=True)[:k]
-            return render_template('search.html', top_k_products=sorted_products)
+            if k >= 0 and k <= len(products):
+                sorted_products = sorted(products, key=lambda x: x.price, reverse=True)[:k]
+                return render_template('search.html', top_k_products=sorted_products)
+            else:
+                return "Invalid input. Please enter a valid number for K."
         except ValueError:
             return "Invalid input. Please enter a valid number for K."
     return render_template('index.html')
