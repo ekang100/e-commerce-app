@@ -51,6 +51,16 @@ WHERE cartid = :cartid
                               cartid = cartid)
         return None
     
+    @staticmethod
+    def get_total_cartprice(cartid): #going to need to add a constraint here
+            rows = app.db.execute('''
+    SELECT totalCartPrice
+    FROM Cart
+    WHERE cartid = :cartid
+    ''', 
+                              cartid = cartid)
+            return ((rows[0])[0]) if rows else None
+
 
     @staticmethod
     def update_number_unique_items(cartid): #going to need to add a constraint here

@@ -11,7 +11,7 @@ num_users = 50
 num_products = 2000
 num_products_for_sale = 2500
 # num_purchases = 2500
-
+num_reviews = 100
 num_lineitems = 500
 num_orders = 100
 
@@ -316,7 +316,53 @@ def gen_orders_in_progress(num_orders):
         print(f'{num_orders} generated')
 
 
+def gen_product_reviews(num_reviews, user_ids, product_ids):
+    with open(csv_path('ReviewSource.csv'), 'r', encoding='utf-8') as source_file, \
+         open(csv_path('Reviews.csv'), 'w', encoding='utf-8', newline='') as reviews_file:
         
+        source_reader = csv.DictReader(source_file)
+        # We'll manually handle the CSV writing process, so no csv.writer is used here
+        print('Generating Product Reviews...', end=' ', flush=True)
+
+        for review_id in range(num_reviews):
+            if review_id % 10 == 0:
+                print(f'{review_id}', end=' ', flush=True)
+            
+            try:
+                review_source_data = next(source_reader)
+            except StopIteration:
+                source_file.seek(0)
+                next(source_reader)  # Skip header
+                review_source_data = next(source_reader)
+
+            user_id = fake.random_element(elements=user_ids)
+            product_id = fake.random_element(elements=product_ids)
+            
+            # Escape double quotes and enclose comments in double quotes
+            comments = '"' + review_source_data['review_content'].replace('"', '""') + '"'
+
+            # Do not quote other fields
+            rating = str(fake.random_int(min=1, max=5))
+            date = fake.date_time_this_year(before_now=True, after_now=False, tzinfo=None).isoformat()
+
+            # Manually construct the CSV row as a string
+            row = ','.join([
+                str(review_id),
+                str(product_id),
+                str(user_id),
+                "",  # seller_id is empty since these are product reviews
+                "product",
+                rating,
+                comments,
+                date
+            ])
+
+            # Write the manually constructed row to the CSV file
+            reviews_file.write(row + '\n')
+
+        print(f'{num_reviews} generated')
+    return
+
 
 
 # def gen_purchases(num_purchases, available_pids):
@@ -341,9 +387,6 @@ gen_lineitems(num_lineitems)
 removeQuotations('db/generated/LineItem-PreProcess.csv', 'db/generated/LineItem.csv')
 gen_orders_in_progress(num_orders)
 removeQuotations('db/generated/OrdersInProgress-PreProcess.csv','db/generated/OrdersInProgress.csv')
-
-# gen_users(num_users)
-# gen_products(num_products)
-# gen_products_for_sale(num_products_for_sale, product_list)
-# available_pids = gen_products(num_products)
-# gen_purchases(num_purchases, available_pids)
+user_ids = list(range(50))
+num_reviews = 100  # or however many reviews you want to generate
+gen_product_reviews(num_reviews, user_ids, product_id_list)

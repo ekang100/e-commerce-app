@@ -96,7 +96,6 @@
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
       <th scope="col">Description</th>
-      <!-- Add more columns as needed -->
     </tr>
   </thead>
   <tbody>
@@ -105,7 +104,35 @@
         <th scope="row">{{ product.name }}</th>
         <td>${{ product.price }}</td>
         <td>{{ product.description }}</td>
-        <!-- Add more cells for other product details -->
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
+<h1><span style="color: #00aaff;">{{ current_user.firstname }}'s Seller Reviews</span></h1>
+
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Type</th>
+      <th scope="col">Entity Name</th>
+      <th scope="col">User ID</th>
+      <th scope="col">Rating</th>
+      <th scope="col">Comments</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for feedback in feedbacks %}
+      <tr>
+        <td>{{ feedback.type }}</td>
+        <td>{{ feedback.entity_name }}</td>
+        <td>{{ feedback.uid }}</td>
+        <td>{{ feedback.rating }}</td>
+        <td>{{ feedback.comments }}</td>
+        <td>{{ feedback.date }}</td>
       </tr>
     {% endfor %}
   </tbody>

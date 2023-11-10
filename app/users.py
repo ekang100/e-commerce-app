@@ -165,17 +165,25 @@ def search_user():
             return render_template('search_user_results.html')
     except Exception:
         return 'No names found'
+<<<<<<< HEAD
     
+=======
+>>>>>>> origin
     return render_template('search_user_results.html', users=users)
 
 # Route for displaying public profile
 @bp.route('/user_profile/<int:account_id>', methods=['GET', 'POST'])
 def public_profile(account_id):
     if request.method == 'POST':
+<<<<<<< HEAD
+=======
+    # try:
+>>>>>>> origin
         info = User.pubprofile_search(account_id)
         sell_stat = info[0][-1]
         return render_template('user_profile.html', user=info, sell_stat=sell_stat)
     return redirect(url_for('users.account'))
+<<<<<<< HEAD
 
 @bp.route('/account', methods=['GET', 'POST'])
 def verify_account():
@@ -184,3 +192,5 @@ def verify_account():
             return redirect(url_for('users.account'))
     return render_template('account.html')
 
+=======
+>>>>>>> origin
