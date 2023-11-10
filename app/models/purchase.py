@@ -26,6 +26,7 @@ FROM Cart C, Products P, LineItem L
 WHERE C.buyerid = :uid
 AND L.time_purchased >= :since
 AND C.cartid = L.cartid
+AND L.buyStatus = TRUE
 AND L.productid = P.productid
 ORDER BY L.time_purchased DESC
 ''',

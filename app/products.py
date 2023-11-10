@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, Blueprint, render_template
-from flask_paginate import Pagination
+# from flask_paginate import Pagination
 bp = Blueprint('products', __name__)
 
 from .models.product import Product
