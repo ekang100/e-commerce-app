@@ -5,6 +5,7 @@ from faker import Faker
 from PIL import Image, ImageDraw, ImageFont
 import requests
 from io import BytesIO
+from collections import defaultdict
 
 num_users = 50
 num_products = 2000
@@ -19,11 +20,15 @@ fake = Faker()
 
 generated_path = os.path.join(os.getcwd(), 'db/generated')
 
-seller_list = []
-product_list = []
-sellers_with_products = set()
+seller_list = [] # from box
+product_list = [] # from ekang for general use
+product_id_list = [] # from ekang for bryant
+# sellers_with_products = set() # will probably overwrite this
 productid_to_price = {}
-productid_to_sellerid = {}
+productid_to_sellerid = defaultdict(set)
+sellerid_to_productid = defaultdict(set)
+
+
 orderid_cartid_map = {}  # dictionary to track the mapping from orderid to cartid
 orderid_fulfillmentStatus = {}
 product_id_list = []
@@ -131,32 +136,38 @@ def gen_products(num_products):
                 image_path = gen_product_image(row['img_link'], productid, name)
             available = available = fake.random_element(elements=('true', 'false'))
             avg_rating = fake.random_int(min=0, max=500) / 100
-            seller_id = fake.random_element(seller_list)
+            seller_id = fake.random_element(seller_list) # i think i can still keep this i just wont put it in the csv?
 
-            productid_to_sellerid[productid] = seller_id
+            productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
+            sellerid_to_productid[seller_id].add(productid) # add the product to the set of products for a given seller
 
             if available == 'true':
                 product_list.append([productid, name])
                 product_id_list.append(productid)
+                sellerid_to_productid
 
             # Add to seller set if seller has products
-            sellers_with_products.add(seller_id)
+            # sellers_with_products.add(seller_id)
 
-            product_writer.writerow([productid, name, price, description, category, image_path, available, avg_rating, seller_id])
+            product_writer.writerow([productid, name, price, description, category, image_path, available, avg_rating])
         print(f'{num_products} generated')
     return
 
 # generate inventory
-def gen_products_for_sale(num_products_for_sale, product_id_list, sellers):
+def gen_products_for_sale(num_products_for_sale, product_id_list, sellerid_to_productid):
     with open(csv_path('ProductsForSale.csv'), 'w') as f:
         writer = get_csv_writer(f)
-        check = set()
-        for i in range(num_products_for_sale):
-            productid = fake.random_element(product_id_list)
-            uid = fake.random_element(sellers)
-            quantity = fake.random_int(min=1, max=50)
-            if check.add((productid, uid)):
+        #check = set()
+        sellers_with_products = sellerid_to_productid.keys()
+
+        for seller in sellers_with_products:
+            productList = sellerid_to_productid[seller]
+            for product in productList:
+                productid = product
+                uid = seller
+                quantity = fake.random_int(min=1, max=50)
                 writer.writerow([productid, uid, quantity])
+
         print('inventory generated')
 
     return
@@ -262,7 +273,7 @@ def gen_lineitems(num_lineitems):
             else:
                 time_fulfilled = time_purchased
 
-            sellerid = productid_to_sellerid.get(productid)
+            sellerid = fake.random_element(productid_to_sellerid[productid])
 
             writer.writerow([lineid, cartid, productid, quantities, unitPrice, buyStatus, fulfilledStatus, time_purchased, time_fulfilled, orderid, sellerid])
 
@@ -326,7 +337,7 @@ def gen_orders_in_progress(num_orders):
 
 gen_users(num_users)
 gen_products(num_products)
-gen_products_for_sale(num_products_for_sale, product_id_list, sellers_with_products)
+gen_products_for_sale(num_products_for_sale, product_id_list, sellerid_to_productid)
 gen_carts(num_users)
 gen_lineitems(num_lineitems)
 removeQuotations('db/generated/LineItem-PreProcess.csv', 'db/generated/LineItem.csv')
