@@ -19,17 +19,13 @@ def top_products():
             return "Invalid input. Please enter a valid number for K."
     return render_template('index.html')
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/search_product_results', methods=['GET', 'POST'])
 def search_keywords():
-    if request.method == 'POST' and request.args.get('action') == 'search_keywords':
-        try:
-            query = str(request.form['search'])
-            products = Product.search(query)
-            #if k >= 0 and k <= len(products):
-                #sorted_products = sorted(products, key=lambda x: x.price, reverse=True)[:k]
-            return render_template('search.html', result=products)
-            #else:
-               #return "Invalid input. Please enter a valid number for K."
-        except ValueError:
-            return "Invalid input. Please enter a valid number for K."
-    return render_template('index.html')
+    query = str(request.form['query'])
+    try:
+        products = Product.search_product(query)
+        if len(products) == 0:
+            return render_template('search_product_results.html')
+    except Exception:
+        return 'No products found'
+    return render_template('search_product_results.html', products=products)

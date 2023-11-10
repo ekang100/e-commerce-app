@@ -74,6 +74,13 @@
         </form>
       </div>
 
+      <div id="search-bar">
+        <form id="search-form" action="/search_product_results" method="POST">
+            <input type="text" name="query" id="search-input" placeholder="Search for a product...">
+            <input type="submit" value="Search">
+        </form>
+      </div>
+
       <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}
           Hello {{current_user.firstname}}! 
