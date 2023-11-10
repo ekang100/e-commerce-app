@@ -9,9 +9,6 @@ SELECT pg_catalog.setval('public.users_id_seq',
                          false);
 
 
-\COPY Seller FROM 'Sellers.csv' WITH DELIMITER ',' NULL '' CSV
-
-
 \COPY Products FROM 'Products.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.products_productid_seq',
                          (SELECT MAX(productid)+1 FROM Products),
@@ -34,9 +31,7 @@ SELECT pg_catalog.setval('public.lineitem_lineid_seq',
                          (SELECT MAX(lineid)+1 FROM LineItem),
                          false);
 
-\COPY Purchases FROM 'Purchases.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(id)+1 FROM Purchases),
-                         false);
+\COPY ProductsForSale FROM 'ProductsForSale.csv' WITH DELIMITER ',' NULL '' CSV
+
 
 \COPY Reviews FROM 'Review.csv' WITH DELIMITER ',' NULL '' CSV
