@@ -95,7 +95,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for product in current_user.get_products() %}
+        {% for product in current_user.get_products_for_sale() %}
           <tr>
             <th scope="row">{{ product.name }}</th>
             <td>{{ product.description }}</td>

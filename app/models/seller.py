@@ -36,28 +36,17 @@ class Seller:
             return user_profile
         else:
             return None
-        
-    # Gets the products by the seller of interest (self) -- beta version
-    def get_products(self):
+
+    #gets the products for sale by the seller of interest (self)
+    def get_products_for_sale(self):
         rows = app.db.execute('''
-            SELECT p.name, p.description, p.price
-            FROM Products p
-            WHERE p.seller_id = :seller_id
-        ''', seller_id=self.uid)
+        SELECT s.quantity, p.productid, p.name, p.price, p.description
+        FROM ProductsForSale s
+        JOIN Products p ON s.productid = p.productid
+        WHERE s.uid = :seller_id
+    ''',
+        seller_id=self.uid)
 
         return [Product(*row) for row in rows]
-
-
-#gets the products for sale by the seller of interest (self)
-    # def get_products_for_sale(self):
-    #     rows = app.db.execute('''
-    #     SELECT s.quantity, p.productid, p.name, p.price, p.description
-    #     FROM ProductsForSale s
-    #     JOIN Products p ON s.productid = p.productid
-    #     WHERE p.seller_id = :seller_id
-    # ''',
-    #     seller_id=self.uid)
-
-    #     return [Product(*row) for row in rows]
 
 
