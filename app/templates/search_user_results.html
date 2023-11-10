@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results:</h1>
+    <ul>
+        {% if users %}
+            {% for user in users %}
+            <li>
+                <form style="margin-top: 10px;" action="{{ url_for('users.public_profile', account_id=user['account_id']) }}" method="post">
+                    <button type="submit">
+                        {{ user['name'] }}
+                    </button>
+                </form>
+            </li>
+            {% endfor %}
+        {% else %}
+            <p>No users found</p>
+        {% endif %}
+    </ul>
+</body>
+</html>
+{% endblock %}

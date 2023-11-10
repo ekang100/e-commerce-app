@@ -155,3 +155,26 @@ def become_seller():
         if User.become_seller(current_user.id):
             return redirect(url_for('users.account'))
     return render_template('account.html')
+
+@bp.route('/search_user_results', methods=['GET', 'POST'])
+def search_user():
+    ##add nonetype error handling
+    user_to_search = request.form['query']
+    try:
+        # users = User.search_user(user_to_search_arr[0], user_to_search_arr[1])
+        users = User.search_user(user_to_search)
+        if len(users) == 0:
+            return render_template('search_user_results.html')
+    except Exception:
+        return 'No names found'
+    return render_template('search_user_results.html', users=users)
+
+# Route for displaying public profile
+@bp.route('/user_profile/<int:account_id>', methods=['GET', 'POST'])
+def public_profile(account_id):
+    if request.method == 'POST':
+    # try:
+        info = User.pubprofile_search(account_id)
+        sell_stat = info[0][-1]
+        return render_template('user_profile.html', user=info, sell_stat=sell_stat)
+    return redirect(url_for('users.account'))

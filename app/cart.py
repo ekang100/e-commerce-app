@@ -3,6 +3,7 @@ from flask_login import current_user
 import datetime
 from flask import jsonify
 
+from .models.user import User
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
@@ -34,14 +35,6 @@ def cart():
                 LineItem.remove_lineitem(lineitem_id)
             except ValueError: #might have to modify this
                 return "Failed"
-        
-        elif action_type == "order_all":
-            #do all checking code here
-            # check available balances and inventories
-            # update inventories and balances at time of submission
-            # The buyer’s balance will be decremented, and the sellers’ balances will be incremented and inventories decremented.
-            # cart becomes empty
-            print('haha')
             
             
         
@@ -51,7 +44,7 @@ def cart():
         updateCartFirst = Cart.update_total_cart_price(Cart.get_cartID_from_buyerid(current_user.id)) #replace 0's with current_user.id
         updateCartQuantity = Cart.update_number_unique_items(Cart.get_cartID_from_buyerid(current_user.id))
         singleCart = Cart.get_cart_from_buyerid(current_user.id)
-        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart)
+        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = False)
     else:
          return jsonify({}), 404
     
@@ -61,12 +54,60 @@ def buyerOrder():
     if current_user.is_authenticated:
         allItemsBought = LineItem.get_all_by_cartid_bought(Cart.get_cartID_from_buyerid(current_user.id),True)
         # allOrderIDs = Orders.get_all_orderIDs_by_buyerid(current_user.id)
-        #this will be correct later
+        # print(allOrderIDs)
+        # # this will be correct later
 
+        # lineitems = [] 
         # for order in allOrderIDs:
-        #     LineItem.get_all_lineitems_by_orderid(order)
+        #     lineitems.append(LineItem.get_all_lineitems_by_orderid(order))
 
 
+
+        #post for submitting entire cart
+        if request.method == 'POST': 
+                action_type = request.form.get('action')
+                print(action_type) #this is implemented for testing
+
+                errorMessageString = ''
+
+                if action_type == "order_all":
+                    can_order = True
+            #do all checking code here
+            # check available balances and inventories
+            # update inventories and balances at time of submission
+            # The buyer’s balance will be decremented, and the sellers’ balances will be incremented and inventories decremented.
+            # cart becomes empty
+
+                    #1) check available balances
+                    if User.get_balance(current_user.id) < Cart.get_total_cartprice(current_user.id):
+                        can_order = False
+                        errorMessageString = 'You do not have enough money!!!!'
+                        print('User too poor to order')
+                
+            #2) need to check available inventories
+                
+                #if constraints haven't been met
+                    if can_order == False:
+                        allItemsInCart = LineItem.get_all_by_cartid_not_bought(Cart.get_cartID_from_buyerid(current_user.id),False)
+                        updateCartFirst = Cart.update_total_cart_price(Cart.get_cartID_from_buyerid(current_user.id)) #replace 0's with current_user.id
+                        updateCartQuantity = Cart.update_number_unique_items(Cart.get_cartID_from_buyerid(current_user.id))
+                        singleCart = Cart.get_cart_from_buyerid(current_user.id)
+                        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString)
+                
+                #if constraints have been met
+                    else:
+                        User.add_balance(current_user.id, (User.get_balance(current_user.id)-Cart.get_total_cartprice(current_user.id)))
+                        #need to add the balance to the seller
+                        #need to decrement inventory
+                        #change the status of buyStatus
+                        allItemsInCart = LineItem.get_all_by_cartid_not_bought(current_user.id)
+                        # for lineitem in allItemsInCart:
+                            # LineItem.change_buystatus(LineItem.id) # seomthing wrong here and lineitem.py
+                        #need to update time of buyStauts
+
+                        #change the status of fulfillmentStatus
+                        #make sure cart is cleared
+                        print('order submitted')
 
 
 

@@ -66,12 +66,14 @@
             style="width:70px;height:60px;" >
           </a>
       </div>
-      <div style="color: aliceblue; text-align: center; margin: 0; border: 0">
-        <form method="post" action="{{ url_for('products.search_keywords') }}">
-          <input type="text" name="search" required>
-          <input type="submit" value="Search">
+
+      <div id="search-bar">
+        <form id="search-form" action="/search_user_results" method="POST">
+            <input type="text" name="query" id="search-input" placeholder="Search for a user...">
+            <input type="submit" value="Search">
         </form>
       </div>
+
       <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}
           Hello {{current_user.firstname}}! 
