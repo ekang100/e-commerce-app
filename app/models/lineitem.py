@@ -26,6 +26,14 @@ WHERE lineid = :lineid
                               lineid=lineid)
         return LineItem(*(rows[0])) if rows else None
 
+    @staticmethod
+    def get_lineid():
+        rows = app.db.execute('''
+SELECT lineid
+FROM LineItem
+''',
+                              )
+        return ((rows[0])) if rows is not None else None
 
 #     @staticmethod
 #     def get_all_by_cartid_not_bought(cartid, status=False):
@@ -104,7 +112,28 @@ WHERE lineid = :lineid
                 rows = app.db.execute('''
 SELECT *
 FROM LineItem
-WHERE LineItem.orderid := orderid
+WHERE LineItem.orderid = :orderid
 ''',
             orderid=orderid) 
                 return LineItem(*(rows[0])) if rows else None
+    
+    @staticmethod
+    def get_fulfillment_status(lineitemid):
+                         rows = app.db.execute('''
+SELECT fulfillmentStatus
+FROM LineItem
+WHERE LineItem.lineitemid = :lineitemid
+''',
+            lineitemid=lineitemid) 
+                         return ((rows[0])) if rows is not None else None
+
+
+    @staticmethod
+    def change_buystatus(lineid):
+        rows = app.db.execute('''
+UPDATE LineItem 
+SET buyStatus = True
+WHERE lineid = :lineid 
+''',
+            lineid = lineid)
+        return None           

@@ -111,6 +111,22 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
+        
+     #check this with ryan before committing
+    #this is used in cart for checkign constraints
+    @staticmethod
+    def get_balance (id):
+        try:
+            rows = app.db.execute("""
+                SELECT balance
+                FROM Users
+                WHERE id = :id
+            """, id=id)
+            return ((rows[0])[0]) if rows else None
+        except Exception as e:
+            print(str(e))
+            return None
+
     
     @staticmethod
     def become_seller(user_id):
