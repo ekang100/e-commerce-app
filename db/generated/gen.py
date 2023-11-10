@@ -63,7 +63,8 @@ def gen_users(num_users):
             isSeller = fake.pybool()
             if isSeller:
                 seller_list.append(uid)
-            users_writer.writerow([uid, address, email, password, firstname, lastname, balance, isSeller])
+            isVerified = fake.pybool()
+            users_writer.writerow([uid, address, email, password, firstname, lastname, balance, isSeller, isVerified])
             passwords_writer.writerow([uid, plain_password])
         print(f'{num_users} generated')
     return
