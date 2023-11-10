@@ -86,6 +86,22 @@
     {% else %}
         <p>No user found</p>
     {% endif %}
+    {% if sell_stat and seller_reviews %}
+    <hr style="border-top: 2px solid #FFD700; margin-top: 70px;">
+    <h2 style="color: #FFD700; margin-bottom: 20px;">{{ user[0]['name'] }}'s Seller Reviews</h2>
+
+    <div style="margin-top: 20px;">
+        {% for review in seller_reviews %}
+            <div style="background-color: #1e1e1e; padding: 20px; border-radius: 10px; margin-bottom: 15px; color: #eee;">
+                <p style="margin-bottom: 5px;"><strong>Rating:</strong> {{ review.rating }} / 5</p>
+                <p style="margin-bottom: 5px;"><strong>Comments:</strong> {{ review.comments }}</p>
+                <p style="margin-bottom: 5px;"><strong>Date:</strong> {{ review.date }}</p>
+            </div>
+        {% else %}
+            <p style="color: #FFD700;">No reviews yet.</p>
+        {% endfor %}
+    </div>
+{% endif %}
 
 </body>
 </html>

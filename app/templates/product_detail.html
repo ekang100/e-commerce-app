@@ -86,42 +86,68 @@
 
     <div class="container">
       <h2>Reviews</h2>
-      <table class='table table-hover table-bordered container'>
+      <table class='table table-hover table-bordered'>
           <thead class="thead-dark">
           <tr>
               <th scope="col">Reviewer</th>
               <th scope="col">Rating</th>
               <th scope="col">Comments</th>
+              <th scope="col">Date</th>
+              <th scope="col">Edit</th>
           </tr>
           </thead>
           <tbody>
-          {% for r in reviews %}
-              <tr>
-                  <th scope="row"><form style="margin-top: 10px;" action="{{ url_for('users.public_profile', account_id=r.reviewer_id) }}" method="post">
-                    <button type="submit">
-                        {{ r.reviewer_firstname }}
-                    </button>
-                </form></th>
-                  
-                  <th scope="row">{{ r.rating }}</th>
-                  <td>{{ r.comment }}</td>
-
-              </tr>
-            {% endfor %}
+            {% for review in reviews %}
+            <tr>
+                <td>{{ review.name }}</td>
+                <td>{{ review.rating }}</td>
+                <td>{{ review.comments }}</td>
+                <td>{{ review.date }}</td>
+                {% if review.user_id == current_user.id %}
+                    <td>
+                        <form action="{{ url_for('feedback.update_review', review_id=review.id) }}" method="post">
+                            <input type="number" name="rating" value="{{ review.rating }}" min="1" max="5">
+                            <input type="text" name="comments" value="{{ review.comments }}">
+                            <input type="submit" value="Update">
+                        </form>
+                        <form action="{{ url_for('feedback.delete_review', review_id=review.id) }}" method="post">
+                            <input type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+                        </form>
+                    </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr><td colspan="5">No reviews found for this product.</td></tr>
+        {% endfor %}
           </tbody>
       </table>
         
       {% if current_user.is_authenticated %}
-        <form action="{{ url_for('feedback.post_review_route') }}" method="post">
-            <input type="hidden" name="action" value="add"/>
-            <input type="hidden" name="user_id" value="{{ current_user.id }}"/>
-            <input type="hidden" name="product_id" value="{{ product.productid }}"/>
-            idk what other info you need
-            <input type="submit" value="Add Review">
-        </form>
-      {% else %}
-        <p><a href="{{ url_for('users.login') }}">Log in</a> to add items to add reviews</p>
-      {% endif %}
+      <form action="{{ url_for('feedback.post_review') }}" method="post">
+          <input type="hidden" name="user_id" value="{{ current_user.id }}"/>
+          <input type="hidden" name="product_id" value="{{ product.productid }}"/>          
+          <div class="form-group">
+              <label for="rating">Rating:</label>
+              <select id="rating" name="rating" class="form-control">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+              </select>
+          </div>
+
+          <div class="form-group">
+              <label for="comments">Comments:</label>
+              <textarea id="comments" name="comments" class="form-control" rows="3"></textarea>
+          </div>
+
+          <input type="submit" value="Post Review" class="btn btn-primary">
+      </form>
+    {% else %}
+      <p><a href="{{ url_for('users.login') }}">Log in</a> to add reviews</p>
+    {% endif %}
+  </div>
     </div>
   
     {% endif %}

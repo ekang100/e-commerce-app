@@ -416,6 +416,75 @@ def gen_product_reviews(num_reviews, user_ids, product_ids):
         print(f'{num_reviews} generated')
     return
 
+import csv
+import random
+from faker import Faker
+
+fake = Faker()
+
+
+def gen_reviews(num_reviews, user_ids, seller_ids, csv_file_path):
+    existing_reviews = set()
+    last_review_id = 0
+
+    with open(csv_file_path, 'r', encoding='utf-8') as existing_file:
+        existing_reader = csv.reader(existing_file)
+        next(existing_reader)  # Skip header
+        for row in existing_reader:
+            review_id = int(row[0])
+            last_review_id = max(last_review_id, review_id)  # Track the highest review ID
+            user_id = row[2]
+            seller_id = row[3]
+            review_type = row[4]
+            entity_id = seller_id if review_type == 'seller' else ""
+            existing_reviews.add((user_id, entity_id, review_type))
+
+    # Continue with appending new seller reviews
+    with open(csv_file_path, 'a', encoding='utf-8', newline='') as reviews_file:
+        print('Appending Seller Reviews...', end=' ', flush=True)
+        review_count = 0
+
+        while review_count < num_reviews:
+            user_id = random.choice(user_ids)
+            seller_id = random.choice(seller_ids)
+            review_type = 'seller'
+
+            # Check if this seller review combination already exists
+            if (user_id, seller_id, review_type) in existing_reviews:
+                continue  # Skip to the next iteration
+
+            existing_reviews.add((user_id, seller_id, review_type))
+            last_review_id += 1  # Increment the review ID
+
+            comments = '"' + fake.text().replace('"', '""') + '"'
+            rating = str(fake.random_int(min=1, max=5))
+            date = fake.date_time_this_year(before_now=True, after_now=False, tzinfo=None).isoformat()
+
+            row = [
+                str(last_review_id),  # Incremented Review ID
+                "",  # Product ID is empty for seller reviews
+                str(user_id),
+                str(seller_id),  # Seller ID
+                review_type,
+                rating,
+                comments,
+                date
+            ]
+
+            reviews_file.write(','.join(row) + '\n')
+            review_count += 1
+
+        print(f'{num_reviews} appended')
+    return
+
+# Example usage:
+# gen_reviews(100, user_ids, seller_ids, 'path/to/your/Reviews.csv')
+
+
+# Example usage:
+# gen_reviews(100, user_ids, product_ids, seller_ids, 'path/to/your/Reviews.csv')
+
+
 
 
 # def gen_purchases(num_purchases, available_pids):
@@ -443,3 +512,5 @@ removeQuotations('db/generated/OrdersInProgress-PreProcess.csv','db/generated/Or
 user_ids = list(range(50))
 num_reviews = 100  # or however many reviews you want to generate
 gen_product_reviews(num_reviews, user_ids, product_id_list)
+gen_reviews(100, user_ids, seller_list, 'db/generated/Reviews.csv')
+
