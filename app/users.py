@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, session
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -17,7 +17,6 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
-
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -166,14 +165,32 @@ def search_user():
             return render_template('search_user_results.html')
     except Exception:
         return 'No names found'
+<<<<<<< HEAD
+    
+=======
+>>>>>>> origin
     return render_template('search_user_results.html', users=users)
 
 # Route for displaying public profile
 @bp.route('/user_profile/<int:account_id>', methods=['GET', 'POST'])
 def public_profile(account_id):
     if request.method == 'POST':
+<<<<<<< HEAD
+=======
     # try:
+>>>>>>> origin
         info = User.pubprofile_search(account_id)
         sell_stat = info[0][-1]
         return render_template('user_profile.html', user=info, sell_stat=sell_stat)
     return redirect(url_for('users.account'))
+<<<<<<< HEAD
+
+@bp.route('/account', methods=['GET', 'POST'])
+def verify_account():
+    if request.method == 'POST':
+        if User.verify_account(current_user.id):
+            return redirect(url_for('users.account'))
+    return render_template('account.html')
+
+=======
+>>>>>>> origin
