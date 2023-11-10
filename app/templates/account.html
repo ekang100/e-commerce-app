@@ -45,15 +45,6 @@
             {% endif %}       
         </td>
       </tr>
-      <tr style="background-color: white; color: black;">
-        <td>Verified Status: {{current_user.isVerified}}
-            {% if not current_user.isVerified %}
-            <form method="POST" action="{{ url_for('users.verify_account') }}">
-                <button type="submit" class="btn btn-primary" style="float: right; background-color: #00aaff;" role="button">Become Verified User</button>
-            </form>            
-            {% endif %}       
-        </td>
-      </tr>
   </tbody>
 </table>
 <a href="{{ url_for('users.update_name_address') }}" class="btn btn-primary" style="float: left; margin-right: 10px; background-color: #00aaff;" role="'button">Update Name/Address</a>
