@@ -126,6 +126,16 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
+    
+    def get_products(self):
+        rows = app.db.execute('''
+            SELECT p.name, p.description, p.price
+            FROM Products p
+            WHERE p.seller_id = :seller_id
+        ''', seller_id=self.id)
+
+        return [Product(row['name'], row['description'], row['price']) for row in rows]
+
 
     #gets the products for sale by the seller of interest (self)
     def get_products_for_sale(self):
