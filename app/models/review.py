@@ -13,21 +13,19 @@ class Reviews:
 
 
     @staticmethod
-    def get_most_recent_by_uid(uid, limit=5):
+    def get_most_recent_by_uid(uid):
         rows = app.db.execute('''
 SELECT R.type,
        CASE 
            WHEN R.type = 'product' THEN (SELECT name FROM Products WHERE productid = R.entity_id)
-           WHEN R.type = 'seller' THEN (SELECT firstname || ' ' || lastname FROM Users WHERE id = R.entity_id)
+           WHEN R.type = 'seller' THEN (SELECT firstname || ' ' || lastname FROM Users WHERE id = R.seller_id)
        END as entity_name,
        R.uid, R.rating, R.comments, R.date
 FROM Reviews R
 WHERE R.uid = :uid
 ORDER BY R.date DESC
-LIMIT :limit
 ''',
-                              uid=uid,
-                              limit=limit)
+                              uid=uid)
         if not rows:
             raise ValueError(f"No reviews found for user_id: {uid}")
         return [Reviews(type=row[0], 

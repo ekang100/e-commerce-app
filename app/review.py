@@ -11,7 +11,7 @@ def get_feedbacks():
         user_id = request.form['user_id']
 
         try:
-            feedbacks = get_recent_reviews_by_uid(user_id, 5)
+            feedbacks = get_recent_reviews_by_uid(user_id)
         except ValueError as e:
             flash(str(e), 'error')
             return render_template('feedbacks.html', feedbacks=[])
@@ -19,14 +19,15 @@ def get_feedbacks():
     return render_template('feedbacks.html', feedbacks=feedbacks)
 
 
-def get_recent_reviews_by_uid(uid, limit=5):
+def get_recent_reviews_by_uid(uid):
     try:
-        reviews = Reviews.get_most_recent_by_uid(uid, limit)
+        reviews = Reviews.get_most_recent_by_uid(uid)
         reviews_sorted = sorted(reviews, key=lambda x: x.date, reverse=True)
-        return reviews_sorted[:limit]
+        return reviews_sorted
     except Exception as e:
         # Handle database errors
         raise ValueError(f"Error fetching reviews: {str(e)}")
+
 
 
 @bp.route('/post_review', methods=['GET', 'POST'])
