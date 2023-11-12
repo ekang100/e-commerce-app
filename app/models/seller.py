@@ -47,6 +47,15 @@ class Seller:
     ''',
         seller_id=self.uid)
 
-        return [Product(*row) for row in rows]
+        products = [
+        {
+            'quantity': row[0],
+            'name': row[2],
+            'price': row[3],
+            'description': row[4]
+        }
+        for row in rows
+    ]
+        return products
 
 
