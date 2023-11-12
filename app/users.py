@@ -147,7 +147,7 @@ def add_balance():
             return redirect(url_for('users.account'))
     return render_template('balance.html', title='Add Balance', form=form)
 
-@bp.route('/account', methods=['GET', 'POST'])
+@bp.route('/become_seller', methods=['GET', 'POST'])
 def become_seller():
     if request.method == 'POST':
         if User.become_seller(current_user.id):
@@ -179,7 +179,10 @@ def public_profile(account_id):
 @bp.route('/account', methods=['GET', 'POST'])
 def verify_account():
     if request.method == 'POST':
-        if User.verify_account(current_user.id):
-            return redirect(url_for('users.account'))
+        if User.get_balance(current_user.id) > 100:
+            User.add_balance(current_user.id, float(User.get_balance(current_user.id)) - 100.0)
+            if User.verify_account(current_user.id):
+                return redirect(url_for('users.account'))
+        else:
+            raise ValidationError('You do not have enough money')
     return render_template('account.html')
-
