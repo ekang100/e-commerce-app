@@ -88,26 +88,63 @@
 
 {% if current_user.isSeller %}
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
-<h1><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
+<div class="d-flex justify-content-between">
+  <h1><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
+
+  <!-- Add Button to the Right of "Seller's Profile" -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProductModal" style="border: 1px solid #FFD700; color: #FFD700;">
+    Add Product
+  </button>
+</div>
+
 
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
       <th scope="col">Description</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Adjust</th>
     </tr>
   </thead>
   <tbody>
-    {% for product in inventory %}
+    {% for product in current_user.get_products_for_sale() %}
       <tr>
         <th scope="row">{{ product.name }}</th>
-        <td>${{ product.price }}</td>
         <td>{{ product.description }}</td>
+        <td>${{ product.price }}</td>
+        <td>{{ product.quantity }}</td>
+        
+        <td style="margin-top: 10px; float: left;">
+          <!-- Modify Button -->
+          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modifyProductModal{{ loop.index }}" style="border: 1px solid #FFD700; color: #FFD700;">
+            Modify
+          </button>
+        
+          <!-- Modify Product Modal -->
+          <div class="modal fade" id="modifyProductModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="modifyProductModalLabel{{ loop.index }}" aria-hidden="true">
+            <!-- Modal content goes here -->
+          </div>
+        </td>
+        <td style="margin-top: 10px; float: left;">
+          <!-- Remove Button -->
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeProductModal{{ loop.index }}" style="border: 1px solid #FFD700; color: #FFD700;">
+            Remove
+          </button>
+        
+          <!-- Remove Product Modal -->
+          <div class="modal fade" id="removeProductModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="removeProductModalLabel{{ loop.index }}" aria-hidden="true">
+            <!-- Modal content goes here -->
+          </div>
+        </td>
+        
+        
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
 
 
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">

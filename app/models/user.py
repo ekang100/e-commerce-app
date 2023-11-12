@@ -159,13 +159,21 @@ RETURNING id
         SELECT s.quantity, p.productid, p.name, p.price, p.description
         FROM ProductsForSale s
         JOIN Products p ON s.productid = p.productid
-        WHERE p.seller_id = :seller_id
+        WHERE s.uid = :seller_id
     ''',
         seller_id=self.id)
 
         
-        products = [Product(*row) for row in rows]
-        print(self.id)  # Print the products
+        # Return a list of tuples with the selected values
+        products = [
+        {
+            'quantity': row[0],
+            'name': row[2],
+            'price': row[3],
+            'description': row[4]
+        }
+        for row in rows
+    ]
         return products
         
     @staticmethod
