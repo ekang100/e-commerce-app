@@ -6,7 +6,7 @@
 
 {% if ErrorMessageCheck %}
 <script type="text/javascript">
-  alert("{{ errorMessageString }}");
+  alert("{{ errorMessageString|safe }}");
   </script>
 {% endif %}
 
