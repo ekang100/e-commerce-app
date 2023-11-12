@@ -130,6 +130,9 @@ def buyerOrder():
                         #decrement balance
                         User.add_balance(current_user.id, (User.get_balance(current_user.id)-Cart.get_total_cartprice(current_user.id))) #this decrements own balance
                         
+                        #generate orderid
+                        new_orderid = Orders.add_order_to_orders_table(current_user.id)
+                        print(new_orderid)
                         #adds the balance to the seller
                         #need to decrement inventory
                         #change the status of buyStatus
@@ -153,10 +156,15 @@ def buyerOrder():
                             #updates time_purchased
                             LineItem.update_time_purchased_from_lineid(lineitem_id)
 
+                            #assign orderid to the lineitems
+                            LineItem.update_lineitem_orderid(lineitem_id, new_orderid)
+
                         #for order checking:
                         # 1) find an unused order id
                         # 2) assign to all the lineitems here in the cart
-                        # 3) insert into orders table the necessary information
+                        # 3) insert into orders table the necessary information                            
+                            # print(new_orderid)
+
                         #need to update time of buyStauts
                         #need to assign an ordernumber and add to orders
                         #change the status of fulfillmentStatus?
