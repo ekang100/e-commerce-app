@@ -104,14 +104,15 @@ def buyerOrder():
                                 invalidItems.append(lineitem_name)
                         if not can_order:
                             errorMessageString = 'Not enough inventory for '
+                            i = 1
                             for itemName in invalidItems:
-                                i = 1
                                 if len(invalidItems) ==1:
                                     errorMessageString = errorMessageString + itemName + '.'
                                 elif i != len(invalidItems):
-                                   errorMessageString = errorMessageString + itemName + ','
-                                else:
-                                    errorMessageString = errorMessageString + ' and ' + itemName + '.'
+                                   errorMessageString = errorMessageString + itemName + ', '
+                                elif i == len(invalidItems):
+                                    errorMessageString = errorMessageString + 'and ' + itemName + '.'
+                                i +=1
                         # print(errorMessageString)
 
                 #if constraints haven't been met
@@ -140,18 +141,25 @@ def buyerOrder():
                             lineitem_quantityDemanded = lineitem["quantities"]
                             lineitem_unitprice = lineitem["price"]
                             lineitem_pid = lineitem["productid"]
-
                             #changes status of buyStatus
                             LineItem.change_buystatus(lineitem_id)
 
                             #adds balance to seller
                             User.add_balance(lineitem_sellerid, (User.get_balance(lineitem_sellerid) + lineitem_unitprice*lineitem_quantityDemanded))
                             
-                            ProductsForSale.update_quantity(lineitem_pid, lineitem_sellerid, lineitem_quantityDemanded)
-                        
+                            #decrements inventory
+                            ProductsForSale.update_quantity(lineitem_pid, lineitem_sellerid, ProductsForSale.get_quantity(lineitem_pid, lineitem_sellerid) - lineitem_quantityDemanded)
+                            
+                            #updates time_purchased
+                            LineItem.update_time_purchased_from_lineid(lineitem_id)
+
+                        #for order checking:
+                        # 1) find an unused order id
+                        # 2) assign to all the lineitems here in the cart
+                        # 3) insert into orders table the necessary information
                         #need to update time of buyStauts
                         #need to assign an ordernumber and add to orders
-                        #change the status of fulfillmentStatus
+                        #change the status of fulfillmentStatus?
                         #make sure cart is cleared
                         print('order submitted')
 
