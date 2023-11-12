@@ -6,7 +6,7 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, address, email, firstname, lastname, balance, isSeller):
+    def __init__(self, id, address, email, firstname, lastname, balance, isSeller, isVerified):
         self.id = id
         self.address = address
         self.email = email
@@ -14,11 +14,12 @@ class User(UserMixin):
         self.lastname = lastname
         self.balance = balance
         self.isSeller = isSeller
+        self.isVerified = isVerified
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, address, balance, isSeller
+SELECT password, id, email, firstname, lastname, address, balance, isSeller, isVerified
 FROM Users
 WHERE email = :email
 """,
@@ -140,12 +141,25 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
+    
+    @staticmethod
+    def verify_account(user_id):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET isVerified = TRUE
+                WHERE id = :user_id
+            """, user_id=user_id)
+            return User.get(user_id)
+        except Exception as e:
+            print(str(e))
+            return None
         
     @staticmethod
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, address, email, firstname, lastname, balance, isSeller
+SELECT id, address, email, firstname, lastname, balance, isSeller, isVerified
 FROM Users
 WHERE id = :id
 """,
