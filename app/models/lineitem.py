@@ -28,12 +28,33 @@ WHERE lineid = :lineid
 
     @staticmethod
     def get_lineid(): #this is not working
+    def get_lineid(): #this is not working
         rows = app.db.execute('''
 SELECT lineid
 FROM LineItem
 ''',
                               )
         return ((rows[0])) if rows is not None else None
+    
+    @staticmethod
+    def get_sellerid(lineid):
+            rows = app.db.execute('''
+SELECT sellerid
+FROM LineItem
+WHERE lineid = :lineid
+''',
+                              lineid=lineid)
+            return ((rows[0])) if rows is not None else None
+    
+    @staticmethod
+    def get_productid(lineid):
+            rows = app.db.execute('''
+SELECT productid
+FROM LineItem
+WHERE lineid = :lineid
+''',
+                              lineid=lineid)
+            return ((rows[0])) if rows is not None else None
     
     @staticmethod
     def get_sellerid(lineid):
@@ -78,12 +99,14 @@ WHERE productid = :productid
     def get_all_by_cartid_not_bought(cartid,buyStatus = False):
         rows = app.db.execute('''
 SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.productid, LineItem.sellerid, LineItem.orderid, LineItem.fulfilledStatus
+SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.productid, LineItem.sellerid, LineItem.orderid, LineItem.fulfilledStatus
 FROM LineItem, Products P
 WHERE P.productid = LineItem.productid
 AND LineItem.cartid = :cartid
 AND LineItem.buyStatus = False
 ''',
                               cartid=cartid)
+        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "productid":row[4], "sellerid":row[5]} for row in rows]
         return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "productid":row[4], "sellerid":row[5]} for row in rows]
 
     @staticmethod
