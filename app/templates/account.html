@@ -54,11 +54,12 @@
             {% endif %}       
         </td>
       </tr>
-      <tr style="background-color: white; color: black;">
-        <td>Verified Status: {{current_user.isVerified}}
+      <tr>
+        <td>
+          <strong style="color: #FFD700">Verified Status:</strong> <span style="color: #eee">{{current_user.isVerified}}</span>
             {% if not current_user.isVerified %}
             <form method="POST" action="{{ url_for('users.verify_account') }}">
-                <button type="submit" class="btn btn-primary" style="float: right; background-color: #00aaff;" role="button">Become Verified User</button>
+                <button type="submit" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float:right; color: #FFD700;" role="button">Become Verfied User</button>
             </form>            
             {% endif %}       
         </td>
