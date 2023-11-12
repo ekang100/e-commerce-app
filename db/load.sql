@@ -23,6 +23,7 @@ SELECT pg_catalog.setval('public.cart_cartid_seq',
 
 
 \COPY OrdersInProgress FROM 'OrdersInProgress.csv' WITH DELIMITER ',' NULL '' CSV
+
 SELECT pg_catalog.setval('public.ordersinprogress_orderid_seq',
                          (SELECT MAX(orderid)+1 FROM OrdersInProgress),
                          false);
