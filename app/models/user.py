@@ -4,6 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from .. import login
 
+from .product import Product
+
 
 class User(UserMixin):
     def __init__(self, id, address, email, firstname, lastname, balance, isSeller, isVerified):
@@ -154,6 +156,38 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
+    def get_products(self):
+        rows = app.db.execute('''
+            SELECT p.name, p.description, p.price
+            FROM Products p
+            WHERE p.seller_id = :seller_id
+        ''', seller_id=self.id)
+
+        return [Product(row['name'], row['description'], row['price']) for row in rows]
+
+
+    #gets the products for sale by the seller of interest (self)
+    def get_products_for_sale(self):
+        rows = app.db.execute('''
+        SELECT s.quantity, p.productid, p.name, p.price, p.description
+        FROM ProductsForSale s
+        JOIN Products p ON s.productid = p.productid
+        WHERE s.uid = :seller_id
+    ''',
+        seller_id=self.id)
+
+        
+        # Return a list of tuples with the selected values
+        products = [
+        {
+            'quantity': row[0],
+            'name': row[2],
+            'price': row[3],
+            'description': row[4]
+        }
+        for row in rows
+    ]
+        return products
         
     @staticmethod
     @login.user_loader
