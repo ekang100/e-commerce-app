@@ -54,16 +54,23 @@ def gen_users(num_users):
             plain_password = f'pass{uid}'
             password = generate_password_hash(plain_password)
             name_components = profile['name'].split(' ')
+
             if "." not in name_components[0]:
                 firstname = name_components[0]
             else:
                 firstname = name_components[1]
-            lastname = name_components[-1]
+
+            if "." not in name_components[-1]:
+                lastname = name_components[-1]
+            else:
+                lastname = name_components[-2]
+
             balance = fake.pyint(0, 9999)
             isSeller = fake.pybool()
+            isVerified = fake.pybool()
             if isSeller:
                 seller_list.append(uid)
-            users_writer.writerow([uid, address, email, password, firstname, lastname, balance, isSeller])
+            users_writer.writerow([uid, address, email, password, firstname, lastname, balance, isSeller, isVerified])
             passwords_writer.writerow([uid, plain_password])
         print(f'{num_users} generated')
     return
