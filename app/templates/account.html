@@ -99,16 +99,15 @@
 {% if current_user.isSeller %}
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
 <div class="d-flex justify-content-between">
-  <h1><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
+  <h1 style="font-size: 1.5em;"><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
 
   <!-- Add Button to the Right of "Seller's Profile" -->
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProductModal" style="border: 1px solid #FFD700; color: #FFD700;">
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProductModal" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
     Add Product
   </button>
 </div>
 
-
-<table class='table table-hover table-bordered container'>
+<table class='table table-hover table-bordered container' style="font-size: 0.8em;">
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product Name</th>
@@ -128,7 +127,7 @@
         
         <td style="margin-top: 10px; float: left;">
           <!-- Modify Button -->
-          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modifyProductModal{{ loop.index }}" style="border: 1px solid #FFD700; color: #FFD700;">
+          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modifyProductModal{{ loop.index }}" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
             Modify
           </button>
         
@@ -139,7 +138,7 @@
         </td>
         <td style="margin-top: 10px; float: left;">
           <!-- Remove Button -->
-          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeProductModal{{ loop.index }}" style="border: 1px solid #FFD700; color: #FFD700;">
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeProductModal{{ loop.index }}" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
             Remove
           </button>
         
@@ -148,12 +147,11 @@
             <!-- Modal content goes here -->
           </div>
         </td>
-        
-        
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
 
 
 
