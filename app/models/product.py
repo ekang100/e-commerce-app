@@ -47,14 +47,17 @@ OFFSET :offset
         return [Product(*row) for row in rows]
     
     @staticmethod
-    def search(query: str, sort_by=None):
+    def search_product(query):
         # implement sort by later
-        if type(sort_by) is str and sort_by.find(';') != -1:
-            sort_by = None
-        rows = app.db.execute('''
-            SELECT productid, name, price, description, category, image_path, available, avg_rating
-            FROM Products
-            WHERE Products.name LIKE :query OR Products.description LIKE :query
-            {("ORDER BY " + sort_by) if sort_by is not None else ""};
-        ''', query='%' + query + '%')
-        return [Product(*row) for row in rows]
+        #if type(sort_by) is str and sort_by.find(';') != -1:
+            #sort_by = None
+        try:
+            rows = app.db.execute('''
+                SELECT *
+                FROM Products
+                WHERE name LIKE :query OR description LIKE :query
+            ''', query='%' + query + '%')
+            return rows
+        except Exception as e:
+            print(str(e))
+            return None
