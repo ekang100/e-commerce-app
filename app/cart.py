@@ -122,7 +122,7 @@ def buyerOrder():
                         updateCartQuantity = Cart.update_number_unique_items(Cart.get_cartID_from_buyerid(current_user.id))
                         singleCart = Cart.get_cart_from_buyerid(current_user.id)
                         print(errorMessageString)
-                        print(errorMessageString)
+                        can_order = True
                         return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString)
                 
                 #if constraints have been met
@@ -173,8 +173,25 @@ def buyerOrder():
 
 
         allItemsBought = LineItem.get_all_by_cartid_bought(Cart.get_cartID_from_buyerid(current_user.id),True)
+        
+        allOrdersByUser = Orders.get_all_orderIDs_by_buyerid(current_user.id)
 
-        return render_template('buyer-order.html', allItemsBought = allItemsBought)
+        #will update whether an entire order has been fulfilled
+        #this hasn't been tested yet
+        for order in allOrdersByUser:
+            orderID = order["orderid"]
+            allFulfilled = True
+            lineItemsForEachOrderID = LineItem.get_all_lineitems_by_orderid(orderID)
+            for lineitem in lineItemsForEachOrderID:
+                if not lineitem["fulfilledStatus"]:
+                    allFulfilled = False
+            if allFulfilled:
+                Orders.update_entireOrderFulfillmentStatus(orderID)
+        
+        allOrdersByUser = Orders.get_all_orderIDs_by_buyerid(current_user.id)
+
+
+        return render_template('buyer-order.html', allItemsBought = allItemsBought, allOrdersByUser = allOrdersByUser)
     else:
         return jsonify({}), 404
     

@@ -28,7 +28,6 @@ WHERE lineid = :lineid
 
     @staticmethod
     def get_lineid(): #this is not working
-    def get_lineid(): #this is not working
         rows = app.db.execute('''
 SELECT lineid
 FROM LineItem
@@ -95,18 +94,19 @@ WHERE productid = :productid
                               productid=productid)
         return ((rows[0])) if rows is not None else None
     
+
+    #can change ordering if need to, ordered this way so that the tuples dont flip around the cart when quantites are changed
     @staticmethod
     def get_all_by_cartid_not_bought(cartid,buyStatus = False):
         rows = app.db.execute('''
-SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.productid, LineItem.sellerid, LineItem.orderid, LineItem.fulfilledStatus
 SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.productid, LineItem.sellerid, LineItem.orderid, LineItem.fulfilledStatus
 FROM LineItem, Products P
 WHERE P.productid = LineItem.productid
 AND LineItem.cartid = :cartid
 AND LineItem.buyStatus = False
+ORDER BY P.name
 ''',
                               cartid=cartid)
-        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "productid":row[4], "sellerid":row[5]} for row in rows]
         return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "productid":row[4], "sellerid":row[5]} for row in rows]
 
     @staticmethod
@@ -117,6 +117,7 @@ FROM LineItem, Products P
 WHERE P.productid = LineItem.productid
 AND LineItem.cartid = :cartid
 AND LineItem.buyStatus = :buyStatus
+ORDER BY orderid
 ''',
                               cartid=cartid, buyStatus = buyStatus)
         return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "orderid":row[4], "fulfilledStatus":row[5]} for row in rows]
@@ -145,16 +146,15 @@ WHERE lineid = :lineid
         return None
 
 
-#this is new
     @staticmethod
     def get_all_lineitems_by_orderid(orderid):
                 rows = app.db.execute('''
-SELECT *
+SELECT LineItem.buyStatus, LineItem.fulFilledStatus
 FROM LineItem
 WHERE LineItem.orderid = :orderid
 ''',
             orderid=orderid) 
-                return LineItem(*(rows[0])) if rows else None
+                return [{"buyStatus": row[0], "fulfilledStatus": row[1]} for row in rows]
     
     @staticmethod
     def get_fulfillment_status(lineitemid):
