@@ -246,7 +246,7 @@ WHERE id = :id
             results = app.db.execute("""
                 SELECT *
                 FROM PubProfile
-                WHERE name LIKE :name
+                WHERE LOWER(name) LIKE LOWER(:name)
             """, name='%' + name + '%')
             return results
         except Exception as e:

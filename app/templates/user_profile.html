@@ -4,16 +4,24 @@
 <html>
 <body>
     {% if user %}
-    <h1>{{ user[0]['name'] }}'s Public Profile</h1>
+    <h1 style="color: yellow;">{{ user[0]['name'] }}'s Public Profile</h1>
     <ul>
         <li><strong>Account ID:</strong> {{ user[0]['account_id'] }}</li>
         <li><strong>Name:</strong> {{ user[0]['name'] }}</li>
-        <li><a href="{{ url_for('users.search_user') }}">Back to Search Results</a></li>
+        {% if ver_stat %}
+        <li><strong>Verified:</strong>
+            <span style="display: inline;">
+                <i class="fas fa-star" style="color: yellow; font-size: 16px;"></i>
+                <i class="fas fa-star" style="color: yellow; font-size: 16px;"></i>
+                <i class="fas fa-star" style="color: yellow; font-size: 16px;"></i>
+            </span>
+        </li>
+        {% endif %}
     </ul>
 
     {% if sell_stat %}
-    <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
-    <h1><span style="color: #00aaff;">Seller Public Profile</span></h1>
+    <hr style="clear: both; margin-top: 70px;">
+    <h1><span style="color: yellow;">Seller Public Profile</span></h1>
     <ul>
         <li><strong>Email:</strong> {{ user[0]['email'] }}</li>
         <li><strong>Address:</strong> {{ user[0]['address'] }}</li>
