@@ -179,8 +179,8 @@ def public_profile(account_id):
 @bp.route('/account', methods=['GET', 'POST'])
 def verify_account():
     if request.method == 'POST':
-        if User.get_balance(current_user.id) > 100:
-            User.add_balance(current_user.id, float(User.get_balance(current_user.id)) - 100.0)
+        if User.get_balance(current_user.id) > 500:
+            User.add_balance(current_user.id, float(User.get_balance(current_user.id)) - 500.0)
             if User.verify_account(current_user.id):
                 return redirect(url_for('users.account'))
         else:

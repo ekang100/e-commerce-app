@@ -203,7 +203,10 @@ p {
       <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}
           Hello {{current_user.firstname}}! 
-          <a href="{{ url_for('users.account') }}"><img src="https://cdn-icons-png.flaticon.com/512/9815/9815472.png" style="width:45px; height:40px;" alt="Account"></a>
+          {% if current_user.isVerified %}
+            <i class="fas fa-star" style="color: yellow; font-size: 30px; position: relative; top: 5px;"></i>
+          {% endif %}
+       <a href="{{ url_for('users.account') }}"><img src="https://cdn-icons-png.flaticon.com/512/9815/9815472.png" style="width:45px; height:40px;" alt="Account"></a>
        <a href="cart"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/858958/shopping-cart-clipart-xl.png" style="width:45px; height:40px;" alt="Cart"></a>
        <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log Out</a>
      {% else %}

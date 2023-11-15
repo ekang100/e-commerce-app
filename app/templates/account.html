@@ -61,13 +61,23 @@
             <form method="POST" action="{{ url_for('users.verify_account') }}">
                 <button type="submit" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float:right; color: #FFD700;" role="button">Become Verfied User</button>
             </form>            
-            {% endif %}       
+            {% endif %}
+            {% if current_user.isVerified %}
+              <i class="fas fa-star" style="color: yellow; font-size: 16px; float: right;"></i>
+              <i class="fas fa-star" style="color: yellow; font-size: 16px; float: right;"></i>
+              <i class="fas fa-star" style="color: yellow; font-size: 16px; float: right;"></i>
+            {% endif %}</th>       
         </td>
       </tr>
   </tbody>
 </table>
-<a href="{{ url_for('users.update_name_address') }}" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="'button">Update Name/Address</a>
-<a href="{{ url_for('users.change_email') }}" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="'button">Change Email</a>
+
+<p style="color: #FFD700; margin-top: 10px;">
+    ***<strong>Disclaimer:</strong> Star verification status requires BoxML approval and a one-time fee of $500***
+</p>
+
+<a href="{{ url_for('users.update_name_address') }}" class="btn btn-primary" style="margin-top: 10px; margin-right: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="'button">Update Name/Address</a>
+<a href="{{ url_for('users.change_email') }}" class="btn btn-primary" style="margin-top: 10px; margin-right: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="'button">Change Email</a>
 <a href="{{ url_for('users.change_password') }}" class="btn btn-primary" href="cart" style="margin-top: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="button">Change Star Password</a>
 
 <br><br>
