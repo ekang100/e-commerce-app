@@ -17,3 +17,15 @@ WHERE buyerid = :buyerid
 ''',
                               buyerid=buyerid)
         return [row[0] for row in rows]
+
+    @staticmethod
+    def add_order_to_orders_table(buyerid):
+                rows = app.db.execute('''
+INSERT INTO OrdersInProgress(buyerid, entireOrderFulfillmentStatus)
+VALUES (:buyerid, False)
+RETURNING orderid
+''', 
+                              buyerid = buyerid)
+                return ((rows[0][0])) if rows is not None else None
+    
+

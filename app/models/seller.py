@@ -37,14 +37,25 @@ class Seller:
         else:
             return None
 
-    def get_products(self):
+    #gets the products for sale by the seller of interest (self)
+    def get_products_for_sale(self):
         rows = app.db.execute('''
-SELECT productid, name, price, description, category, available, avg_rating, seller_id
-FROM Products
-WHERE seller_id = :seller_id
-''',
-                              seller_id=self.uid)
-        return [Product(*row) for row in rows]
+        SELECT s.quantity, p.productid, p.name, p.price, p.description
+        FROM ProductsForSale s
+        JOIN Products p ON s.productid = p.productid
+        WHERE s.uid = :seller_id
+    ''',
+        seller_id=self.uid)
 
+        products = [
+        {
+            'quantity': row[0],
+            'name': row[2],
+            'price': row[3],
+            'description': row[4]
+        }
+        for row in rows
+    ]
+        return products
 
 
