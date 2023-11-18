@@ -2,8 +2,20 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h1> <span style = "color:#FFD700"> {{current_user.firstname}}'s User Bio</span></h1>
+<div style="background-color: white; padding: 20px; border-radius: 5px; color: black; clear: both;">
+  {{current_user.bio}}
+</div>
 
-<h1> <span style = "color:#FFD700"> {{current_user.firstname}}'s Cosmic Dashboard</span></h1>
+<form method="POST" action="{{ url_for('users.bio') }}">
+  <button type="submit" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float: left; color: #FFD700;" role="button">Update Bio</button>
+</form>  
+
+<div style="clear: both; height: 70px;"></div>
+<!-- <div style="flex: 0 0 auto; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin-right: 20px;">
+  <img src="{{ url_for('static', filename=current_user.avatar) }}" alt="User Avatar" style="width: 100%; height: auto;">
+</div> -->
+<h1> <span style = "color:#FFD700;"> {{current_user.firstname}}'s Cosmic Dashboard</span></h1>
 
 <table class='table table-bordered container'>
   <thead class="thead-dark">
@@ -81,7 +93,7 @@
 <a href="{{ url_for('users.change_password') }}" class="btn btn-primary" href="cart" style="margin-top: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="button">Change Star Password</a>
 
 <br><br>
-<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
+<hr style="border: none; clear: both; margin-top: 70px;">
 <h1 style = "color: #FFD700;">{{current_user.firstname}}'s Recent Purchases:</h1>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -109,7 +121,7 @@
 {% if current_user.isSeller %}
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
 <div class="d-flex justify-content-between">
-  <h1 style="font-size: 1.5em;"><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
+  <h1><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
 
   <!-- Add Button to the Right of "Seller's Profile" -->
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProductModal" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
