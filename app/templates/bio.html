@@ -1,0 +1,45 @@
+{% if current_user.is_authenticated %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Update User Biography</h1>
+
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.bio.label }}<br/>
+    {{ form.bio(rows=4, cols=50, id='bio_text') }}<br/>
+    <!-- <span id="charCount">0/500</span><br/> -->
+    {% for error in form.bio.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>{{ form.submit() }}</p>
+</form>
+
+<!-- <script>
+// Function to count characters
+function countCharacters(){
+    var element = document.getElementById('bio_text');
+    var count = element.value.length;
+    var display = document.getElementById('charCount');
+    display.textContent = count + '/500';
+
+    // Optional: Change color if over the limit
+    if(count > 500){
+        display.style.color = 'red';
+    } else {
+        display.style.color = 'black';
+    }
+}
+
+// Event listener for when the user types in the bio field
+document.getElementById('bio_text').addEventListener('input', countCharacters);
+
+// Initial call to set the character count when the page loads
+document.addEventListener('DOMContentLoaded', countCharacters);
+</script> -->
+
+{% endblock %}
+{% endif %}

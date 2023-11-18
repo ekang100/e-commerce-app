@@ -188,3 +188,22 @@ def verify_account():
         else:
             raise ValidationError('You do not have enough money')
     return render_template('account.html')
+
+class BioForm(FlaskForm):
+    bio = StringField('500 Character Limit')
+    submit = SubmitField('Update')
+
+    def validate_bio(self, bio):
+        if bio.data is None:
+            return
+        if len(bio.data) > 500:
+            raise ValidationError(f'Your bio is too long: {len(bio.data)} characters. It must be 500 characters or less.')
+
+@bp.route('/bio', methods=['GET', 'POST'])
+def bio():
+    form = BioForm()
+    if form.validate_on_submit():
+        if User.bio(current_user.id,
+                        form.bio.data):
+            return redirect(url_for('users.account'))
+    return render_template('bio.html', title='500 Character Limit', form=form)
