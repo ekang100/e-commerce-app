@@ -9,8 +9,8 @@
   {{ form.hidden_tag() }}
   <p>
     {{ form.bio.label }}<br/>
-    {{ form.bio(rows=4, cols=50, id='bio_text') }}<br/>
-    <!-- <span id="charCount">0/500</span><br/> -->
+    {{ form.bio(rows=4, cols=50, onkeyup='countChars(this);') }}<br/>
+    <p id="charNum">Type to see characters remaining</p>
     {% for error in form.bio.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
@@ -18,28 +18,19 @@
   <p>{{ form.submit() }}</p>
 </form>
 
-<!-- <script>
-// Function to count characters
-function countCharacters(){
-    var element = document.getElementById('bio_text');
-    var count = element.value.length;
-    var display = document.getElementById('charCount');
-    display.textContent = count + '/500';
+<script>
+function countChars(obj){
+  var maxLength = 500;
+  var strLength = obj.value.length;
+  var charRemain = (maxLength - strLength);
 
-    // Optional: Change color if over the limit
-    if(count > 500){
-        display.style.color = 'red';
-    } else {
-        display.style.color = 'black';
-    }
+  if(charRemain < 0){
+    document.getElementById('charNum').innerHTML = '<span style="color:red;">' + strLength + '/500 </span>';
+  }else{
+    document.getElementById('charNum').innerHTML = strLength + '/500 characters';
+  }
 }
-
-// Event listener for when the user types in the bio field
-document.getElementById('bio_text').addEventListener('input', countCharacters);
-
-// Initial call to set the character count when the page loads
-document.addEventListener('DOMContentLoaded', countCharacters);
-</script> -->
+</script>
 
 {% endblock %}
 {% endif %}
