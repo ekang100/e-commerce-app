@@ -10,7 +10,7 @@
   <p>
     {{ form.bio.label }}<br/>
     {{ form.bio(rows=4, cols=50, onkeyup='countChars(this);') }}<br/>
-    <p id="charNum">Type to see characters remaining</p>
+    <span id="charNum">Type to see characters remaining</span>
     {% for error in form.bio.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
