@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Unfulfilled Order History</h1>
+
+<table class="table table-hover table-bordered container" style="font-size: 0.8em;">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Quantities</th>
+            <th scope="col">Time Purchased</th>
+            <th scope="col">Buyer Address</th>
+            <th scope="col">Mark Fulfilled</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in order_history %}
+            <tr>
+                <td>{{ order.quantities }}</td>
+                <td>{{ order.time_purchased }}</td>
+                <td>{{ order.address }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('sellers.mark_line_item_fulfilled', line_item_id=order.itemid) }}">
+                        <button type="submit" class="btn btn-success">Mark Fulfilled</button>
+                    </form>
+                </td>
+                
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

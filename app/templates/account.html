@@ -111,56 +111,26 @@
 <div class="d-flex justify-content-between">
   <h1 style="font-size: 1.5em;"><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
 
-  <!-- Add Button to the Right of "Seller's Profile" -->
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProductModal" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-    Add Product
-  </button>
+  <!-- Products for Sale Button -->
+<a href="{{ url_for('sellers.get_seller_inventory', seller_id=current_user.id) }}" class="btn btn-info" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
+  Products for Sale
+</a>
+
+<!-- Fulfilled Orders Button -->
+<a href="{{ url_for('sellers.get_fulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-success" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
+  Fulfilled Orders History
+</a>
+
+<!-- Unfulfilled Orders Button -->
+<a href="{{ url_for('sellers.get_unfulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-danger" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
+  Unfulfilled Orders History 
+</a>
+
+
+
+
 </div>
 
-<table class='table table-hover table-bordered container' style="font-size: 0.8em;">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Product Name</th>
-      <th scope="col">Description</th>
-      <th scope="col">Price</th>
-      <th scope="col">Quantity</th>
-      <th scope="col">Adjust</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for product in current_user.get_products_for_sale() %}
-      <tr>
-        <th scope="row">{{ product.name }}</th>
-        <td>{{ product.description }}</td>
-        <td>${{ product.price }}</td>
-        <td>{{ product.quantity }}</td>
-        
-        <td style="margin-top: 10px; float: left;">
-          <!-- Modify Button -->
-          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modifyProductModal{{ loop.index }}" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-            Modify
-          </button>
-        
-          <!-- Modify Product Modal -->
-          <div class="modal fade" id="modifyProductModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="modifyProductModalLabel{{ loop.index }}" aria-hidden="true">
-            <!-- Modal content goes here -->
-          </div>
-        </td>
-        <td style="margin-top: 10px; float: left;">
-          <!-- Remove Button -->
-          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeProductModal{{ loop.index }}" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-            Remove
-          </button>
-        
-          <!-- Remove Product Modal -->
-          <div class="modal fade" id="removeProductModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="removeProductModalLabel{{ loop.index }}" aria-hidden="true">
-            <!-- Modal content goes here -->
-          </div>
-        </td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
 
 
 
