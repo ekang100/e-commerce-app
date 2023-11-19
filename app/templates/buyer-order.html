@@ -3,32 +3,35 @@
 {% block content %}
 
 {% if allItemsBought %}
-<h1></h1>
+<h1> {{current_user.firstname}}'s Cosmic Order History</h1>
+
+{% for order in allOrdersByUser %}
+<h2>Order ID: {{ order.orderid }}</h2>
+<p>Entire Order Fulfillment Status: {{ order.entireOrderFulfillmentStatus }}</p>
 
 <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
         <tr>
-          <th scope="col">Product Name</th>
-          <th scope="col">Quantities</th>
-          <th scope="col">Unit Price</th>
-          <th scope = "col"> OrderID </th>
-          <th scope = "col">Lineitem Fulfilled</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Quantities</th>
+            <th scope="col">Unit Price</th>
+            <th scope="col">Lineitem Fulfilled</th>
         </tr>
-      </thead>
-<tbody>
-    {% for lineitem in allItemsBought%}
-      <tr>
-        <th scope="row">{{lineitem.name}}</th>
-        <td>{{lineitem.quantities}}</td>
-        <td>{{lineitem.price}}</td>
-        <td> {{lineitem.orderid}}</td>
-        <td> {{lineitem.fulfilledStatus}}</td>
-        <!-- <td ><button type="button"> Remove lineitem.</button> </td> -->
-
-      </tr>
-    {% endfor %}
-</tbody>
+    </thead>
+    <tbody>
+        {% for lineitem in allItemsBought %}
+            {% if lineitem.orderid == order.orderid %}
+                <tr>
+                    <td>{{ lineitem.name }}</td>
+                    <td>{{ lineitem.quantities }}</td>
+                    <td>{{ lineitem.price }}</td>
+                    <td>{{ lineitem.fulfilledStatus }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
 </table>
+{% endfor %}
 
 
 
