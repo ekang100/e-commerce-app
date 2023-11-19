@@ -3,18 +3,47 @@
 
 {% block content %}
 <h1> <span style = "color:#FFD700"> {{current_user.firstname}}'s User Bio</span></h1>
-<div style="background-color: white; padding: 20px; border-radius: 5px; color: black; clear: both;">
-  {{current_user.bio}}
+
+<!-- Main Flex Container -->
+<div style="display: flex; justify-content: start; align-items: start; margin-bottom: 20px;">
+
+  <!-- Left Column: Avatar and Change Avatar Button -->
+  <div style="margin-right: 20px; text-align: center;">
+    <div style="width: 150px; height: 150px; border-radius: 80%; overflow: hidden; background-color: white; margin-bottom: 10px;">
+      {% if current_user.avatar == 1 %}
+        <img src="/static/rocket.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+      {% elif current_user.avatar == 2 %}
+        <img src="/static/alien.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+      {% elif current_user.avatar == 3 %}
+        <img src="/static/telescope.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+      {% elif current_user.avatar == 4 %}
+        <img src="/static/astronaut.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+      {% endif %}
+    </div>
+
+    <form method="POST" action="{{ url_for('users.change_avatar') }}" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 90px;">
+      <select name="avatar" class="form-control" style="margin-bottom: 10px;">
+        <option value="1" {% if current_user.avatar == 1 %}selected{% endif %}>Rocket</option>
+        <option value="2" {% if current_user.avatar == 2 %}selected{% endif %}>Alien</option>
+        <option value="3" {% if current_user.avatar == 3 %}selected{% endif %}>Telescope</option>
+        <option value="4" {% if current_user.avatar == 4 %}selected{% endif %}>Astronaut</option>
+      </select>
+      <button type="submit" class="btn btn-primary" style="border: 2px solid #FFD700; color: #FFD700;">Change Avatar</button>
+    </form>
+  </div>
+
+  <!-- Right Column: User Bio, Bio Box, and Update Bio Button -->
+  <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+    <div style="background-color: white; padding: 20px; border-radius: 5px; color: black; height: 150px; margin-bottom: 10px;">
+      {{current_user.bio}}
+    </div>
+    <form method="POST" action="{{ url_for('users.bio') }}">
+      <button type="submit" class="btn btn-primary" style="border: 2px solid #FFD700; color: #FFD700;">Update Bio</button>
+    </form>
+  </div>
 </div>
 
-<form method="POST" action="{{ url_for('users.bio') }}">
-  <button type="submit" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float: left; color: #FFD700;" role="button">Update Bio</button>
-</form>  
-
-<div style="clear: both; height: 70px;"></div>
-<!-- <div style="flex: 0 0 auto; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin-right: 20px;">
-  <img src="{{ url_for('static', filename=current_user.avatar) }}" alt="User Avatar" style="width: 100%; height: auto;">
-</div> -->
+<div style="clear: both; height: 50px;"></div>
 <h1> <span style = "color:#FFD700;"> {{current_user.firstname}}'s Cosmic Dashboard</span></h1>
 
 <table class='table table-bordered container'>
@@ -40,20 +69,16 @@
       <tr>
           <td>
             <strong style="color: #FFD700">Email:</strong> <span style="color: #eee">{{current_user.email}}</span>
-              <!-- <button href='\'class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
           </td>
       </tr>
       <tr>
           <td>
             <strong style="color: #FFD700">Name:</strong> <span style="color: #eee">{{current_user.firstname}} {{current_user.lastname}}</span>
-                          <!-- <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
           </td>
       </tr>
       <tr>
           <td>
             <strong style="color: #FFD700">Address:</strong> <span style="color: #eee">{{current_user.address}}</span>
-
-              <!-- <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
           </td>
       </tr>
       <tr>
