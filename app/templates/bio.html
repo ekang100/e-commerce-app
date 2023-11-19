@@ -1,0 +1,36 @@
+{% if current_user.is_authenticated %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Update User Biography</h1>
+
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.bio.label }}<br/>
+    {{ form.bio(rows=4, cols=50, onkeyup='countChars(this);') }}<br/>
+    <span id="charNum">Type to see characters remaining</span>
+    {% for error in form.bio.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>{{ form.submit() }}</p>
+</form>
+
+<script>
+function countChars(obj){
+  var maxLength = 500;
+  var strLength = obj.value.length;
+  var charRemain = (maxLength - strLength);
+
+  if(charRemain < 0){
+    document.getElementById('charNum').innerHTML = '<span style="color:red;">' + strLength + '/500 </span>';
+  }else{
+    document.getElementById('charNum').innerHTML = strLength + '/500 characters';
+  }
+}
+</script>
+
+{% endblock %}
+{% endif %}

@@ -26,7 +26,11 @@
 25,36,False
 26,3,False
 27,29,True
+<<<<<<< 7ddbfe91e1f5e6a1ba6d647ee5e8f8793b90e8a6
 28,26,True
+=======
+28,39,False
+>>>>>>> 85f620ab29951c895d60d67d5e580e38dffcae27
 29,21,False
 30,9,True
 31,44,False

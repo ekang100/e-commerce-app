@@ -212,17 +212,48 @@ def search_user():
 def public_profile(account_id):
     if request.method == 'POST':
         info = User.pubprofile_search(account_id)
-        sell_stat = info[0][-1]
-        return render_template('user_profile.html', user=info, sell_stat=sell_stat)
+        sell_stat = info[0][4]
+        ver_stat = info[0][5]
+        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat)
     return redirect(url_for('users.account'))
 
 @bp.route('/account', methods=['GET', 'POST'])
 def verify_account():
     if request.method == 'POST':
-        if User.get_balance(current_user.id) > 100:
-            User.add_balance(current_user.id, float(User.get_balance(current_user.id)) - 100.0)
+        if User.get_balance(current_user.id) > 500:
+            User.add_balance(current_user.id, float(User.get_balance(current_user.id)) - 500.0)
             if User.verify_account(current_user.id):
                 return redirect(url_for('users.account'))
         else:
             raise ValidationError('You do not have enough money')
     return render_template('account.html')
+
+class BioForm(FlaskForm):
+    bio = StringField('500 Character Limit')
+    submit = SubmitField('Update')
+
+    def validate_bio(self, bio):
+        if bio.data is None:
+            return
+        if len(bio.data) > 500:
+            raise ValidationError(f'Your bio is too long: {len(bio.data)} characters. It must be 500 characters or less.')
+
+@bp.route('/bio', methods=['GET', 'POST'])
+def bio():
+    form = BioForm()
+    if form.validate_on_submit():
+        if User.bio(current_user.id,
+                        form.bio.data):
+            return redirect(url_for('users.account'))
+    return render_template('bio.html', title='500 Character Limit', form=form)
+
+@bp.route('/change_avatar', methods=['GET', 'POST'])
+def change_avatar():
+    selected_avatar = request.form.get('avatar')
+    try:
+        User.change_avatar(current_user.id, selected_avatar)
+        return redirect(url_for('users.account'))
+    except:
+        raise ValidationError('Could not update avatar')
+
+

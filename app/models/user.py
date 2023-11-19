@@ -8,7 +8,7 @@ from .product import Product
 
 
 class User(UserMixin):
-    def __init__(self, id, address, email, firstname, lastname, balance, isSeller, isVerified):
+    def __init__(self, id, address, email, firstname, lastname, balance, isSeller, isVerified, bio, avatar):
         self.id = id
         self.address = address
         self.email = email
@@ -17,11 +17,13 @@ class User(UserMixin):
         self.balance = balance
         self.isSeller = isSeller
         self.isVerified = isVerified
+        self.bio = bio
+        self.avatar = avatar
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, address, balance, isSeller, isVerified
+SELECT password, id, email, firstname, lastname, address, balance, isSeller, isVerified, bio, avatar
 FROM Users
 WHERE email = :email
 """,
@@ -156,6 +158,7 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
+        
     def get_products(self):
         rows = app.db.execute('''
             SELECT p.name, p.description, p.price
@@ -193,52 +196,12 @@ RETURNING id
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, address, email, firstname, lastname, balance, isSeller, isVerified
-FROM Users
-WHERE id = :id
-""",
+    SELECT id, address, email, firstname, lastname, balance, isSeller, isVerified, bio, avatar
+    FROM Users
+    WHERE id = :id
+    """,
                               id=id)
         return User(*(rows[0])) if rows else None
-    
-    # @staticmethod
-    # def search_user_firstname(user_to_search):
-    #     try:
-    #         results = app.db.execute("""
-    #             SELECT account_id 
-    #             FROM PubProfile
-    #             WHERE firstname LIKE :search_query
-    #         """, search_query='%' + user_to_search + '%').fetchall()
-    #         return results
-    #     except Exception as e:
-    #         print(str(e))
-    #         return None
-        
-    # @staticmethod
-    # def search_user_lastname(user_to_search):
-    #     try:
-    #         results = app.db.execute("""
-    #             SELECT account_id 
-    #             FROM PubProfile
-    #             WHERE lastname LIKE :search_query
-    #         """, search_query='%' + user_to_search + '%').fetchall()
-    #         return results
-    #     except Exception as e:
-    #         print(str(e))
-    #         return None
-        
-    # @staticmethod
-    # def search_user(firstname_enter, lastname_enter):
-    #     try:
-    #         results = app.db.execute("""
-    #             SELECT account_id
-    #             FROM PubProfile
-    #             WHERE firstname LIKE :firstname
-    #             AND lastname LIKE :lastname
-    #         """, firstname='%' + firstname_enter + '%', lastname='%' + lastname_enter + '%')
-    #         return results
-    #     except Exception as e:
-    #         print(str(e))
-    #         return None
 
     @staticmethod
     def search_user(name):
@@ -246,7 +209,7 @@ WHERE id = :id
             results = app.db.execute("""
                 SELECT *
                 FROM PubProfile
-                WHERE name LIKE :name
+                WHERE LOWER(name) LIKE LOWER(:name)
             """, name='%' + name + '%')
             return results
         except Exception as e:
@@ -262,6 +225,32 @@ WHERE id = :id
                 WHERE account_id = :account_id
             """, account_id=account_id)
             return results
+        except Exception as e:
+            print(str(e))
+            return None
+
+    @staticmethod
+    def bio(user_id, bio):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET bio = :bio
+                WHERE id = :user_id
+            """, user_id=user_id, bio=bio)
+            return User.get(user_id)
+        except Exception as e:
+            print(str(e))
+            return None
+        
+    @staticmethod
+    def change_avatar(user_id, avatar):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET avatar = :avatar
+                WHERE id = :user_id
+            """, user_id=user_id, avatar=avatar)
+            return User.get(user_id)
         except Exception as e:
             print(str(e))
             return None

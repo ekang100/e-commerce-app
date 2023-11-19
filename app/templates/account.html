@@ -2,8 +2,49 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h1> <span style = "color:#FFD700"> {{current_user.firstname}}'s User Bio</span></h1>
 
-<h1> <span style = "color:#FFD700"> {{current_user.firstname}}'s Cosmic Dashboard</span></h1>
+<!-- Main Flex Container -->
+<div style="display: flex; justify-content: start; align-items: start; margin-bottom: 20px;">
+
+  <!-- Left Column: Avatar and Change Avatar Button -->
+  <div style="margin-right: 20px; text-align: center;">
+    <div style="width: 150px; height: 150px; border-radius: 80%; overflow: hidden; background-color: white; margin-bottom: 10px;">
+      {% if current_user.avatar == 1 %}
+        <img src="/static/rocket.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+      {% elif current_user.avatar == 2 %}
+        <img src="/static/alien.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+      {% elif current_user.avatar == 3 %}
+        <img src="/static/telescope.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+      {% elif current_user.avatar == 4 %}
+        <img src="/static/astronaut.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+      {% endif %}
+    </div>
+
+    <form method="POST" action="{{ url_for('users.change_avatar') }}" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 90px;">
+      <select name="avatar" class="form-control" style="margin-bottom: 10px;">
+        <option value="1" {% if current_user.avatar == 1 %}selected{% endif %}>Rocket</option>
+        <option value="2" {% if current_user.avatar == 2 %}selected{% endif %}>Alien</option>
+        <option value="3" {% if current_user.avatar == 3 %}selected{% endif %}>Telescope</option>
+        <option value="4" {% if current_user.avatar == 4 %}selected{% endif %}>Astronaut</option>
+      </select>
+      <button type="submit" class="btn btn-primary" style="border: 2px solid #FFD700; color: #FFD700;">Change Avatar</button>
+    </form>
+  </div>
+
+  <!-- Right Column: User Bio, Bio Box, and Update Bio Button -->
+  <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+    <div style="background-color: white; padding: 20px; border-radius: 5px; color: black; height: 150px; margin-bottom: 10px;">
+      {{current_user.bio}}
+    </div>
+    <form method="POST" action="{{ url_for('users.bio') }}">
+      <button type="submit" class="btn btn-primary" style="border: 2px solid #FFD700; color: #FFD700;">Update Bio</button>
+    </form>
+  </div>
+</div>
+
+<div style="clear: both; height: 50px;"></div>
+<h1> <span style = "color:#FFD700;"> {{current_user.firstname}}'s Cosmic Dashboard</span></h1>
 
 <table class='table table-bordered container'>
   <thead class="thead-dark">
@@ -28,20 +69,16 @@
       <tr>
           <td>
             <strong style="color: #FFD700">Email:</strong> <span style="color: #eee">{{current_user.email}}</span>
-              <!-- <button href='\'class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
           </td>
       </tr>
       <tr>
           <td>
             <strong style="color: #FFD700">Name:</strong> <span style="color: #eee">{{current_user.firstname}} {{current_user.lastname}}</span>
-                          <!-- <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
           </td>
       </tr>
       <tr>
           <td>
             <strong style="color: #FFD700">Address:</strong> <span style="color: #eee">{{current_user.address}}</span>
-
-              <!-- <button class="btn btn-primary" style="float: right; background-color: #00aaff;">Update</button> -->
           </td>
       </tr>
       <tr>
@@ -61,17 +98,27 @@
             <form method="POST" action="{{ url_for('users.verify_account') }}">
                 <button type="submit" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float:right; color: #FFD700;" role="button">Become Verfied User</button>
             </form>            
-            {% endif %}       
+            {% endif %}
+            {% if current_user.isVerified %}
+              <i class="fas fa-star" style="color: yellow; font-size: 16px; float: right;"></i>
+              <i class="fas fa-star" style="color: yellow; font-size: 16px; float: right;"></i>
+              <i class="fas fa-star" style="color: yellow; font-size: 16px; float: right;"></i>
+            {% endif %}</th>       
         </td>
       </tr>
   </tbody>
 </table>
-<a href="{{ url_for('users.update_name_address') }}" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="'button">Update Name/Address</a>
-<a href="{{ url_for('users.change_email') }}" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="'button">Change Email</a>
+
+<p style="color: #FFD700; margin-top: 10px;">
+    ***<strong>Disclaimer:</strong> Star verification status requires BoxML approval and a one-time fee of $500***
+</p>
+
+<a href="{{ url_for('users.update_name_address') }}" class="btn btn-primary" style="margin-top: 10px; margin-right: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="'button">Update Name/Address</a>
+<a href="{{ url_for('users.change_email') }}" class="btn btn-primary" style="margin-top: 10px; margin-right: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="'button">Change Email</a>
 <a href="{{ url_for('users.change_password') }}" class="btn btn-primary" href="cart" style="margin-top: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="button">Change Star Password</a>
 
 <br><br>
-<hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
+<hr style="border: none; clear: both; margin-top: 70px;">
 <h1 style = "color: #FFD700;">{{current_user.firstname}}'s Recent Purchases:</h1>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -99,7 +146,7 @@
 {% if current_user.isSeller %}
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
 <div class="d-flex justify-content-between">
-  <h1 style="font-size: 1.5em;"><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
+  <h1><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
 
   <!-- Add Button to the Right of "Seller's Profile" -->
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProductModal" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
