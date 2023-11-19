@@ -11,26 +11,28 @@
 {% endif %}
 
 
-<h1> <span style = "color:blue"> Your Mini Amazon Cart</span></h1>
+<h1> <span style = "color:#FFD700"> Your Mini Amazon Cart</span> </h1>
+<a href="buyer-order" type = "button" class="btn btn-primary" style="float: top; margin-right: 10px; border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">View Order History</a>
 
 <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
         <tr>
-          <th scope="col">Product Name</th>
-          <th scope="col">Quantities</th>
-          <th scope="col">Unit Price</th>
+          <th scope="col" style="color: #FFD700">Product Name</th>
+          <th scope="col" style="color: #FFD700">Quantities</th>
+          <th scope="col" style="color: #FFD700">Unit Price</th>
         </tr>
       </thead>
 <tbody>
     {% for lineitem in ItemsInCart%}
       <tr>
         <th scope="row">{{lineitem.name}}</th>
-        <td>{{lineitem.quantities}}
-              <form method="post" action="{{ url_for('cart.cart')}}">
-              <input type = 'number' name = newQuantity>
-              <input type = 'hidden' name = lineitem_id value = {{lineitem.lineid}}>
+        <td style="display: flex; justify-content: space-between; align-items: flex-start;">
+          {{lineitem.quantities}}
+              <form method="post" action="{{ url_for('cart.cart')}}" style= "float: right" >
+                <input type='number' name='newQuantity' style="float: right; background-color: #1a1a1a; color: #FFD700; border: 1px solid #FFD700; border-radius: 5px; padding: 8px 12px; margin-right: 10px;">
+                <input type = 'hidden' name = lineitem_id value = {{lineitem.lineid}}>
               <input type = 'hidden' name = action value = "update">
-              <input type="submit" value="Modify Quantity">
+              <input type="submit" value="Modify Quantity" class="btn btn-primary" style="float: right; margin-top: 15px; margin-right: 10px; border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
               </form>
         </td>
         <td>{{lineitem.price}}</td>
@@ -39,7 +41,7 @@
             <form method="post" action="{{ url_for('cart.cart')}}">
               <input type = 'hidden' name = lineitem_id value = {{lineitem.lineid}}>
               <input type = 'hidden' name = action value = "delete">
-              <input type="submit" value="Remove Item">
+              <input type="submit" value="Remove Item" class="btn btn-primary" style="float: top; border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
             </form>
           </td>
 
@@ -50,20 +52,21 @@
 
 
 
-<h3>
+<h3 style="color: #FFD700">
     Total Unique Items: {{singleCart.uniqueItemCount}}
 <br/>
     Total Cart Price: ${{singleCart.totalCartPrice}}
 </h3>
 
-<form method = "post" action = "{{url_for('cart.buyerOrder')}}">
+<form method = "post" action = "{{url_for('cart.buyerOrder')}}" >
 <input type = 'hidden' name = action value = "order_all">
-<input type = "submit" value = "Order Entire Cart">
+<input type = "submit" value = "Order Entire Cart" class="btn btn-primary" style="margin-right: 10px; border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
 </form>
 
 
 {% else %}
-<h3 style = "color:blue"> Cart is empty! Go Shop! </h3>
+<h3 style = "color:#FFD700"> Cart is empty! Go Shop! </h3>
+<a href="buyer-order" type = "button" class="btn btn-primary" style="float: top; margin-right: 10px; border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">View Order History</a>
 
 {% endif %}
 
