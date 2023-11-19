@@ -8,7 +8,7 @@ from .product import Product
 
 
 class User(UserMixin):
-    def __init__(self, id, address, email, firstname, lastname, balance, isSeller, isVerified, bio):
+    def __init__(self, id, address, email, firstname, lastname, balance, isSeller, isVerified, bio, avatar):
         self.id = id
         self.address = address
         self.email = email
@@ -18,11 +18,12 @@ class User(UserMixin):
         self.isSeller = isSeller
         self.isVerified = isVerified
         self.bio = bio
+        self.avatar = avatar
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, address, balance, isSeller, isVerified, bio
+SELECT password, id, email, firstname, lastname, address, balance, isSeller, isVerified, bio, avatar
 FROM Users
 WHERE email = :email
 """,
@@ -195,10 +196,10 @@ RETURNING id
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, address, email, firstname, lastname, balance, isSeller, isVerified, bio
-FROM Users
-WHERE id = :id
-""",
+    SELECT id, address, email, firstname, lastname, balance, isSeller, isVerified, bio, avatar
+    FROM Users
+    WHERE id = :id
+    """,
                               id=id)
         return User(*(rows[0])) if rows else None
 
@@ -236,6 +237,19 @@ WHERE id = :id
                 SET bio = :bio
                 WHERE id = :user_id
             """, user_id=user_id, bio=bio)
+            return User.get(user_id)
+        except Exception as e:
+            print(str(e))
+            return None
+        
+    @staticmethod
+    def change_avatar(user_id, avatar):
+        try:
+            app.db.execute("""
+                UPDATE Users
+                SET avatar = :avatar
+                WHERE id = :user_id
+            """, user_id=user_id, avatar=avatar)
             return User.get(user_id)
         except Exception as e:
             print(str(e))

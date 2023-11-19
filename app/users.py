@@ -173,8 +173,8 @@ def search_user():
 def public_profile(account_id):
     if request.method == 'POST':
         info = User.pubprofile_search(account_id)
-        sell_stat = info[0][-2]
-        ver_stat = info[0][-1]
+        sell_stat = info[0][4]
+        ver_stat = info[0][5]
         return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat)
     return redirect(url_for('users.account'))
 
@@ -207,3 +207,14 @@ def bio():
                         form.bio.data):
             return redirect(url_for('users.account'))
     return render_template('bio.html', title='500 Character Limit', form=form)
+
+@bp.route('/change_avatar', methods=['GET', 'POST'])
+def change_avatar():
+    selected_avatar = request.form.get('avatar')
+    try:
+        User.change_avatar(current_user.id, selected_avatar)
+        return redirect(url_for('users.account'))
+    except:
+        raise ValidationError('Could not update avatar')
+
+

@@ -4,28 +4,83 @@
 <html>
 <body>
     {% if user %}
-    <h1 style="color: yellow;">{{ user[0]['name'] }}'s Public Profile</h1>
-    <ul>
-        <li><strong>Account ID:</strong> {{ user[0]['account_id'] }}</li>
-        <li><strong>Name:</strong> {{ user[0]['name'] }}</li>
-        {% if ver_stat %}
-        <li><strong>Verified:</strong>
-            <span style="display: inline;">
-                <i class="fas fa-star" style="color: yellow; font-size: 16px;"></i>
-                <i class="fas fa-star" style="color: yellow; font-size: 16px;"></i>
-                <i class="fas fa-star" style="color: yellow; font-size: 16px;"></i>
-            </span>
-        </li>
-        {% endif %}
-    </ul>
+    <h1 style="color: yellow;">{{ user[0]['name'] }}'s Profile</h1>
+    <div style="display: flex; align-items: flex-start;">
+
+        <!-- Avatar -->
+        <div style="width: 150px; height: 150px; border-radius: 80%; overflow: hidden; background-color: white; margin-right: 20px;">
+            {% if user[0]['avatar'] == 1 %}
+              <img src="/static/rocket.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            {% elif user[0]['avatar'] == 2 %}
+              <img src="/static/alien.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            {% elif user[0]['avatar'] == 3 %}
+              <img src="/static/telescope.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            {% elif user[0]['avatar'] == 4 %}
+              <img src="/static/astronaut.png" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            {% endif %}
+        </div>
+        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="background-color: white; padding: 20px; border-radius: 5px; color: black; height: 150px; margin-bottom: 10px;">
+              {{user[0]['bio']}}
+            </div>
+        </div>
+    </div>
+
+    <div style="clear: both; height: 50px;"></div>
+
+    <table class='table table-bordered container'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Galactic Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td>
+                <strong style="color: #FFD700">Account ID:</strong> <span style="color: #eee">{{user[0]['account_id']}}</span>
+                
+              </td>
+            </tr>
+            <tr>
+                <td>
+                  <strong style="color: #FFD700">Name:</strong> <span style="color: #eee">{{user[0]['name']}}</span>
+                </td>
+            </tr>
+            <tr>
+              <td>
+                <strong style="color: #FFD700">Verified:</strong> <span style="color: #eee"></span>
+                  {% if ver_stat %}
+                    <i class="fas fa-star" style="color: yellow; font-size: 16px; float: right;"></i>
+                    <i class="fas fa-star" style="color: yellow; font-size: 16px; float: right;"></i>
+                    <i class="fas fa-star" style="color: yellow; font-size: 16px; float: right;"></i>
+                  {% endif %}</th>       
+              </td>
+            </tr>
+        </tbody>
+      </table>
 
     {% if sell_stat %}
     <hr style="clear: both; margin-top: 70px;">
-    <h1><span style="color: yellow;">Seller Public Profile</span></h1>
-    <ul>
-        <li><strong>Email:</strong> {{ user[0]['email'] }}</li>
-        <li><strong>Address:</strong> {{ user[0]['address'] }}</li>
-    </ul>
+    <h1><span style="color: yellow;">Seller Profile</span></h1>
+    <table class='table table-bordered container'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td>
+                <strong style="color: #FFD700">Email:</strong> <span style="color: #eee">{{user[0]['email']}}</span>
+              </td>
+            </tr>
+            <tr>
+                <td>
+                  <strong style="color: #FFD700">Address:</strong> <span style="color: #eee">{{user[0]['address']}}</span>
+                </td>
+            </tr>
+        </tbody>
+      </table>
     {% endif %}
 
     {% else %}
