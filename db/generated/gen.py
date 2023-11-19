@@ -41,6 +41,7 @@ def get_csv_writer(f):
     return csv.writer(f, dialect='unix')
 
 def gen_users(num_users):
+    static_path = 'app/static/'
     with open(csv_path('Users.csv'), 'w') as f_users, open(csv_path('Password.csv'), 'w') as f_passwords:
         users_writer = get_csv_writer(f_users)
         passwords_writer = get_csv_writer(f_passwords)
@@ -71,7 +72,9 @@ def gen_users(num_users):
             if isSeller:
                 seller_list.append(uid)
             bio = None
-            users_writer.writerow([uid, address, email, password, firstname, lastname, balance, isSeller, isVerified, bio])
+            avatar = 1
+            users_writer.writerow([uid, address, email, password, firstname, lastname, balance, isSeller, isVerified, bio, avatar])
+            # users_writer.writerow([uid, address, email, password, firstname, lastname, balance, isSeller, isVerified, bio])
             passwords_writer.writerow([uid, plain_password])
         print(f'{num_users} generated')
     return
