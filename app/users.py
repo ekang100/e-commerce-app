@@ -23,7 +23,21 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
     form = LoginForm()
-    if form.validate_on_submit():
+
+    captchaCorrect = False
+    captcha  = {}
+    # captcha.put()
+    captchaImg = '/static/captcha/226md.png'
+    captcha[captchaImg] =  '226md'
+
+    if request.method == 'POST': 
+        captchaValue = request.form.get('forCaptcha')
+        # print (captchaValue)
+        if captchaValue == '226md':
+            captchaCorrect = True
+
+
+    if captchaCorrect and form.validate_on_submit():
         user = User.get_by_auth(form.email.data, form.password.data)
         if user is None:
             flash('Invalid email or password')
@@ -34,7 +48,7 @@ def login():
             next_page = url_for('index.index')
 
         return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('login.html', title='Sign In', form=form, captchaImg = captchaImg)
 
 
 class RegistrationForm(FlaskForm):
