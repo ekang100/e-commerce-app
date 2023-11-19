@@ -8,6 +8,9 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from .models.user import User
 from .models.purchase import Purchase
 
+import os
+import random
+
 from flask import Blueprint
 bp = Blueprint('users', __name__)
 
@@ -25,19 +28,41 @@ def login():
     form = LoginForm()
 
     captchaCorrect = False
-    captcha  = {}
-    # captcha.put()
-    captchaImg = '/static/captcha/226md.png'
-    captcha[captchaImg] =  '226md'
+
+    #tony's captcha stuff - dont delete this yet
+    # #get all the files from static/captcha
+    # static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/captcha')
+    # filenames = [filename for filename in os.listdir(static_path) if os.path.isfile(os.path.join(static_path, filename))]
+
+    # # Pick a random file from the list
+    # random_file = random.choice(filenames)
+    # print (random_file)
+
+
+    # # fileAnswer, _ = os.path.splitext(random_file)
+    # fileAnswer = random_file[:5]
+    # print("File Answer:", fileAnswer)
+
+    # random_file = 'static/captcha/'+random_file
+    # captchaImg = random_file
+    # captchaAnswer = fileAnswer
+    # print(captchaAnswer)
+    captchaImg = 'static/captcha/2fxgd.png'
 
     if request.method == 'POST': 
         captchaValue = request.form.get('forCaptcha')
-        # print (captchaValue)
-        if captchaValue == '226md':
+        # # print (captchaValue)
+        # print(f"Captcha Value: {captchaValue}")
+        # print(f"Captcha Answer: {captchaAnswer}")
+
+        if str(captchaValue) == '2fxgd':
             captchaCorrect = True
+        else:
+            flash('Captcha verification failed. Please try again.', 'error')
 
 
     if captchaCorrect and form.validate_on_submit():
+    # if form.validate_on_submit():
         user = User.get_by_auth(form.email.data, form.password.data)
         if user is None:
             flash('Invalid email or password')
@@ -48,7 +73,7 @@ def login():
             next_page = url_for('index.index')
 
         return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form, captchaImg = captchaImg)
+    return render_template('login.html', title='Sign In', form=form, captchaImg=captchaImg)
 
 
 class RegistrationForm(FlaskForm):
