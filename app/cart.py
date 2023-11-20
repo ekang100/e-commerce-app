@@ -44,9 +44,18 @@ def cart():
 
         allItemsInCart = LineItem.get_all_by_cartid_not_bought(Cart.get_cartID_from_buyerid(current_user.id),False)
         updateCartFirst = Cart.update_total_cart_price(Cart.get_cartID_from_buyerid(current_user.id)) #replace 0's with current_user.id
+        
+                                #verified additional part
+        moneySaved = 0.00
+        if User.get(current_user.id).isVerified:
+            print('this user is verified so they get a discount')
+                            #this bottom part needs to change to update it correctly
+            moneySaved = round(float(Cart.get_total_cartprice(current_user.id))*0.1,2)
+            updateCartFirst = Cart.update_total_cart_price_if_verified(Cart.get_cartID_from_buyerid(current_user.id))
+                        
         updateCartQuantity = Cart.update_number_unique_items(Cart.get_cartID_from_buyerid(current_user.id))
         singleCart = Cart.get_cart_from_buyerid(current_user.id)
-        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = False)
+        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = False, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
     else:
          return jsonify({}), 404
     
@@ -119,11 +128,20 @@ def buyerOrder():
                     if can_order == False:
                         allItemsInCart = LineItem.get_all_by_cartid_not_bought(Cart.get_cartID_from_buyerid(current_user.id),False)
                         updateCartFirst = Cart.update_total_cart_price(Cart.get_cartID_from_buyerid(current_user.id)) #replace 0's with current_user.id
+                        
+                        #verified additional part
+                        moneySaved = 0.00
+                        if User.get(current_user.id).isVerified:
+                            print('this user is verified so they get a discount')
+                            #this bottom part needs to change to update it correctly
+                            moneySaved = round(float(Cart.get_total_cartprice(current_user.id))*0.1,2)
+                            updateCartFirst = Cart.update_total_cart_price_if_verified(Cart.get_cartID_from_buyerid(current_user.id))
+                        
                         updateCartQuantity = Cart.update_number_unique_items(Cart.get_cartID_from_buyerid(current_user.id))
                         singleCart = Cart.get_cart_from_buyerid(current_user.id)
                         print(errorMessageString)
                         can_order = True
-                        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString)
+                        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
                 
                 #if constraints have been met
                     else:
