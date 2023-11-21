@@ -8,7 +8,7 @@ from .product import Product
 
 
 class User(UserMixin):
-    def __init__(self, id, address, email, firstname, lastname, balance, isSeller, isVerified, bio, avatar):
+    def __init__(self, id, address, email, firstname, lastname, balance, isSeller, isVerified, verifiedDate, bio, avatar):
         self.id = id
         self.address = address
         self.email = email
@@ -17,13 +17,14 @@ class User(UserMixin):
         self.balance = balance
         self.isSeller = isSeller
         self.isVerified = isVerified
+        self.verifiedDate = verifiedDate
         self.bio = bio
         self.avatar = avatar
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, address, balance, isSeller, isVerified, bio, avatar
+SELECT password, id, email, firstname, lastname, address, balance, isSeller, isVerified, verifiedDate, bio, avatar
 FROM Users
 WHERE email = :email
 """,
@@ -154,6 +155,11 @@ RETURNING id
                 SET isVerified = TRUE
                 WHERE id = :user_id
             """, user_id=user_id)
+            app.db.execute("""
+                UPDATE Users
+                SET verifiedDate = current_timestamp AT TIME ZONE 'UTC'
+                WHERE id = :user_id
+            """, user_id=user_id)
             return User.get(user_id)
         except Exception as e:
             print(str(e))
@@ -196,7 +202,7 @@ RETURNING id
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-    SELECT id, address, email, firstname, lastname, balance, isSeller, isVerified, bio, avatar
+    SELECT id, address, email, firstname, lastname, balance, isSeller, isVerified, verifiedDate, bio, avatar
     FROM Users
     WHERE id = :id
     """,

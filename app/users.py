@@ -225,7 +225,7 @@ def verify_account():
             if User.verify_account(current_user.id):
                 return redirect(url_for('users.account'))
         else:
-            raise ValidationError('You do not have enough money')
+            flash('You do not have enough money to become verified: $500 balance needed')
     return render_template('account.html')
 
 class BioForm(FlaskForm):
@@ -255,5 +255,3 @@ def change_avatar():
         return redirect(url_for('users.account'))
     except:
         raise ValidationError('Could not update avatar')
-
-

@@ -28,9 +28,18 @@ def index2():
     # find the products current user has bought:
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+            current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+        if current_user.isVerified:
+            result = Purchase.get_all_by_uid_price_since(current_user.id, current_user.verifiedDate)
+            print(result)
+            if len(result) > 0:
+                total_saved = sum(item['price'] for item in result)
+            else:
+                total_saved = 0.00
+        else:
+            total_saved = 0.00
     else:
         purchases = None
-    # render the page by adding information to the index.html file
+        total_saved = 0.00
     return render_template('account.html',
-                           purchase_history=purchases)
+                           purchase_history=purchases, total_saved=total_saved)
