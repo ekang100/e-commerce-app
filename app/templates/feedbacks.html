@@ -2,6 +2,14 @@
 
 {% block content %}
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
     <form action="/feedbacks" method="post">
         <label for="user_id">Enter User ID:</label>
         <input type="text" name="user_id" required>
@@ -12,9 +20,17 @@
     <h2>Feedbacks:</h2>
     <ul>
         {% for feedback in feedbacks %}
-        <li><strong>Type:</strong> {{ feedback.type }} | <strong>Entity ID:</strong> {{ feedback.entity_id }} | <strong>Rating:</strong> {{ feedback.rating }} | <strong>Comment:</strong> {{ feedback.comments }} | <strong>Date:</strong> {{ feedback.date }}</li>
+        <li>
+            <strong>Type:</strong> {{ feedback.type }} | 
+            <strong>Reviewed Entity:</strong> {{ feedback.entity_name }} | 
+            <strong>Rating:</strong> {{ feedback.rating }} | 
+            <strong>Comment:</strong> {{ feedback.comments }} | 
+            <strong>Date:</strong> {{ feedback.date }}
+        </li>
         {% endfor %}
     </ul>
+    {% else %}
+    <p>No feedbacks available for the provided user ID.</p>
     {% endif %}
 </body>
 </html>

@@ -33,3 +33,19 @@ ORDER BY L.time_purchased DESC
                               uid=uid,
                               since=since)
         return [{"name": row[0], "quantities": row[1], "price": row[2], "time_purchased": row[3], "fulfilledStatus": row[4]} for row in rows]
+
+    @staticmethod
+    def get_all_by_uid_price_since(uid, since):
+        rows = app.db.execute('''
+SELECT P.price
+FROM Cart C, Products P, LineItem L
+WHERE C.buyerid = :uid
+AND L.time_purchased >= :since
+AND C.cartid = L.cartid
+AND L.buyStatus = TRUE
+AND L.productid = P.productid
+ORDER BY L.time_purchased DESC
+''',
+                              uid=uid,
+                              since=since)
+        return [{"price": row[0]} for row in rows]

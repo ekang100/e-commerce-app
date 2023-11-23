@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Fulfilled Order History</h1>
+
+<table class="table table-hover table-bordered container" style="font-size: 0.8em;">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Quantities</th>
+            <th scope="col">Time Purchased</th>
+            <th scope="col">Buyer Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in order_history %}
+            <tr>
+                <td>{{ order.quantities }}</td>
+                <td>{{ order.time_purchased }}</td>
+                <td>{{ order.address }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

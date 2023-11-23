@@ -21,6 +21,12 @@
     {% endfor %}
   </p>
   <p>
+    It's Captcha Time!
+    <img src="{{captchaImg}}" width="300" height="100" style="display: block;" />
+    <input type="text" name="forCaptcha" style="margin-top: 10px;  display: block;" />
+</p>
+
+  <p>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul>

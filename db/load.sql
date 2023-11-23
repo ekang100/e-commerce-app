@@ -14,6 +14,7 @@ SELECT pg_catalog.setval('public.products_productid_seq',
                          (SELECT MAX(productid)+1 FROM Products),
                          false);
 
+\COPY ProductsForSale FROM 'ProductsForSale.csv' WITH DELIMITER ',' NULL '' CSV
 
 \COPY Cart FROM 'Cart.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.cart_cartid_seq',
@@ -22,6 +23,7 @@ SELECT pg_catalog.setval('public.cart_cartid_seq',
 
 
 \COPY OrdersInProgress FROM 'OrdersInProgress.csv' WITH DELIMITER ',' NULL '' CSV
+
 SELECT pg_catalog.setval('public.ordersinprogress_orderid_seq',
                          (SELECT MAX(orderid)+1 FROM OrdersInProgress),
                          false);
@@ -31,7 +33,5 @@ SELECT pg_catalog.setval('public.lineitem_lineid_seq',
                          (SELECT MAX(lineid)+1 FROM LineItem),
                          false);
 
-\COPY ProductsForSale FROM 'ProductsForSale.csv' WITH DELIMITER ',' NULL '' CSV
 
-
-\COPY Reviews FROM 'Review.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY Reviews FROM 'Reviews.csv' WITH DELIMITER ',' NULL '' CSV

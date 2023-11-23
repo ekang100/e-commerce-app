@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, session
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -7,6 +7,9 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
 from .models.purchase import Purchase
+
+import os
+import random
 
 from flask import Blueprint
 bp = Blueprint('users', __name__)
@@ -18,13 +21,48 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
-
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
     form = LoginForm()
-    if form.validate_on_submit():
+
+    captchaCorrect = False
+
+    #tony's captcha stuff - dont delete this yet
+    # #get all the files from static/captcha
+    # static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/captcha')
+    # filenames = [filename for filename in os.listdir(static_path) if os.path.isfile(os.path.join(static_path, filename))]
+
+    # # Pick a random file from the list
+    # random_file = random.choice(filenames)
+    # print (random_file)
+
+
+    # # fileAnswer, _ = os.path.splitext(random_file)
+    # fileAnswer = random_file[:5]
+    # print("File Answer:", fileAnswer)
+
+    # random_file = 'static/captcha/'+random_file
+    # captchaImg = random_file
+    # captchaAnswer = fileAnswer
+    # print(captchaAnswer)
+    captchaImg = 'static/captcha/2fxgd.png'
+
+    if request.method == 'POST': 
+        captchaValue = request.form.get('forCaptcha')
+        # # print (captchaValue)
+        # print(f"Captcha Value: {captchaValue}")
+        # print(f"Captcha Answer: {captchaAnswer}")
+
+        if str(captchaValue) == '2fxgd':
+            captchaCorrect = True
+        else:
+            flash('Captcha verification failed. Please try again.', 'error')
+
+
+    if captchaCorrect and form.validate_on_submit():
+    # if form.validate_on_submit():
         user = User.get_by_auth(form.email.data, form.password.data)
         if user is None:
             flash('Invalid email or password')
@@ -35,7 +73,7 @@ def login():
             next_page = url_for('index.index')
 
         return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('login.html', title='Sign In', form=form, captchaImg=captchaImg)
 
 
 class RegistrationForm(FlaskForm):
@@ -74,6 +112,7 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('index.index'))
+
 
 @bp.route('/account')
 def account():
@@ -148,7 +187,7 @@ def add_balance():
             return redirect(url_for('users.account'))
     return render_template('balance.html', title='Add Balance', form=form)
 
-@bp.route('/account', methods=['GET', 'POST'])
+@bp.route('/become_seller', methods=['GET', 'POST'])
 def become_seller():
     if request.method == 'POST':
         if User.become_seller(current_user.id):
@@ -172,8 +211,47 @@ def search_user():
 @bp.route('/user_profile/<int:account_id>', methods=['GET', 'POST'])
 def public_profile(account_id):
     if request.method == 'POST':
-    # try:
         info = User.pubprofile_search(account_id)
-        sell_stat = info[0][-1]
-        return render_template('user_profile.html', user=info, sell_stat=sell_stat)
+        sell_stat = info[0][4]
+        ver_stat = info[0][5]
+        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat)
     return redirect(url_for('users.account'))
+
+@bp.route('/account', methods=['GET', 'POST'])
+def verify_account():
+    if request.method == 'POST':
+        if User.get_balance(current_user.id) > 500:
+            User.add_balance(current_user.id, float(User.get_balance(current_user.id)) - 500.0)
+            if User.verify_account(current_user.id):
+                return redirect(url_for('users.account'))
+        else:
+            flash('You do not have enough money to become verified: $500 balance needed')
+    return render_template('account.html')
+
+class BioForm(FlaskForm):
+    bio = StringField('500 Character Limit')
+    submit = SubmitField('Update')
+
+    def validate_bio(self, bio):
+        if bio.data is None:
+            return
+        if len(bio.data) > 500:
+            raise ValidationError(f'Your bio is too long: {len(bio.data)} characters. It must be 500 characters or less.')
+
+@bp.route('/bio', methods=['GET', 'POST'])
+def bio():
+    form = BioForm()
+    if form.validate_on_submit():
+        if User.bio(current_user.id,
+                        form.bio.data):
+            return redirect(url_for('users.account'))
+    return render_template('bio.html', title='500 Character Limit', form=form)
+
+@bp.route('/change_avatar', methods=['GET', 'POST'])
+def change_avatar():
+    selected_avatar = request.form.get('avatar')
+    try:
+        User.change_avatar(current_user.id, selected_avatar)
+        return redirect(url_for('users.account'))
+    except:
+        raise ValidationError('Could not update avatar')

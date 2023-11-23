@@ -37,14 +37,88 @@ class Seller:
         else:
             return None
 
-    def get_products(self):
+    #gets the products for sale by the seller of interest (self)
+    def get_products_for_sale(self):
         rows = app.db.execute('''
-SELECT productid, name, price, description, category, available, avg_rating, seller_id
-FROM Products
-WHERE seller_id = :seller_id
-''',
-                              seller_id=self.uid)
-        return [Product(*row) for row in rows]
+        SELECT s.quantity, p.productid, p.name, p.price, p.description
+        FROM ProductsForSale s
+        JOIN Products p ON s.productid = p.productid
+        WHERE s.uid = :seller_id
+    ''',
+        seller_id=self.uid)
+
+        products = [
+        {
+            'quantity': row[0],
+            'productid': row[1],
+            'name': row[2],
+            'price': row[3],
+            'description': row[4]
+        }
+        for row in rows
+    ]
+        return products
+    
+    def modify_product_quantity(self, product_id, new_quantity):
+    # Modify the product quantity in the inventory
+        app.db.execute('''
+            UPDATE ProductsForSale
+            SET quantity = :new_quantity
+            WHERE productid = :product_id AND uid = :seller_id
+        ''', new_quantity=new_quantity, product_id=product_id, seller_id=self.uid)
+
+    
+    def get_fulfilledOrder_history(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = TRUE
+            ORDER BY li.time_purchased DESC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2]
+            }
+            for row in rows
+        ]
+        return order_history
+    
+    def get_unfulfilledOrder_history(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.lineid
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = FALSE
+            ORDER BY li.time_purchased DESC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'itemid': row[3]
+            }
+            for row in rows
+        ]
+        return order_history
+    
+    def mark_line_item_fulfilled(self, line_id):
+        # Mark a specific LineItem as fulfilled
+        app.db.execute('''
+            UPDATE LineItem
+            SET fulfilledStatus = TRUE
+            WHERE lineid = :line_id 
+        ''', line_id=line_id)
+
 
 
 
