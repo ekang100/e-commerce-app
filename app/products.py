@@ -29,3 +29,8 @@ def search_keywords():
     except Exception:
         return 'No products found'
     return render_template('search_product_results.html', products=products)
+
+@bp.route('/product/<int:productid>')
+def product_detail(productid):
+    product = Product.get(productid)
+    return render_template('product_detail.html', product=product)

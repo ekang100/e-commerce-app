@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+<h2>Products Details:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product Image</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if product %}
+      <tr>
+        <!--<th scope="row">{{product.productid}}</th>-->
+        <td><img src="/static/{{ product.productid }}.png" alt="{{product.name}}" width="100" height="100"></td>
+        <td>{{product.name}}</td>
+        <td>{{product.price}}</td>
+      </tr>
+      {% else %}
+      <p>Product not found</p>
+    {% endif %}
+  </tbody>
+</table>
+<a href="/">Back to Product List</a>
+
+{% endblock %}
