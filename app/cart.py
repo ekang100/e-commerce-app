@@ -2,6 +2,7 @@ from flask import render_template
 from flask_login import current_user
 import datetime
 from flask import jsonify
+from decimal import Decimal
 
 from .models.user import User
 from .models.product import Product
@@ -80,7 +81,34 @@ def buyerOrder():
 
                 errorMessageString = ''
 
+
                 if action_type == "order_all":
+
+                    tip = request.form.get('tipPercentage')
+                    print ('tip', tip)
+                    # tip = round(float(tip),2)
+
+                    #need to error check if they put in a negative without clicking 'add tip'
+                    if(float(tip)<0 or float(tip) != round(float(tip),2)):
+                        allItemsInCart = LineItem.get_all_by_cartid_not_bought(Cart.get_cartID_from_buyerid(current_user.id),False)
+                        updateCartFirst = Cart.update_total_cart_price(Cart.get_cartID_from_buyerid(current_user.id)) #replace 0's with current_user.id
+                        
+                        #verified additional part
+                        moneySaved = 0.00
+                        if User.get(current_user.id).isVerified:
+                            print('this user is verified so they get a discount')
+                            #this bottom part needs to change to update it correctly
+                            moneySaved = round(float(Cart.get_total_cartprice(current_user.id))*0.1,2)
+                            updateCartFirst = Cart.update_total_cart_price_if_verified(Cart.get_cartID_from_buyerid(current_user.id))
+                        
+                        updateCartQuantity = Cart.update_number_unique_items(Cart.get_cartID_from_buyerid(current_user.id))
+                        singleCart = Cart.get_cart_from_buyerid(current_user.id)
+                        print(errorMessageString)
+                        can_order = True
+                        errorMessageString = 'Please input a valid dollar tip amount.'
+                        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
+                        
+
                     can_order = True
             #do all checking code here
             # check available balances and inventories
@@ -89,9 +117,9 @@ def buyerOrder():
             # cart becomes empty
 
                     #1) check available balances
-                    if User.get_balance(current_user.id) < Cart.get_total_cartprice(current_user.id):
+                    if User.get_balance(current_user.id) < Cart.get_total_cartprice(current_user.id) + Decimal(round(float(tip))):
                         can_order = False
-                        errorMessageString = 'You do not have enough money!!!!'
+                        errorMessageString = 'You do not have enough money!!!! Check your total cart price and tip amount.'
                         # print('User too poor to order')
                         # print('User too poor to order')
                 
@@ -146,8 +174,10 @@ def buyerOrder():
                 #if constraints have been met
                     else:
                         #decrement balance
-                        User.add_balance(current_user.id, (User.get_balance(current_user.id)-Cart.get_total_cartprice(current_user.id))) #this decrements own balance
-                        
+                        print ('before', User.get_balance(current_user.id))
+                        User.add_balance(current_user.id, (User.get_balance(current_user.id)-Cart.get_total_cartprice(current_user.id) - Decimal(round(float(tip),2)))) #this decrements own balance
+                        print ('after', User.get_balance(current_user.id))
+
                         #generate orderid
                         new_orderid = Orders.add_order_to_orders_table(current_user.id)
                         print(new_orderid)

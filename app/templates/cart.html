@@ -4,6 +4,44 @@
 
 {% if ItemsInCart %}
 
+
+<script>
+    function showTipPopup() {
+        document.getElementById('tipPopup').style.display = 'block';
+    }
+
+    function hideTipPopup() {
+            document.getElementById('tipPopup').style.display = 'none';
+            document.getElementById('thankYouMessage').style.display = 'none';
+        }
+
+    function addTip() {
+            // Get the entered tip percentage
+            var tipPercentage = document.getElementById('tipPercentage').value;
+
+            // Check if the tip amount is greater than 0
+                        // Check if the tip amount is a valid float with at most two decimal places
+                var isValidTip = /^(\d*\.\d{1,2}|\d+)$/.test(tipPercentage);
+
+                if (!isValidTip ){
+                    document.getElementById('TipError').style.display = 'block';
+                }
+                else if (isValidTip && parseFloat(tipPercentage) > 0) {  
+                
+                // Display the thank you message and hide the popup
+                document.getElementById('thankYouMessage').innerText = `Thank you for adding a $${tipPercentage} tip!`;
+                document.getElementById('thankYouMessage').style.display = 'block';
+                document.getElementById('tipPopup').style.display = 'none';
+                // document.getElementById('ti')
+            } else {
+                document.getElementById('TipError').style.display = 'block';
+                // You can perform additional logic here if needed
+                // For simplicity, let's just hide the popup in this example
+                // hideTipPopup();
+            }
+        }
+</script>
+
 {% if ErrorMessageCheck %}
 <script type="text/javascript">
   alert("{{ errorMessageString|safe }}");
@@ -76,7 +114,23 @@
 <form method = "post" action = "{{url_for('cart.buyerOrder')}}" >
 <input type = 'hidden' name = action value = "order_all">
 <input type = "submit" value = "Order Entire Cart" class="btn btn-primary" style="margin-right: 10px; border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
+
+</br>
+<a style = "color:#FFD700"> Tip Your BoxML Service Worker</a>
+
+
+<div id="tipPopup">
+    <label id = "TipError" style = 'display: none; color: red'> Error: Please tip a positive dollar amount. </label>
+    <label for="tipPercentage">Enter tip amount:</label>
+    <input type="number" id="tipPercentage" name="tipPercentage" step=".01" required>
+    <button type="button" class="btn btn-primary" onclick="addTip()">Add Tip</button>
+</div>
+
+<div id="thankYouMessage" style = "display: none">Thank you for adding a tip!</div>
+
 </form>
+
+
 
 
 {% else %}
