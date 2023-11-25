@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify, Blueprint, render_template
 bp = Blueprint('products', __name__)
 
 from .models.product import Product
+from .models.productsforsale import ProductsForSale
 
 @bp.route('/', methods=['GET', 'POST'])
 def top_products():
@@ -33,4 +34,6 @@ def search_keywords():
 @bp.route('/product/<int:productid>')
 def product_detail(productid):
     product = Product.get(productid)
-    return render_template('product_detail.html', product=product)
+    inventory = ProductsForSale.get_all_sellers_for_product(int(productid))
+    return render_template('product_detail.html', product=product, inventory=inventory)
+

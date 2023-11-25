@@ -37,6 +37,15 @@ def cart():
                 LineItem.remove_lineitem(lineitem_id)
             except ValueError: #might have to modify this
                 return "Failed"
+        
+        elif request.form['action'] == 'add':
+            # ADD TO CART!!
+            seller_id = request.form['seller_id']
+            product_id = request.form['product_id']
+            qty = request.form['qty']
+            price = request.form['price']
+            LineItem.add_to_cart(current_user.id, seller_id, qty, product_id, price)
+
             
             
         

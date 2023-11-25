@@ -6,6 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 import requests
 from io import BytesIO
 from collections import defaultdict
+import random
 
 num_users = 50
 num_products = 2000
@@ -142,17 +143,23 @@ def gen_products(num_products):
             image_path = os.path.join(static_path, str(pid) + '.png')
             if not os.path.isfile(image_path):
                 image_path = gen_product_image(row['img_link'], productid, name)
-            available = available = fake.random_element(elements=('true', 'false'))
+            available = fake.random_element(elements=('true', 'false'))
             avg_rating = fake.random_int(min=0, max=500) / 100
             seller_id = fake.random_element(seller_list) # i think i can still keep this i just wont put it in the csv?
 
-            productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
-            sellerid_to_productid[seller_id].add(productid) # add the product to the set of products for a given seller
+            n = fake.random_int(min=1, max=10)
+            seller_id_list = random.sample(seller_list, n) # list of sellers for the product
+
+            for seller_id in seller_id_list: # bc we want multiple sellers for multiple products
+                productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
+                sellerid_to_productid[seller_id].add(productid) # add the product to the set of products for a given seller
+
+            # productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
+            # sellerid_to_productid[seller_id].add(productid) # add the product to the set of products for a given seller
 
             if available == 'true':
                 product_list.append([productid, name])
                 product_id_list.append(productid)
-                sellerid_to_productid
 
             # Add to seller set if seller has products
             # sellers_with_products.add(seller_id)

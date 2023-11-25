@@ -122,7 +122,17 @@ ORDER BY orderid
                               cartid=cartid, buyStatus = buyStatus)
         return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "orderid":row[4], "fulfilledStatus":row[5]} for row in rows]
     
-
+    @staticmethod
+    def add_to_cart(cart_id, seller_id, qty, product_id, price):
+        rows = app.db.execute('''SELECT quantities FROM LineItem WHERE sellerid=:seller_id AND productid=:product_id AND cartid=:cart_id;''', seller_id=seller_id, product_id=product_id, cart_id=cart_id)
+        if rows is None or len(rows) == 0:
+            query = f'''INSERT INTO LineItem(lineid, cartid, productid, quantities, unitPrice, sellerid)
+                    VALUES (COALESCE((SELECT MAX(lineid)+1 FROM LineItem),0), {cart_id}, {product_id}, {qty}, {price}, {seller_id});'''
+            rows = app.db.execute(query)
+        else:
+            rows = app.db.execute('''UPDATE LineItem
+                        SET quantities=:qty + quantities
+                        WHERE productid=:product_id AND sellerid=:seller_id AND cartid=:cart_id;''', qty = qty, product_id=product_id, seller_id=seller_id, cart_id=cart_id)
 
 
     @staticmethod
