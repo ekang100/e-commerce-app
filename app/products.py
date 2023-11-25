@@ -23,13 +23,14 @@ def top_products():
 @bp.route('/search_product_results', methods=['GET', 'POST'])
 def search_keywords():
     query = str(request.form['query'])
+    page = int(request.args.get('page', 1))
     try:
         products = Product.search_product(query)
         if len(products) == 0:
             return render_template('search_product_results.html')
     except Exception:
         return 'No products found'
-    return render_template('search_product_results.html', products=products)
+    return render_template('search_product_results.html', products=products, page=page)
 
 @bp.route('/product/<int:productid>')
 def product_detail(productid):
