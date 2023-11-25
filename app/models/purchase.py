@@ -21,7 +21,7 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT P.name, L.quantities, P.price, L.time_purchased, L.fulfilledStatus
+SELECT P.name, L.quantities, P.price, P.category, L.time_purchased, L.fulfilledStatus
 FROM Cart C, Products P, LineItem L
 WHERE C.buyerid = :uid
 AND L.time_purchased >= :since
@@ -32,7 +32,7 @@ ORDER BY L.time_purchased DESC
 ''',
                               uid=uid,
                               since=since)
-        return [{"name": row[0], "quantities": row[1], "price": row[2], "time_purchased": row[3], "fulfilledStatus": row[4]} for row in rows]
+        return [{"name": row[0], "quantities": row[1], "price": row[2], "category": row[3],  "time_purchased": row[4], "fulfilledStatus": row[5]} for row in rows]
 
     @staticmethod
     def get_all_by_uid_price_since(uid, since):

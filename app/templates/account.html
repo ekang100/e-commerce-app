@@ -122,9 +122,11 @@
 
 <a href="{{ url_for('users.update_name_address') }}" class="btn btn-primary" style="margin-top: 10px; margin-right: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="'button">Update Name/Address</a>
 <a href="{{ url_for('users.change_email') }}" class="btn btn-primary" style="margin-top: 10px; margin-right: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="'button">Change Email</a>
-<a href="{{ url_for('users.change_password') }}" class="btn btn-primary" href="cart" style="margin-top: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="button">Change Star Password</a>
+<a href="{{ url_for('users.change_password') }}" class="btn btn-primary" href="cart" style="margin-top: 10px; border: 2px solid #FFD700; float:left; color: #FFD700;" role="button">Change Password</a>
 
 <br><br>
+
+
 <hr style="border: none; clear: both; margin-top: 70px;">
 <h1 style = "color: #FFD700;">{{current_user.firstname}}'s Recent Purchases:</h1>
 <table class='table table-hover table-bordered container'>
@@ -133,6 +135,7 @@
       <th scope="col">Product Name</th>
       <th scope="col">Number of Items</th>
       <th scope="col">Total Undiscounted Price</th>
+      <th scope="col">Product Category</th>
       <th scope="col">Date Purchased</th>
       <th scope="col">Order Fulfilled</th>
     </tr>
@@ -143,12 +146,17 @@
         <th scope="row">{{purchase.name}}</th>
         <td>{{purchase.quantities}}</td>
         <td>{{ purchase.quantities * purchase.price }}</td>
+        <td>{{purchase.category}}</td>
         <td>{{purchase.time_purchased}}</td>
         <td>{{purchase.fulfilledStatus}}</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<div style="margin-bottom: 20px;">
+  <canvas id="balanceChart"></canvas>
+</div>
 
 {% if current_user.isSeller %}
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">

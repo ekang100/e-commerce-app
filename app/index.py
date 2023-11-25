@@ -31,7 +31,6 @@ def index2():
             current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
         if current_user.isVerified:
             result = Purchase.get_all_by_uid_price_since(current_user.id, current_user.verifiedDate)
-            print(result)
             if len(result) > 0:
                 total_saved = sum(item['price'] for item in result)
             else:
