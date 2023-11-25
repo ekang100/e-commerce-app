@@ -122,6 +122,7 @@ ORDER BY orderid
                               cartid=cartid, buyStatus = buyStatus)
         return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "orderid":row[4], "fulfilledStatus":row[5]} for row in rows]
     
+    # make a new line item or update if it already exists when adding to cart
     @staticmethod
     def add_to_cart(cart_id, seller_id, qty, product_id, price):
         rows = app.db.execute('''SELECT quantities FROM LineItem WHERE sellerid=:seller_id AND productid=:product_id AND cartid=:cart_id;''', seller_id=seller_id, product_id=product_id, cart_id=cart_id)

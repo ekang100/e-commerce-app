@@ -27,6 +27,7 @@ WHERE productid = :productid AND uid = :uid
                               productid = productid, uid = uid, quantity = quantity)
                 return None
     
+    # get list of sellers to display for a given product
     @staticmethod
     def get_all_sellers_for_product(pid):
         rows = app.db.execute(f'''
