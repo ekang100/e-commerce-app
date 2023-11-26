@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, Blueprint, render_template
+import re
 # from flask_paginate import Pagination
 bp = Blueprint('products', __name__)
 
@@ -32,9 +33,24 @@ def search_keywords():
         return 'No products found'
     return render_template('search_product_results.html', products=products, page=page)
 
+@bp.route('/search_category_results', methods=['GET'])
+def search_category():
+    category = request.args.get('category')
+    page = int(request.args.get('page', 1))
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
+    try:
+        products = Product.search_categories(category)
+        if len(products) == 0:
+            return render_template('search_category_results.html')
+    except Exception:
+        return 'No products found'
+    return render_template('search_category_results.html', products=products, page=page, categories=clean_text)
+
 @bp.route('/product/<int:productid>')
 def product_detail(productid):
     product = Product.get(productid)
     inventory = ProductsForSale.get_all_sellers_for_product(int(productid))
+    #reviews = Review.get_reviews_for_product()
     return render_template('product_detail.html', product=product, inventory=inventory)
 

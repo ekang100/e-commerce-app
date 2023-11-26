@@ -2,10 +2,8 @@
 
 {% block content %}
 
-<br><br>
+<!--<h2>Products Details:</h2>
 
-<h2>Products Details:</h2>
-<!--
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
@@ -31,10 +29,11 @@
 <a href="/">Back to Product List</a>-->
 
 <div class="product">
-  <img src="/static/{{ product.productid }}.png" alt="{{product.name}}">
   {% if product %}
+  <h2>{{product.name}}</h2>
+  
     <div class="product-info">
-        <h2>{{product.name}}</h2>
+        <img src="/static/{{ product.productid }}.png" alt="{{product.name}}">
         <h3>Product Description</h3>
         <p>{{product.description}}</p>
         <h3>Price</h3>
@@ -77,14 +76,55 @@
                       {% else %}
                         <p><a href="{{ url_for('users.login') }}">Log in</a> to add items to your cart</p>
                       {% endif %}
+                    </td>
 
               </tr>
           {% endfor %}
           </tbody>
       </table>
     </div>
+
+    <div class="container">
+      <h2>Reviews</h2>
+      <table class='table table-hover table-bordered container'>
+          <thead class="thead-dark">
+          <tr>
+              <th scope="col">Reviewer</th>
+              <th scope="col">Rating</th>
+              <th scope="col">Comments</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for r in reviews %}
+              <tr>
+                  <th scope="row"><form style="margin-top: 10px;" action="{{ url_for('users.public_profile', account_id=r.reviewer_id) }}" method="post">
+                    <button type="submit">
+                        {{ r.reviewer_firstname }}
+                    </button>
+                </form></th>
+                  
+                  <th scope="row">{{ r.rating }}</th>
+                  <td>{{ r.comment }}</td>
+
+              </tr>
+          {% endfor %}
+          </tbody>
+      </table>
+      <!--
+      {% if current_user.is_authenticated %}
+        <form action="{{ url_for('TODO') }}" method="post">
+            <input type="hidden" name="action" value="add"/>
+            <input type="hidden" name="user_id" value="{{ current_user.id }}"/>
+            <input type="hidden" name="product_id" value="{{ product.productid }}"/>
+            idk what other info you need
+            <input type="submit" value="Add Review">
+        </form>
+      {% else %}
+        <p><a href="{{ url_for('users.login') }}">Log in</a> to add items to add reviews</p>
+      {% endif %}
+    </div>
   
-  {% endif %}
-</div>
+    {% endif %}
+  </div>-->
 
 {% endblock %}

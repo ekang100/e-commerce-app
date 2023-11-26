@@ -200,6 +200,17 @@ p {
         </form>
       </div>
 
+      <div id ="search-bar">
+        <form id="search-form" action="/search_category_results" method="GET">
+            <select name="category">
+                {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Show Products">
+        </form>
+      </div>
+
       <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}
           Hello {{current_user.firstname}}! 

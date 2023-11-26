@@ -64,3 +64,32 @@ OFFSET :offset
         except Exception as e:
             print(str(e))
             return None
+    
+    @staticmethod
+    def get_categories(available=True):
+        rows = app.db.execute('''
+SELECT DISTINCT category
+FROM Products
+WHERE available = :available
+''',
+                            available=available)
+        return [str(row) for row in rows]
+    
+    @staticmethod
+    def search_categories(category, page=1, per_page=10):
+        offset = (page - 1) * per_page
+        # implement sort by later
+        #if type(sort_by) is str and sort_by.find(';') != -1:
+            #sort_by = None
+        try:
+            rows = app.db.execute('''
+                SELECT *
+                FROM Products
+                WHERE category LIKE :category
+                LIMIT :per_page
+                OFFSET :offset
+            ''', category='%' + category + '%', per_page=per_page, offset=offset)
+            return rows
+        except Exception as e:
+            print(str(e))
+            return None
