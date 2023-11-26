@@ -8,6 +8,7 @@
 {% for order in allOrdersByUser %}
 <h2>Order ID: {{ order.orderid }}</h2>
 <p>Entire Order Fulfillment Status: {{ order.entireOrderFulfillmentStatus }}</p>
+<a> Service Worker Tip: {{order.tipAmount}}</a>
 
 <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">

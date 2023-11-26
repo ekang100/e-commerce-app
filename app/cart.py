@@ -180,6 +180,7 @@ def buyerOrder():
 
                         #generate orderid
                         new_orderid = Orders.add_order_to_orders_table(current_user.id)
+                        Orders.update_tipAmount(new_orderid, round(float(tip),2))
                         print(new_orderid)
                         #adds the balance to the seller
                         #need to decrement inventory
