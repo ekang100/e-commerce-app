@@ -25,54 +25,55 @@ class LoginForm(FlaskForm):
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
+
     form = LoginForm()
+
+    if 'captchaList' not in session:
+        # initialize captcha list if not already in session
+        session['captchaList'] = []
+
+    captchaList = session['captchaList']
+
+    if not captchaList:
+        # gen captcha information if the list is empty
+        static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/captcha')
+        filenames = [filename for filename in os.listdir(static_path) if os.path.isfile(os.path.join(static_path, filename))]
+        random_file = random.choice(filenames)
+        captchaImg = 'static/captcha/' + random_file
+        captchaAnswer = random_file[:5]  # Assuming the answer is the first 5 characters of the filename
+
+        captchaList.append((captchaImg, captchaAnswer))
+        session['captchaList'] = captchaList
+    else:
+        # get captcha information from the list
+        captchaImg, captchaAnswer = captchaList[-1]
 
     captchaCorrect = False
 
-    #tony's captcha stuff - dont delete this yet
-    # #get all the files from static/captcha
-    # static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/captcha')
-    # filenames = [filename for filename in os.listdir(static_path) if os.path.isfile(os.path.join(static_path, filename))]
-
-    # # Pick a random file from the list
-    # random_file = random.choice(filenames)
-    # print (random_file)
-
-
-    # # fileAnswer, _ = os.path.splitext(random_file)
-    # fileAnswer = random_file[:5]
-    # print("File Answer:", fileAnswer)
-
-    # random_file = 'static/captcha/'+random_file
-    # captchaImg = random_file
-    # captchaAnswer = fileAnswer
-    # print(captchaAnswer)
-    captchaImg = 'static/captcha/2fxgd.png'
-
-    if request.method == 'POST': 
+    if request.method == 'POST':
         captchaValue = request.form.get('forCaptcha')
-        # # print (captchaValue)
-        # print(f"Captcha Value: {captchaValue}")
-        # print(f"Captcha Answer: {captchaAnswer}")
-
-        if str(captchaValue) == '2fxgd':
+        if captchaValue and captchaValue == captchaAnswer:
             captchaCorrect = True
         else:
             flash('Captcha verification failed. Please try again.', 'error')
 
+        if captchaCorrect and form.validate_on_submit():
+            # original login logic
+            user = User.get_by_auth(form.email.data, form.password.data)
+            if user is None:
+                flash('Invalid email or password')
+                return redirect(url_for('users.login'))
+            login_user(user)
+            next_page = request.args.get('next')
+            if not next_page or url_parse(next_page).netloc != '':
+                next_page = url_for('index.index')
 
-    if captchaCorrect and form.validate_on_submit():
-    # if form.validate_on_submit():
-        user = User.get_by_auth(form.email.data, form.password.data)
-        if user is None:
-            flash('Invalid email or password')
-            return redirect(url_for('users.login'))
-        login_user(user)
-        next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('index.index')
+            # remove the used captcha information from the list
+            captchaList.pop()
+            session['captchaList'] = captchaList
 
-        return redirect(next_page)
+            return redirect(next_page)
+
     return render_template('login.html', title='Sign In', form=form, captchaImg=captchaImg)
 
 

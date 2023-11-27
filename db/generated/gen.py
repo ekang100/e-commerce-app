@@ -326,9 +326,9 @@ def gen_orders_in_progress(num_orders):
             
             buyerid = orderid_cartid_map.get(orderid)  # Assume num_users is defined
             entireOrderFulfillmentStatus = orderid_fulfillmentStatus.get(orderid)
+            tipAmount = f'{str(fake.random_int(max=50))}.{fake.random_int(max=99):02}'
 
-
-            writer.writerow([orderid, buyerid, entireOrderFulfillmentStatus])
+            writer.writerow([orderid, buyerid, entireOrderFulfillmentStatus, tipAmount])
 
         print(f'{num_orders} generated')
 
