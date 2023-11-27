@@ -18,6 +18,8 @@
             <th scope="col">Quantity</th>
             <th scope="col">Unit Price</th>
             <th scope="col">Lineitem Fulfilled</th>
+            <th scope="col">Fulfilled Time</th>
+
         </tr>
     </thead>
     <tbody>
@@ -28,7 +30,14 @@
                     <td>{{ lineitem.firstname }} {{ lineitem.lastname }}</td>
                     <td>{{ lineitem.quantities }}</td>
                     <td>{{ lineitem.price }}</td>
-                    <td>{{ lineitem.fulfilledStatus }}</td>
+                    <td>{{ lineitem.fulfilledStatus }}</td>                 
+                    <td>
+                        {% if lineitem.fulfilledStatus %}
+                            {{ lineitem.time_fulfilled }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
                 </tr>
             {% endif %}
         {% endfor %}
