@@ -26,3 +26,17 @@ WHERE productid = :productid AND uid = :uid
 ''', 
                               productid = productid, uid = uid, quantity = quantity)
                 return None
+    
+    # get list of sellers to display for a given product
+    @staticmethod
+    def get_all_sellers_for_product(pid):
+        rows = app.db.execute(f'''
+           SELECT ProductsForSale.productid AS productid, Products.name AS name, Products.price as price, quantity, ProductsForSale.uid AS sid, Users.firstname AS seller_firstname, Users.lastname AS seller_lastname
+           FROM ProductsForSale, Products, Users
+           WHERE ProductsForSale.productid = Products.productid AND Users.id = ProductsForSale.uid
+           AND ProductsForSale.productid={pid}
+           ORDER BY price ASC
+           ''')
+        return rows
+
+
