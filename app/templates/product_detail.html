@@ -73,13 +73,13 @@
                               <input type="number" id="qty" name="qty" min="1" max="{{ i.quantity }}" value="1">
                               <input type="submit" value="Add to Cart">
                           </form>
-                      {% else %}
-                        <p><a href="{{ url_for('users.login') }}">Log in</a> to add items to your cart</p>
-                      {% endif %}
+                          {% else %}
+                            <p><a href="{{ url_for('users.login') }}">Log in</a> to add items to your cart</p>
+                        {% endif %}
                     </td>
 
               </tr>
-          {% endfor %}
+            {% endfor %}
           </tbody>
       </table>
     </div>
@@ -107,12 +107,12 @@
                   <td>{{ r.comment }}</td>
 
               </tr>
-          {% endfor %}
+            {% endfor %}
           </tbody>
       </table>
-      <!--
+        
       {% if current_user.is_authenticated %}
-        <form action="{{ url_for('TODO') }}" method="post">
+        <form action="{{ url_for('feedback.post_review_route') }}" method="post">
             <input type="hidden" name="action" value="add"/>
             <input type="hidden" name="user_id" value="{{ current_user.id }}"/>
             <input type="hidden" name="product_id" value="{{ product.productid }}"/>
@@ -125,6 +125,5 @@
     </div>
   
     {% endif %}
-  </div>-->
 
 {% endblock %}
