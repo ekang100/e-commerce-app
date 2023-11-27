@@ -16,6 +16,7 @@ class Orders:
 SELECT orderid, entireOrderFulfillmentStatus, tipAmount
 FROM OrdersInProgress
 WHERE buyerid = :buyerid
+ORDER by orderid DESC
 ''',
                               buyerid=buyerid)
         return [{"orderid": row[0], "entireOrderFulfillmentStatus": row[1], "tipAmount": row[2]} for row in rows]

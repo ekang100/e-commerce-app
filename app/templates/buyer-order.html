@@ -14,6 +14,7 @@
     <thead class="thead-dark">
         <tr>
             <th scope="col">Product Name</th>
+            <th scope="col">Seller Name</th>
             <th scope="col">Quantity</th>
             <th scope="col">Unit Price</th>
             <th scope="col">Lineitem Fulfilled</th>
@@ -24,6 +25,7 @@
             {% if lineitem.orderid == order.orderid %}
                 <tr>
                     <td>{{ lineitem.name }}</td>
+                    <td>{{ lineitem.firstname }} {{ lineitem.lastname }}</td>
                     <td>{{ lineitem.quantities }}</td>
                     <td>{{ lineitem.price }}</td>
                     <td>{{ lineitem.fulfilledStatus }}</td>

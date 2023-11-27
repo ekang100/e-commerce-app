@@ -25,15 +25,6 @@ WHERE lineid = :lineid
 ''',
                               lineid=lineid)
         return LineItem(*(rows[0])) if rows else None
-
-    @staticmethod
-    def get_lineid(): #this is not working
-        rows = app.db.execute('''
-SELECT lineid
-FROM LineItem
-''',
-                              )
-        return ((rows[0])) if rows is not None else None
     
     @staticmethod
     def get_sellerid(lineid):
@@ -99,28 +90,32 @@ WHERE productid = :productid
     @staticmethod
     def get_all_by_cartid_not_bought(cartid,buyStatus = False):
         rows = app.db.execute('''
-SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.productid, LineItem.sellerid, LineItem.orderid, LineItem.fulfilledStatus
-FROM LineItem, Products P
+SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.productid, LineItem.sellerid, U.firstname, U.lastname, LineItem.orderid, LineItem.fulfilledStatus
+FROM LineItem, Products P, Users U
 WHERE P.productid = LineItem.productid
 AND LineItem.cartid = :cartid
 AND LineItem.buyStatus = False
+AND U.id = LineItem.sellerid
+                    
 ORDER BY P.name
 ''',
                               cartid=cartid)
-        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "productid":row[4], "sellerid":row[5]} for row in rows]
+        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "productid":row[4], "sellerid":row[5], "firstname":row[6],"lastname":row[7]} for row in rows]
 
     @staticmethod
     def get_all_by_cartid_bought(cartid,buyStatus = True):
         rows = app.db.execute('''
-SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.orderid, fulfilledStatus, time_purchased
-FROM LineItem, Products P
+SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.orderid, fulfilledStatus, time_purchased, U.firstname, U.lastname
+FROM LineItem, Products P, Users U
 WHERE P.productid = LineItem.productid
 AND LineItem.cartid = :cartid
 AND LineItem.buyStatus = :buyStatus
-ORDER BY orderid
+AND U.id = LineItem.sellerid
+           
+ORDER BY orderid DESC
 ''',
                               cartid=cartid, buyStatus = buyStatus)
-        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "orderid":row[4], "fulfilledStatus":row[5], "time_purchased":row[6]} for row in rows]
+        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "orderid":row[4], "fulfilledStatus":row[5], "time_purchased":row[6], "firstname":row[7], "lastname":row[8]} for row in rows]
     
     # make a new line item or update if it already exists when adding to cart
     @staticmethod
