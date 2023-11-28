@@ -289,8 +289,11 @@ def gen_lineitems(num_lineitems):
                 time_fulfilled = time_purchased
 
             sellerid = fake.random_element(productid_to_sellerid[productid])
+            present = fake.pybool()
+    
+            
 
-            writer.writerow([lineid, cartid, productid, quantities, unitPrice, buyStatus, fulfilledStatus, time_purchased, time_fulfilled, orderid, sellerid])
+            writer.writerow([lineid, cartid, productid, quantities, unitPrice, buyStatus, fulfilledStatus, time_purchased, time_fulfilled, orderid, sellerid,present])
 
         print(f'{num_lineitems} generated')
 
