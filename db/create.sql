@@ -81,7 +81,8 @@ CREATE TABLE LineItem (
     time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     time_fulfilled timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     orderid INT REFERENCES OrdersInProgress(orderid) DEFAULT NULL,
-    sellerid INT NOT NULL REFERENCES Users(id)
+    sellerid INT NOT NULL REFERENCES Users(id),
+    present BOOLEAN DEFAULT FALSE
     
     -- PRIMARY KEY (lineid) -- updated
 );
