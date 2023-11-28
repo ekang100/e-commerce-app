@@ -13,13 +13,14 @@ class Orders:
     @staticmethod
     def get_all_orderIDs_by_buyerid(buyerid):
         rows = app.db.execute('''
-SELECT orderid, entireOrderFulfillmentStatus, tipAmount
-FROM OrdersInProgress
+SELECT DISTINCT(OrdersInProgress.orderid), entireOrderFulfillmentStatus, tipAmount, LineItem.time_purchased
+FROM OrdersInProgress, LineItem
 WHERE buyerid = :buyerid
+AND LineItem.orderid = OrdersInProgress.orderid
 ORDER by orderid DESC
 ''',
                               buyerid=buyerid)
-        return [{"orderid": row[0], "entireOrderFulfillmentStatus": row[1], "tipAmount": row[2]} for row in rows]
+        return [{"orderid": row[0], "entireOrderFulfillmentStatus": row[1], "tipAmount": row[2], "time_purchased": row[3]} for row in rows]
 
     @staticmethod
     def add_order_to_orders_table(buyerid):

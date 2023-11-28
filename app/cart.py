@@ -45,16 +45,25 @@ def cart():
             product_id = request.form['product_id']
             qty = request.form['qty']
             price = request.form['price']
-            LineItem.add_to_cart(current_user.id, seller_id, qty, product_id, price)
+            LineItem.add_to_cart(current_user.id, seller_id, qty, product_id, price, False)
+
+        elif action_type == "gift":
+            new_status = True
+            if request.form['current_gift_status'] == 'True':
+                new_status = False            
+            LineItem.update_gift(request.form['lineitem_id'], new_status)
 
             
             
         
     if current_user.is_authenticated:
 
-        allItemsInCart = LineItem.get_all_by_cartid_not_bought(Cart.get_cartID_from_buyerid(current_user.id),False)
+        # allItemsInCart = LineItem.get_all_by_cartid_not_bought(Cart.get_cartID_from_buyerid(current_user.id),False)
+        allItemsInCart = LineItem.get_all_by_cartid_not_bought(current_user.id)
+
         updateCartFirst = Cart.update_total_cart_price(Cart.get_cartID_from_buyerid(current_user.id)) #replace 0's with current_user.id
         
+        print(allItemsInCart)
                                 #verified additional part
         moneySaved = 0.00
         if User.get(current_user.id).isVerified:

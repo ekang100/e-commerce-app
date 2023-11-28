@@ -2,7 +2,7 @@ from flask import current_app as app
 
 
 class LineItem:
-    def __init__(self, lineid, cartid, productid, quantities, unitPrice, buyStatus, fulfilledStatus, time_purchased, time_fulfilled, orderid, sellerid):
+    def __init__(self, lineid, cartid, productid, quantities, unitPrice, buyStatus, fulfilledStatus, time_purchased, time_fulfilled, orderid, sellerid, present):
         self.lineid = lineid
         self.cartid = cartid
         self.productid = productid
@@ -14,6 +14,7 @@ class LineItem:
         self.time_fulfilled = time_fulfilled
         self.orderid = orderid
         self.sellerid = sellerid
+        self.present = present
 
 
     @staticmethod
@@ -90,7 +91,7 @@ WHERE productid = :productid
     @staticmethod
     def get_all_by_cartid_not_bought(cartid,buyStatus = False):
         rows = app.db.execute('''
-SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.productid, LineItem.sellerid, U.firstname, U.lastname, LineItem.orderid, LineItem.fulfilledStatus
+SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.productid, LineItem.sellerid, U.firstname, U.lastname, LineItem.orderid, LineItem.fulfilledStatus, LineItem.present
 FROM LineItem, Products P, Users U
 WHERE P.productid = LineItem.productid
 AND LineItem.cartid = :cartid
@@ -100,12 +101,12 @@ AND U.id = LineItem.sellerid
 ORDER BY P.name
 ''',
                               cartid=cartid)
-        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "productid":row[4], "sellerid":row[5], "firstname":row[6],"lastname":row[7]} for row in rows]
+        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "productid":row[4], "sellerid":row[5], "firstname":row[6],"lastname":row[7], "fulfilledStatus":row[9], "present":row[10]} for row in rows]
 
     @staticmethod
     def get_all_by_cartid_bought(cartid,buyStatus = True):
         rows = app.db.execute('''
-SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.orderid, fulfilledStatus, time_purchased, U.firstname, U.lastname, LineItem.time_fulfilled
+SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.orderid, fulfilledStatus, time_purchased, U.firstname, U.lastname, LineItem.time_fulfilled, LineItem.present
 FROM LineItem, Products P, Users U
 WHERE P.productid = LineItem.productid
 AND LineItem.cartid = :cartid
@@ -115,20 +116,20 @@ AND U.id = LineItem.sellerid
 ORDER BY orderid DESC
 ''',
                               cartid=cartid, buyStatus = buyStatus)
-        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "orderid":row[4], "fulfilledStatus":row[5], "time_purchased":row[6], "firstname":row[7], "lastname":row[8], "time_fulfilled":row[9]} for row in rows]
+        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "orderid":row[4], "fulfilledStatus":row[5], "time_purchased":row[6], "firstname":row[7], "lastname":row[8], "time_fulfilled":row[9], "present":row[10]} for row in rows]
     
     # make a new line item or update if it already exists when adding to cart
     @staticmethod
-    def add_to_cart(cart_id, seller_id, qty, product_id, price):
+    def add_to_cart(cart_id, seller_id, qty, product_id, price, present):
         rows = app.db.execute('''SELECT quantities FROM LineItem WHERE sellerid=:seller_id AND productid=:product_id AND cartid=:cart_id;''', seller_id=seller_id, product_id=product_id, cart_id=cart_id)
         if rows is None or len(rows) == 0:
-            query = f'''INSERT INTO LineItem(lineid, cartid, productid, quantities, unitPrice, sellerid)
-                    VALUES (COALESCE((SELECT MAX(lineid)+1 FROM LineItem),0), {cart_id}, {product_id}, {qty}, {price}, {seller_id});'''
+            query = f'''INSERT INTO LineItem(lineid, cartid, productid, quantities, unitPrice, sellerid, present)
+                    VALUES (COALESCE((SELECT MAX(lineid)+1 FROM LineItem),0), {cart_id}, {product_id}, {qty}, {price}, {seller_id}, {present});'''
             rows = app.db.execute(query)
         else:
             rows = app.db.execute('''UPDATE LineItem
                         SET quantities=:qty + quantities
-                        WHERE productid=:product_id AND sellerid=:seller_id AND cartid=:cart_id;''', qty = qty, product_id=product_id, seller_id=seller_id, cart_id=cart_id)
+                        WHERE productid=:product_id AND sellerid=:seller_id AND cartid=:cart_id;''', qty = qty, product_id=product_id, seller_id=seller_id, cart_id=cart_id, present = False)
 
 
     @staticmethod
@@ -225,3 +226,15 @@ WHERE lineid = :lineid
 ''',
             lineid = lineid, orderid = orderid)
                    return None
+    
+
+    @staticmethod
+    def update_gift(lineid, present):
+        rows = app.db.execute('''
+UPDATE LineItem 
+SET present = :present
+WHERE lineid = :lineid 
+''',
+            present = present,
+            lineid = lineid)
+        return None
