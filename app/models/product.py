@@ -34,32 +34,49 @@ WHERE available = :available
         return [Product(*row) for row in rows]
     
     @staticmethod
-    def get_paginated(available=True, page=1, per_page=10):
+    def get_paginated(available=True, page=1, per_page=10, sort_by=None):
         offset = (page - 1) * per_page
+        #if type(sort_by) is str and sort_by == "priceLow":
+        #    sort_by_column = "price ASC"
+        #elif type(sort_by) is str and sort_by == "priceHigh":
+        #    sort_by_column = "price DESC"
+        #else:
+        #    sort_by_column = None
+            
         rows = app.db.execute('''
 SELECT productid, name, price, description, category, image_path, available, avg_rating
 FROM Products
 WHERE available = :available
+ORDER BY
+
+    case when :sort_by = 'priceHigh' THEN  price end DESC,
+    case when :sort_by = 'priceLow' THEN  price end ASC
+
 LIMIT :per_page
 OFFSET :offset
 ''',
-                            available=available, per_page=per_page, offset=offset)
+                            available=available, per_page=per_page, offset=offset, sort_by=sort_by)
         return [Product(*row) for row in rows]
     
     @staticmethod
-    def search_product(query, page=1,per_page=10):
+    def search_product(query, page=1,per_page=10, sort_by=None, available=True):
         offset = (page - 1) * per_page
         # implement sort by later
         #if type(sort_by) is str and sort_by.find(';') != -1:
             #sort_by = None
+        if type(sort_by) is str and sort_by == "None":
+            sort_by = None
+        if type(sort_by) is str and sort_by == "Price: Low to High":
+            sort_by = "price ASC"
         try:
-            rows = app.db.execute('''
+            rows = app.db.execute(f'''
                 SELECT *
                 FROM Products
-                WHERE name LIKE :query OR description LIKE :query
+                WHERE name LIKE :query OR description LIKE :query AND available =: available
+                {("ORDER BY " + sort_by) if sort_by is not None else ""}
                 LIMIT :per_page
                 OFFSET :offset
-            ''', query='%' + query + '%', per_page=per_page, offset=offset)
+            ''', query='%' + query + '%', per_page=per_page, offset=offset, sort_by=sort_by, available=available)
             return rows
         except Exception as e:
             print(str(e))

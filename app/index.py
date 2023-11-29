@@ -12,14 +12,20 @@ bp = Blueprint('index', __name__)
 
 @bp.route('/')
 def index():
+
     # get all available products for sale:
     page = int(request.args.get('page', 1))
     per_page = 10 # can make this adjustable in the future
     all_products = Product.get_all()
-    products = Product.get_paginated(True, page, per_page)
+
+    sort_by = request.args.get('sort_by', default='None')
+
+    products = Product.get_paginated(True, page, per_page, sort_by)
     max_page = int(math.ceil(len(all_products) / per_page))
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
+
+
     # render the page by adding information to the index.html file
     return render_template('index.html',
                            avail_products=products, page=page, max_page=max_page, categories=clean_text)

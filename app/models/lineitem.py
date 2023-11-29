@@ -124,7 +124,7 @@ ORDER BY orderid
     
     # make a new line item or update if it already exists when adding to cart
     @staticmethod
-    def add_to_cart(cart_id, seller_id, qty, product_id, price):
+    def add_to_cart(cart_id, seller_id, qty, product_id, price, buyerid):
         check = app.db.execute('''SELECT cartid FROM Cart WHERE cartid=:cart_id;''', cart_id=cart_id) # does the user have a cart
         if len(check) == 0: # make a new cart
             new_cart_query = f'''INSERT INTO Cart(buyerid, cartid, uniqueItemCount, totalCartPrice)
