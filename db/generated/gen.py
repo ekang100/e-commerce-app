@@ -28,6 +28,7 @@ product_id_list = [] # from ekang for bryant
 productid_to_price = {}
 productid_to_sellerid = defaultdict(set)
 sellerid_to_productid = defaultdict(set)
+productid_to_available = {}
 
 
 orderid_cartid_map = {}  # dictionary to track the mapping from orderid to cartid
@@ -153,6 +154,8 @@ def gen_products(num_products):
             n = fake.random_int(min=1, max=10)
             seller_id_list = random.sample(seller_list, n) # list of sellers for the product
 
+            productid_to_available[productid] = available
+
             for seller_id in seller_id_list: # bc we want multiple sellers for multiple products
                 productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
                 sellerid_to_productid[seller_id].add(productid) # add the product to the set of products for a given seller
@@ -174,7 +177,7 @@ def gen_products(num_products):
     return
 
 # generate inventory
-def gen_products_for_sale(num_products_for_sale, product_id_list, sellerid_to_productid):
+def gen_products_for_sale(sellerid_to_productid):
     with open(csv_path('ProductsForSale.csv'), 'w') as f:
         writer = get_csv_writer(f)
         #check = set()
@@ -431,7 +434,7 @@ def gen_product_reviews(num_reviews, user_ids, product_ids):
 
 gen_users(num_users)
 gen_products(num_products)
-gen_products_for_sale(num_products_for_sale, product_id_list, sellerid_to_productid)
+gen_products_for_sale(sellerid_to_productid)
 gen_carts(num_users)
 gen_lineitems(num_lineitems)
 removeQuotations('db/generated/LineItem-PreProcess.csv', 'db/generated/LineItem.csv')
