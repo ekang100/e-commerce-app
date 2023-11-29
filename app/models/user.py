@@ -6,7 +6,7 @@ from .. import login
 
 from .product import Product
 
-
+#All user attributes
 class User(UserMixin):
     def __init__(self, id, address, email, firstname, lastname, balance, isSeller, isVerified, verifiedDate, bio, avatar):
         self.id = id
@@ -21,6 +21,7 @@ class User(UserMixin):
         self.bio = bio
         self.avatar = avatar
 
+#If user authenticated, return all user attributes
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
@@ -37,6 +38,7 @@ WHERE email = :email
         else:
             return User(*(rows[0][1:]))
 
+#verify that an account email exists
     @staticmethod
     def email_exists(email):
         rows = app.db.execute("""
@@ -47,6 +49,7 @@ WHERE email = :email
                               email=email)
         return len(rows) > 0
 
+#Register an account
     @staticmethod
     def register(address, email, password, firstname, lastname):
         try:
@@ -65,7 +68,8 @@ RETURNING id
             # the following simply prints the error to the console:
             print(str(e))
             return None
-        
+
+#Update databased for name and address
     @staticmethod
     def update_name_address(user_id, address, firstname, lastname):
         try:
@@ -78,7 +82,8 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
-        
+
+# Update unique email
     @staticmethod
     def change_email(user_id, email):
         try:
@@ -91,7 +96,8 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
-        
+
+# Rehash and update password
     @staticmethod
     def change_password(user_id, password):
         try:
@@ -104,7 +110,8 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
-    
+
+# update database to add balance (make sure it is added to current balance in users function)
     @staticmethod
     def add_balance(user_id, balance):
         try:
@@ -118,8 +125,7 @@ RETURNING id
             print(str(e))
             return None
         
-     #check this with ryan before committing
-    #this is used in cart for checkign constraints
+    #Used in cart for checkign constraints
     @staticmethod
     def get_balance (id):
         try:
@@ -133,7 +139,7 @@ RETURNING id
             print(str(e))
             return None
 
-    
+#Method to become a seller --> changed isSeller to true for a user
     @staticmethod
     def become_seller(user_id):
         try:
@@ -146,7 +152,9 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
-    
+
+#Method to become verified --> changed isVerified to true for a user and stores time of verification
+# to determine how much money saved since verification
     @staticmethod
     def verify_account(user_id):
         try:
@@ -165,6 +173,7 @@ RETURNING id
             print(str(e))
             return None
         
+    # get all products given user id who is a seller
     def get_products(self):
         rows = app.db.execute('''
             SELECT p.name, p.description, p.price
@@ -198,6 +207,7 @@ RETURNING id
     ]
         return products
         
+    #Load all attributes for a user who just logged in    
     @staticmethod
     @login.user_loader
     def get(id):
@@ -209,6 +219,8 @@ RETURNING id
                               id=id)
         return User(*(rows[0])) if rows else None
 
+    #Search for any user (combined first and last name together)
+    #Can handle any upper or lowercase
     @staticmethod
     def search_user(name):
         try:
@@ -222,6 +234,7 @@ RETURNING id
             print(str(e))
             return None
 
+    #Load all attributes to display on a users public profile
     @staticmethod
     def pubprofile_search(account_id):
         try:
@@ -235,6 +248,7 @@ RETURNING id
             print(str(e))
             return None
 
+    #Update or change user bio for a given user account
     @staticmethod
     def bio(user_id, bio):
         try:
@@ -247,7 +261,8 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
-        
+    
+    #Update or change user avatar for a given user account
     @staticmethod
     def change_avatar(user_id, avatar):
         try:

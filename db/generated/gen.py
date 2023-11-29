@@ -35,6 +35,8 @@ orderid_cartid_map = {}  # dictionary to track the mapping from orderid to carti
 orderid_fulfillmentStatus = {}
 product_id_list = []
 
+product_id_to_available = {}
+
 
 def csv_path(csv_name):
     return os.path.join(generated_path, csv_name)
@@ -144,7 +146,8 @@ def gen_products(num_products):
             image_path = os.path.join(static_path, str(pid) + '.png')
             if not os.path.isfile(image_path):
                 image_path = gen_product_image(row['img_link'], productid, name)
-            available = random.choice([True, False])
+            available = fake.random_element(elements=(True, False))
+            # available = fake.pybool()
             avg_rating = fake.random_int(min=0, max=500) / 100
             seller_id = fake.random_element(seller_list) # i think i can still keep this i just wont put it in the csv?
 
@@ -163,6 +166,8 @@ def gen_products(num_products):
             if available:
                 product_list.append([productid, name])
                 product_id_list.append(productid)
+
+            product_id_to_available[productid] = available
 
             # Add to seller set if seller has products
             # sellers_with_products.add(seller_id)
@@ -183,7 +188,7 @@ def gen_products_for_sale(sellerid_to_productid):
             for product in productList:
                 productid = product
                 uid = seller
-                if productid_to_available[productid]:
+                if product_id_to_available[productid]:
                     quantity = fake.random_int(min=1, max=50)
                 else:
                     quantity = 0
@@ -228,6 +233,7 @@ def gen_lineitems(num_lineitems):
     # orderid_cartid_map = {}  # dictionary to track the mapping from orderid to cartid
     orderid_time_purchased_map = {}  # dictionary to track the mapping from orderid to time_purchased
     orderid_productid_map = {} 
+    cartid_productid_map = {}
 
     with open(csv_path('LineItem-PreProcess.csv'), 'w') as f:
         writer = get_csv_writer(f)
@@ -238,6 +244,8 @@ def gen_lineitems(num_lineitems):
                 print(f'{lineid}', end=' ', flush=True)
 
             buyStatus = fake.pybool()
+
+    
 
             if buyStatus:
                 orderid = fake.random_int(min=1, max=num_orders-1)  # Assume num_orders is defined
@@ -264,16 +272,35 @@ def gen_lineitems(num_lineitems):
                 else:
                     productid = fake.random_int(min=0, max=len(product_list)-1)
                     orderid_productid_map[orderid] = [productid]
+                
+                # if cartid in cartid_productid_map:
+                #     productids_in_cart = cartid_productid_map[cartid]
+                # else:
+                #     productids_in_cart = []
+                    
             else:
                 orderid = None
                 cartid = fake.random_int(min=0, max=num_users-1)  # Generate a cartid for cases where buyStatus is False
                 time_purchased = fake.date_time_this_decade()
-                productid = fake.random_int(min=0, max=len(product_list)-1)  # Assume productid exists in Products table
+                # productid = fake.random_int(min=0, max=len(product_list)-1)  # Assume productid exists in Products table
+                if cartid in cartid_productid_map:
+                    productids_in_cart = cartid_productid_map[cartid]
+                else:
+                    productids_in_cart = []
+                while productid in productids_in_cart:
+                    productid = fake.random_element(product_id_list)
+                
+                productids_in_cart.append(productid)
+                cartid_productid_map[cartid] = productids_in_cart
+            
 
+                
+            # productid = fake.random_element(product_id_list)
 
             # productid = fake.random_int(min=0, max=len(product_list)-1)  # Assume productid exists in Products table
             quantities = fake.random_int(min=1, max=20)
             unitPrice = productid_to_price.get(productid)
+
             # round(fake.random_int(min=1, max=1000) + fake.random.random(), 2) #doesn't this have to get from products ????
 
             # gen fulfilledStatus only if buyStatus is True
@@ -295,8 +322,11 @@ def gen_lineitems(num_lineitems):
                 time_fulfilled = time_purchased
 
             sellerid = fake.random_element(productid_to_sellerid[productid])
+            present = fake.pybool()
+    
+            
 
-            writer.writerow([lineid, cartid, productid, quantities, unitPrice, buyStatus, fulfilledStatus, time_purchased, time_fulfilled, orderid, sellerid])
+            writer.writerow([lineid, cartid, productid, quantities, unitPrice, buyStatus, fulfilledStatus, time_purchased, time_fulfilled, orderid, sellerid,present])
 
         print(f'{num_lineitems} generated')
 
@@ -332,9 +362,9 @@ def gen_orders_in_progress(num_orders):
             
             buyerid = orderid_cartid_map.get(orderid)  # Assume num_users is defined
             entireOrderFulfillmentStatus = orderid_fulfillmentStatus.get(orderid)
+            tipAmount = f'{str(fake.random_int(max=50))}.{fake.random_int(max=99):02}'
 
-
-            writer.writerow([orderid, buyerid, entireOrderFulfillmentStatus])
+            writer.writerow([orderid, buyerid, entireOrderFulfillmentStatus, tipAmount])
 
         print(f'{num_orders} generated')
 

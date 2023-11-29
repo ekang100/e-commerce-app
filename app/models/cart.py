@@ -52,6 +52,18 @@ WHERE cartid = :cartid
         return None
     
     @staticmethod
+    def update_total_cart_price_if_verified(cartid): #amazon will cover the cost that goes to sellers, sellers will still get their demanded prices
+        rows = app.db.execute('''
+UPDATE Cart
+SET totalCartPrice = (SELECT COALESCE(SUM(quantities * unitPrice * 0.9),0)
+                            FROM LineItem
+                            WHERE cartid = :cartid AND buyStatus = FALSE)
+WHERE cartid = :cartid
+''', 
+                              cartid = cartid)
+        return None
+    
+    @staticmethod
     def get_total_cartprice(cartid): #going to need to add a constraint here
             rows = app.db.execute('''
     SELECT totalCartPrice
@@ -61,6 +73,16 @@ WHERE cartid = :cartid
                               cartid = cartid)
             return ((rows[0])[0]) if rows else None
 
+
+    # @staticmethod
+    # def get_total_cartprice_if_verified(cartid): #going to need to add a constraint here
+    #         rows = app.db.execute('''
+    # SELECT totalCartPrice * 0.9
+    # FROM Cart
+    # WHERE cartid = :cartid
+    # ''', 
+    #                           cartid = cartid)
+    #         return ((rows[0])[0]) if rows else None
 
     @staticmethod
     def update_number_unique_items(cartid): #going to need to add a constraint here

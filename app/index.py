@@ -30,22 +30,24 @@ def index():
     return render_template('index.html',
                            avail_products=products, page=page, max_page=max_page, categories=clean_text)
 
-
-
 @bp.route('/account')
 def index2():
     # find the products current user has bought:
     if current_user.is_authenticated:
+        # Get all products purchased before earliest date
         purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+        # check if verified and display total saved from verification since verification date
         if current_user.isVerified:
             result = Purchase.get_all_by_uid_price_since(current_user.id, current_user.verifiedDate)
             print(result)
             if len(result) > 0:
                 total_saved = sum(item['price'] for item in result)
             else:
+                #if nothing bought since verification return 0
                 total_saved = 0.00
         else:
+            #if not verified return 0
             total_saved = 0.00
     else:
         purchases = None

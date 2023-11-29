@@ -22,21 +22,24 @@
   </p>
   <p>
     It's Captcha Time!
-    <img src="{{captchaImg}}" width="300" height="100" style="display: block;" />
+    <img src="{{ captchaImg }}" width="300" height="100" style="display: block;" />
+    <!-- <input type="hidden" name="captchaAnswer" value="{{ captchaAnswer }}"> -->
     <input type="text" name="forCaptcha" style="margin-top: 10px;  display: block;" />
 </p>
 
-  <p>
+  
     {% with messages = get_flashed_messages() %}
     {% if messages %}
+
     <ul>
       {% for message in messages %}
       <li>{{ message }}</li>
       {% endfor %}
     </ul>
+
     {% endif %}
     {% endwith %}
-  </p>
+
   {{ form.submit(class_="btn btn-black") }}
   <a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Register</a>
 </form>

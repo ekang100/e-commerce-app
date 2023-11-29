@@ -4,6 +4,44 @@
 
 {% if ItemsInCart %}
 
+
+<script>
+    function showTipPopup() {
+        document.getElementById('tipPopup').style.display = 'block';
+    }
+
+    function hideTipPopup() {
+            document.getElementById('tipPopup').style.display = 'none';
+            document.getElementById('thankYouMessage').style.display = 'none';
+        }
+
+    function addTip() {
+            // Get the entered tip percentage
+            var tipPercentage = document.getElementById('tipPercentage').value;
+
+            // Check if the tip amount is greater than 0
+                        // Check if the tip amount is a valid float with at most two decimal places
+                var isValidTip = /^(\d*\.\d{1,2}|\d+)$/.test(tipPercentage);
+
+                if (!isValidTip ){
+                    document.getElementById('TipError').style.display = 'block';
+                }
+                else if (isValidTip && parseFloat(tipPercentage) >= 0) {  
+                
+                // Display the thank you message and hide the popup
+                document.getElementById('thankYouMessage').innerText = `Thank you for adding a $${tipPercentage} tip!`;
+                document.getElementById('thankYouMessage').style.display = 'block';
+                document.getElementById('tipPopup').style.display = 'none';
+                // document.getElementById('ti')
+            } else {
+                document.getElementById('TipError').style.display = 'block';
+                // You can perform additional logic here if needed
+                // For simplicity, let's just hide the popup in this example
+                // hideTipPopup();
+            }
+        }
+</script>
+
 {% if ErrorMessageCheck %}
 <script type="text/javascript">
   alert("{{ errorMessageString|safe }}");
@@ -15,39 +53,65 @@
 <a href="buyer-order" type = "button" class="btn btn-primary" style="float: top; margin-right: 10px; border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">View Order History</a>
 
 <table class='table table-hover table-bordered container'>
-    <thead class="thead-dark">
-        <tr>
-          <th scope="col" style="color: #FFD700">Product Name</th>
-          <th scope="col" style="color: #FFD700">Quantities</th>
-          <th scope="col" style="color: #FFD700">Unit Price</th>
-        </tr>
-      </thead>
-<tbody>
-    {% for lineitem in ItemsInCart%}
+  <thead class="thead-dark">
       <tr>
-        <th scope="row">{{lineitem.name}}</th>
-        <td style="display: flex; justify-content: space-between; align-items: flex-start;">
-          {{lineitem.quantities}}
-              <form method="post" action="{{ url_for('cart.cart')}}" style= "float: right" >
-                <input type='number' name='newQuantity' style="float: right; background-color: #1a1a1a; color: #FFD700; border: 1px solid #FFD700; border-radius: 5px; padding: 8px 12px; margin-right: 10px;">
-                <input type = 'hidden' name = lineitem_id value = {{lineitem.lineid}}>
-              <input type = 'hidden' name = action value = "update">
-              <input type="submit" value="Modify Quantity" class="btn btn-primary" style="float: right; margin-top: 15px; margin-right: 10px; border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
-              </form>
-        </td>
-        <td>{{lineitem.price}}</td>
-        <!-- <td ><button type="button"> Remove lineitem.</button> </td> -->
-        <td>
-            <form method="post" action="{{ url_for('cart.cart')}}">
-              <input type = 'hidden' name = lineitem_id value = {{lineitem.lineid}}>
-              <input type = 'hidden' name = action value = "delete">
-              <input type="submit" value="Remove Item" class="btn btn-primary" style="float: top; border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
-            </form>
-          </td>
+          <th scope="col" style="color: #FFD700; white-space: nowrap;" >Product Name</th>
+          <th scope="col" style="color: #FFD700; white-space: nowrap;">Seller Name</th>
+          <th scope="col" style="color: #FFD700; white-space: nowrap; text-align: center; vertical-align: middle;">Quantities</th>
+          <th scope="col" style="color: #FFD700; white-space: nowrap;">Unit Price</th>
+          <th scope="col" style="color: #FFD700; white-space: nowrap; text-align: center; vertical-align: middle;">Remove Item</th>
+          <th scope="col" style="color: #FFD700; white-space: nowrap; text-align: center; vertical-align: middle;">Gift</th>
+        </tr>
 
-      </tr>
-    {% endfor %}
-</tbody>
+  </thead>
+  <tbody>
+      {% for lineitem in ItemsInCart %}
+          <tr>
+     
+              <td >     
+                {% if lineitem.present %}
+                <img src="/static/gift_icon.png" alt="Gift Image" style="width: 20px; height: 20px; margin-right: 5px;">
+              {% endif %}   
+            {{ lineitem.name }} </td>
+              <td style="vertical-align: middle; white-space: nowrap;">{{ lineitem.firstname }} {{ lineitem.lastname }} </td>
+
+              <td style="vertical-align: middle; white-space: nowrap;">
+                  <span style="display: inline-block; vertical-align: middle;">
+                      {{ lineitem.quantities }}
+                  </span>
+                  <span style="margin-left: 10px; display: inline-block; vertical-align: middle;">
+                      <form method="post" action="{{ url_for('cart.cart')}}" style="white-space: nowrap;">
+                          <input type='number' name='newQuantity' style="background-color: #1a1a1a; color: #FFD700; border: 1px solid #FFD700; border-radius: 5px; padding: 8px 12px; margin-right: 10px;">
+                          <input type='hidden' name='lineitem_id' value='{{ lineitem.lineid }}'>
+                          <input type='hidden' name='action' value='update'>
+                          <input type='submit' value='Modify Quantity' class='btn btn-primary' style="border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
+                      </form>
+                  </span>
+              </td>
+              <td style="text-align: center; vertical-align: middle;">{{ lineitem.price }}</td>
+              <td style="text-align: center; vertical-align: middle;">
+                  <form method="post" action="{{ url_for('cart.cart')}}" style="display: inline-block;">
+                      <input type='hidden' name='lineitem_id' value='{{ lineitem.lineid }}'>
+                      <input type='hidden' name='action' value='delete'>
+                      <input type="submit" value="Remove Item" class="btn btn-primary" style="border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
+                  </form>
+              </td>
+              <td style="text-align: center; vertical-align: middle;">
+                <form method="post" action="{{ url_for('cart.cart')}}" style="display: inline-block;">             
+                    <input type='hidden' name='action' value='gift'>
+                    <input type = 'hidden' name = 'current_gift_status' value = "{{lineitem.present}}">
+                    <input type='hidden' name='lineitem_id' value='{{ lineitem.lineid }}'>
+                {% if lineitem.present %}
+        
+                <input type="submit" value="Unmark As Gift" class="btn btn-primary" style="border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
+                {% else %}                
+                    <input type="submit" value="Mark As Gift" class="btn btn-primary" style="border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
+                    {% endif %}
+                </form>
+            </td>
+          </tr>
+      {% endfor %}
+  </tbody>
 </table>
 
 
@@ -55,13 +119,42 @@
 <h3 style="color: #FFD700">
     Total Unique Items: {{singleCart.uniqueItemCount}}
 <br/>
-    Total Cart Price: ${{singleCart.totalCartPrice}}
+ {% if isVerified %}
+ Verified Discount (Covered by BoxML): ${{moneySaved}}
+ <br/>
+
+ {% else %}
+  Become a verified user to save 10% when you checkout!
+ <br/>
+ {% endif %}
+
+
+
+
+    Final Total Cart Price: ${{singleCart.totalCartPrice}}
 </h3>
 
 <form method = "post" action = "{{url_for('cart.buyerOrder')}}" >
 <input type = 'hidden' name = action value = "order_all">
 <input type = "submit" value = "Order Entire Cart" class="btn btn-primary" style="margin-right: 10px; border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
+
+</br>
+<br>
+<a style = "color:#FFD700"> Tip Your BoxML Service Worker</a>
+
+
+<div id="tipPopup">
+    <label id = "TipError" style = 'display: none; color: red'> Error: Please tip a non-negative dollar amount. </label>
+    <label for="tipPercentage">Enter tip amount:</label>
+    <input type="number" id="tipPercentage" name="tipPercentage" step=".01" required>
+    <button type="button" class="btn btn-primary" onclick="addTip()">Add Tip</button>
+</div>
+
+<div id="thankYouMessage" style = "display: none">Thank you for adding a tip!</div>
+
 </form>
+
+
 
 
 {% else %}

@@ -8,24 +8,39 @@
 {% for order in allOrdersByUser %}
 <h2>Order ID: {{ order.orderid }}</h2>
 <p>Entire Order Fulfillment Status: {{ order.entireOrderFulfillmentStatus }}</p>
+<p> Order Placed on {{order.time_purchased}}</p>
+<a> Service Worker Tip: {{order.tipAmount}}</a>
 
 <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
         <tr>
             <th scope="col">Product Name</th>
-            <th scope="col">Quantities</th>
+            <th scope="col">Seller Name</th>
+            <th scope="col">Quantity</th>
             <th scope="col">Unit Price</th>
             <th scope="col">Lineitem Fulfilled</th>
+            <th scope="col">Fulfilled Time</th>
+
         </tr>
     </thead>
     <tbody>
         {% for lineitem in allItemsBought %}
             {% if lineitem.orderid == order.orderid %}
                 <tr>
-                    <td>{{ lineitem.name }}</td>
+                    <td>                {% if lineitem.present %}
+                        <img src="/static/gift_icon.png" alt="Gift Image" style="width: 20px; height: 20px; margin-right: 5px;">
+                      {% endif %}   {{ lineitem.name }}</td>
+                    <td>{{ lineitem.firstname }} {{ lineitem.lastname }}</td>
                     <td>{{ lineitem.quantities }}</td>
                     <td>{{ lineitem.price }}</td>
-                    <td>{{ lineitem.fulfilledStatus }}</td>
+                    <td>{{ lineitem.fulfilledStatus }}</td>                 
+                    <td>
+                        {% if lineitem.fulfilledStatus %}
+                            {{ lineitem.time_fulfilled }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
                 </tr>
             {% endif %}
         {% endfor %}
