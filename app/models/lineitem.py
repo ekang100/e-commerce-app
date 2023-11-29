@@ -125,6 +125,11 @@ ORDER BY orderid
     # make a new line item or update if it already exists when adding to cart
     @staticmethod
     def add_to_cart(cart_id, seller_id, qty, product_id, price):
+        check = app.db.execute('''SELECT cartid FROM Cart WHERE cartid=:cart_id;''', cart_id=cart_id) # does the user have a cart
+        if len(check) == 0: # make a new cart
+            new_cart_query = f'''INSERT INTO Cart(buyerid, cartid, uniqueItemCount, totalCartPrice)
+                                    VALUES (COALESCE((SELECT MAX(id) FROM Users),0), {cart_id}, {0}, {0.00});'''
+            rows = app.db.execute(new_cart_query)
         rows = app.db.execute('''SELECT quantities FROM LineItem WHERE sellerid=:seller_id AND productid=:product_id AND cartid=:cart_id;''', seller_id=seller_id, product_id=product_id, cart_id=cart_id)
         if rows is None or len(rows) == 0:
             query = f'''INSERT INTO LineItem(lineid, cartid, productid, quantities, unitPrice, sellerid)
@@ -134,7 +139,7 @@ ORDER BY orderid
             rows = app.db.execute('''UPDATE LineItem
                         SET quantities=:qty + quantities
                         WHERE productid=:product_id AND sellerid=:seller_id AND cartid=:cart_id;''', qty = qty, product_id=product_id, seller_id=seller_id, cart_id=cart_id)
-
+               
 
     @staticmethod
     def remove_lineitem(lineid): 
