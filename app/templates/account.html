@@ -127,6 +127,25 @@
 <br><br>
 <hr style="border: none; clear: both; margin-top: 70px;">
 <h1 style = "color: #FFD700;">{{current_user.firstname}}'s Recent Purchases:</h1>
+
+<form action="{{ url_for('index.index2') }}" method="get">
+  <label for="sort">Sort by:</label>
+  <select name="sort" id="sort" onchange="this.form.submit()">
+      <option value="date_desc">Most Recent Date</option>
+      <option value="date_asc">Oldest Date</option>
+      <option value="quantity">Quantity</option>
+      <option value="priceLow">Price: Low to High</option>
+      <option value="priceHigh">Price: High to Low</option>
+      <option value="Home Improvement">Category: Home Improvement</option>
+      <option value="Electronics">Category: Electronics</option>
+      <option value="Health&Personal Care">Category: Health & Personal Care</option>
+      <option value="Office Products">Category: Office Products</option>
+      <option value="Computers&Accessories">Category: Computers & Accessories</option>
+      <option value="Toys & Games">Category: Toys & Games</option>
+      <option value="Home&Kitchen">Category: Home & Kitchen</option>
+  </select>
+</form>
+
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
