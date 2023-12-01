@@ -34,49 +34,64 @@ WHERE available = :available
         return [Product(*row) for row in rows]
     
     @staticmethod
-    def get_paginated(available=True, page=1, per_page=10, sort_by=None):
-        offset = (page - 1) * per_page
-        #if type(sort_by) is str and sort_by == "priceLow":
-        #    sort_by_column = "price ASC"
-        #elif type(sort_by) is str and sort_by == "priceHigh":
-        #    sort_by_column = "price DESC"
-        #else:
-        #    sort_by_column = None
-            
+    def get_num_products(available=True):
         rows = app.db.execute('''
+SELECT COUNT(*)
+FROM Products
+WHERE available=:available''', available=available)
+        total = rows[0][0] if rows else 0
+        return total
+    
+    @staticmethod
+    def get_paginated(sort_by, page, available=True):
+        per_page = 10
+        offset = (page - 1) * per_page
+        if type(sort_by) is str and sort_by == "priceLow":
+            sort_by_column = "price ASC"
+        elif type(sort_by) is str and sort_by == "priceHigh":
+            sort_by_column = "price DESC"
+        else:
+            sort_by_column = None
+            
+        rows = app.db.execute(f'''
 SELECT productid, name, price, description, category, image_path, available, avg_rating
 FROM Products
 WHERE available = :available
-ORDER BY
-
-    case when :sort_by = 'priceHigh' THEN  price end DESC,
-    case when :sort_by = 'priceLow' THEN  price end ASC
-
+{("ORDER BY " + sort_by_column) if sort_by_column is not None else ""}
 LIMIT :per_page
 OFFSET :offset
 ''',
-                            available=available, per_page=per_page, offset=offset, sort_by=sort_by)
+                            available=available, per_page=per_page, offset=offset)
         return [Product(*row) for row in rows]
     
     @staticmethod
-    def search_product(query, page=1,per_page=10, sort_by=None, available=True):
+    def search_count(query):
+        rows = app.db.execute(f'''
+            SELECT COUNT(*)
+            FROM Products
+            WHERE name LIKE :query OR description LIKE :query
+        ''', query='%' + query + '%')
+        total = rows[0][0] if rows else 0
+        return total
+    
+    @staticmethod
+    def search_product(query, page, per_page=10):
         offset = (page - 1) * per_page
         # implement sort by later
         #if type(sort_by) is str and sort_by.find(';') != -1:
             #sort_by = None
-        if type(sort_by) is str and sort_by == "None":
-            sort_by = None
-        if type(sort_by) is str and sort_by == "Price: Low to High":
-            sort_by = "price ASC"
+        #if type(sort_by) is str and sort_by == "None":
+        #    sort_by = None
+        #if type(sort_by) is str and sort_by == "Price: Low to High":
+        #    sort_by = "price ASC"
         try:
             rows = app.db.execute(f'''
                 SELECT *
                 FROM Products
-                WHERE name LIKE :query OR description LIKE :query AND available =: available
-                {("ORDER BY " + sort_by) if sort_by is not None else ""}
+                WHERE name LIKE :query OR description LIKE :query
                 LIMIT :per_page
                 OFFSET :offset
-            ''', query='%' + query + '%', per_page=per_page, offset=offset, sort_by=sort_by, available=available)
+            ''', query='%' + query + '%', per_page=per_page, offset=offset)
             return rows
         except Exception as e:
             print(str(e))

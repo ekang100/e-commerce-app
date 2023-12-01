@@ -20,15 +20,17 @@ def index():
 
     sort_by = request.args.get('sort_by', default='None')
 
-    products = Product.get_paginated(True, page, per_page, sort_by)
+    total = int(Product.get_num_products())
+    products = Product.get_paginated(sort_by, page)
     max_page = int(math.ceil(len(all_products) / per_page))
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
 
 
+
     # render the page by adding information to the index.html file
     return render_template('index.html',
-                           avail_products=products, page=page, max_page=max_page, categories=clean_text)
+                           avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by)
 
 @bp.route('/account')
 def index2():

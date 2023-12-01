@@ -23,15 +23,20 @@ def top_products():
 
 @bp.route('/search_product_results', methods=['GET', 'POST'])
 def search_keywords():
-    query = str(request.form['query'])
+    try: # an original search
+        query = request.form['query']
+    except: # for maintaining the search query throughout pagination
+        query = request.args.get('query')
     page = int(request.args.get('page', 1))
+    per_page = 10
     try:
-        products = Product.search_product(query)
+        products = Product.search_product(query, page)
+        total = Product.search_count(query)
         if len(products) == 0:
             return render_template('search_product_results.html')
     except Exception:
-        return 'No products found'
-    return render_template('search_product_results.html', products=products, page=page)
+        return 'No products found lol'
+    return render_template('search_product_results.html', products=products, page=page, total=total, query=query, per_page=per_page)
 
 @bp.route('/search_category_results', methods=['GET'])
 def search_category():

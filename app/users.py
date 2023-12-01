@@ -7,9 +7,11 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
 from .models.purchase import Purchase
+from .models.product import Product
 
 import os
 import random
+import re
 
 from flask import Blueprint
 # Create a Blueprint for the users module. This helps in organizing the app into components.
@@ -164,7 +166,9 @@ def logout():
 #reroute to account page
 @bp.route('/account')
 def account():
-    return render_template('account.html')
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
+    return render_template('account.html', categories=clean_text)
 
 #Change name or address (don't need to be unique)
 @bp.route('/update_name_address', methods=['GET', 'POST'])
@@ -227,6 +231,8 @@ def become_seller():
 @bp.route('/search_user_results', methods=['GET', 'POST'])
 def search_user():
     ##add nonetype error handling- reroute to page 'No names found'
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
     user_to_search = request.form['query']
     try:
         users = User.search_user(user_to_search)
@@ -235,7 +241,7 @@ def search_user():
             return render_template('search_user_results.html')
     except Exception:
         return 'No names found'
-    return render_template('search_user_results.html', users=users)
+    return render_template('search_user_results.html', users=users, categories=clean_text)
 
 # Route for displaying public profile
 @bp.route('/user_profile/<int:account_id>', methods=['GET', 'POST'])
