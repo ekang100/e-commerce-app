@@ -35,8 +35,21 @@ def index2():
     # find the products current user has bought:
     if current_user.is_authenticated:
         # Get all products purchased before earliest date
-        purchases = Purchase.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+        if request.args.get('sort', 'date_desc') is not None:
+            sort_order = request.args.get('sort', 'date_desc')
+            if sort_order == 'date_desc':
+                purchases = Purchase.get_all_by_uid_since(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+            elif sort_order == 'date_asc':
+                purchases = Purchase.get_all_by_uid_since_asc(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+            elif sort_order == 'quantity':
+                purchases = Purchase.get_all_by_uid_since_quantities(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+            elif sort_order == 'priceLow':
+                purchases = Purchase.get_all_by_uid_since_price_lh(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+            elif sort_order == 'priceHigh':
+                purchases = Purchase.get_all_by_uid_since_price_hl(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+        else:
+            purchases = Purchase.get_all_by_uid_since(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+
         # check if verified and display total saved from verification since verification date
         if current_user.isVerified:
             result = Purchase.get_all_by_uid_price_since(current_user.id, current_user.verifiedDate)
