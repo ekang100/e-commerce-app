@@ -34,21 +34,28 @@ def index():
 def index2():
     # find the products current user has bought:
     if current_user.is_authenticated:
-        # Get all products purchased before earliest date
+        # Get all products depending on how user specifies sorting
         if request.args.get('sort', 'date_desc') is not None:
             sort_order = request.args.get('sort', 'date_desc')
+            #sort by descending date
             if sort_order == 'date_desc':
                 purchases = Purchase.get_all_by_uid_since(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+            #sort by ascending date
             elif sort_order == 'date_asc':
                 purchases = Purchase.get_all_by_uid_since_asc(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+            #sort by quantity
             elif sort_order == 'quantity':
                 purchases = Purchase.get_all_by_uid_since_quantities(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+            #sort by price low to high
             elif sort_order == 'priceLow':
                 purchases = Purchase.get_all_by_uid_since_price_lh(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+            #sort by price high to low
             elif sort_order == 'priceHigh':
                 purchases = Purchase.get_all_by_uid_since_price_hl(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
+            #sort by category
             else:
                 purchases = Purchase.get_all_by_uid_since_category(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0), sort_order)
+        #default to sort by date descending
         else:
             purchases = Purchase.get_all_by_uid_since(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
 
