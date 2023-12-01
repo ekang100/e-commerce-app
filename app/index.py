@@ -47,19 +47,7 @@ def index2():
                 purchases = Purchase.get_all_by_uid_since_price_lh(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
             elif sort_order == 'priceHigh':
                 purchases = Purchase.get_all_by_uid_since_price_hl(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
-            elif sort_order == 'Home Improvement':
-                purchases = Purchase.get_all_by_uid_since_category(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0), sort_order)
-            elif sort_order == 'Electronics':
-                purchases = Purchase.get_all_by_uid_since_category(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0), sort_order)
-            elif sort_order == 'Health&Personal Care':
-                purchases = Purchase.get_all_by_uid_since_category(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0), sort_order)
-            elif sort_order == 'Office Products':
-                purchases = Purchase.get_all_by_uid_since_category(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0), sort_order)
-            elif sort_order == 'Computers&Accessories':
-                purchases = Purchase.get_all_by_uid_since_category(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0), sort_order)
-            elif sort_order == 'Toys & Games':
-                purchases = Purchase.get_all_by_uid_since_category(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0), sort_order)
-            elif sort_order == 'Home&Kitchen':
+            else:
                 purchases = Purchase.get_all_by_uid_since_category(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0), sort_order)
         else:
             purchases = Purchase.get_all_by_uid_since(current_user.id, datetime.datetime(1950, 9, 14, 0, 0, 0))
