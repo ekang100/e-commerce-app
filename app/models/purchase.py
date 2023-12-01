@@ -99,6 +99,24 @@ ORDER BY L.quantities * P.price ASC
         return [{"name": row[0], "quantities": row[1], "price": row[2], "time_purchased": row[3], "fulfilledStatus": row[4], "category": row[5]} for row in rows]
 
     @staticmethod
+    def get_all_by_uid_since_category(uid, since, category):
+        rows = app.db.execute('''
+SELECT P.name, L.quantities, P.price, L.time_purchased, L.fulfilledStatus, P.category
+FROM Cart C, Products P, LineItem L
+WHERE C.buyerid = :uid
+AND L.time_purchased >= :since
+AND C.cartid = L.cartid
+AND L.buyStatus = TRUE
+AND L.productid = P.productid
+AND P.category = :category
+ORDER BY L.time_purchased DESC
+''',
+                              uid=uid,
+                              since=since,
+                              category=category)
+        return [{"name": row[0], "quantities": row[1], "price": row[2], "time_purchased": row[3], "fulfilledStatus": row[4], "category": row[5]} for row in rows]
+
+    @staticmethod
     def get_all_by_uid_price_since(uid, since):
         rows = app.db.execute('''
 SELECT P.price

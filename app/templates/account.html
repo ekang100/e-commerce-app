@@ -136,19 +136,15 @@
       <option value="quantity">Quantity</option>
       <option value="priceLow">Price: Low to High</option>
       <option value="priceHigh">Price: High to Low</option>
+      <option value="Home Improvement">Category: Home Improvement</option>
+      <option value="Electronics">Category: Electronics</option>
+      <option value="Health&Personal Care">Category: Health & Personal Care</option>
+      <option value="Office Products">Category: Office Products</option>
+      <option value="Computers&Accessories">Category: Computers & Accessories</option>
+      <option value="Toys & Games">Category: Toys & Games</option>
+      <option value="Home&Kitchen">Category: Home & Kitchen</option>
   </select>
 </form>
-
-<div id ="search-bar">
-  <form id="search-form" action="/search_category_results" method="GET">
-      <select name="category">
-          {% for category in categories %}
-              <option value="{{ category }}">{{ category }}</option>
-          {% endfor %}
-      </select>
-      <input type="submit" value="Show Products">
-  </form>
-</div>
 
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
