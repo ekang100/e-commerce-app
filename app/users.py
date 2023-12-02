@@ -231,10 +231,10 @@ def become_seller():
 @bp.route('/search_user_results', methods=['GET', 'POST'])
 def search_user():
     ##add nonetype error handling- reroute to page 'No names found'
-    categories = Product.get_categories()
-    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
     user_to_search = request.form['query']
     try:
+        categories = Product.get_categories()
+        clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
         users = User.search_user(user_to_search)
         if len(users) == 0:
             #Display 'no users found' if nothing matches

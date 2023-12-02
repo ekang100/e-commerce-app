@@ -96,6 +96,16 @@ OFFSET :offset
         except Exception as e:
             print(str(e))
             return None
+        
+    @staticmethod
+    def category_search_count(category):
+        rows = app.db.execute('''
+            SELECT COUNT(*)
+            FROM Products
+            WHERE category LIKE :category
+        ''', category='%' + category + '%')
+        total = rows[0][0] if rows else 0
+        return total
     
     @staticmethod
     def get_categories(available=True):
@@ -108,7 +118,7 @@ WHERE available = :available
         return [str(row) for row in rows]
     
     @staticmethod
-    def search_categories(category, page=1, per_page=10):
+    def search_categories(category, page, per_page=10):
         offset = (page - 1) * per_page
         # implement sort by later
         #if type(sort_by) is str and sort_by.find(';') != -1:

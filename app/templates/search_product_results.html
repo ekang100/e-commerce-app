@@ -54,7 +54,7 @@
     {% endfor %}
     
     {# Next Button #}
-    {% if page <= total_pages %}
+    {% if page < total_pages %}
       <li class="page-item">
         <a href="{{ url_for('products.search_keywords', query=query, page=page+1) }}">Next</a>
       </li>
