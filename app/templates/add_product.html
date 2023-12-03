@@ -26,15 +26,31 @@
         <label for="image_path">Image Path</label>
         <input type="text" class="form-control" id="image_path" name="image_path" required>
     </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="available" name="available">
-        <label class="form-check-label" for="available">Available</label>
-    </div>
     <div class="form-group">
         <label for="quantity">Quantity</label>
         <input type="number" class="form-control" id="quantity" name="quantity" required>
     </div>
     
-    <button type="submit" class="btn btn-success">Add Product</button>
+    <button type="submit" class="btn btn-success flash-green" id="flash-button" style="border: 1px solid #FFFF00; color: #FFFF00;">Add Product</button>
 </form>
+
+<style>
+    /* CSS for flashing effect on hover */
+    @keyframes flash-green {
+        from {
+            background-color: #00FF00;
+            color: #FFFF00;
+        }
+        to {
+            background-color: #007700;
+            color: #FFFF00;
+        }
+    }
+
+    /* Apply the flashing effect on hover */
+    .flash-green:hover {
+        animation: flash-green 0.5s infinite alternate;
+    }
+</style>
+
 {% endblock %}

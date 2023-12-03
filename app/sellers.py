@@ -13,7 +13,12 @@ def get_seller_inventory(seller_id):
         # Handle the case when the user has inventory
         return render_template('inventory.html', inventory=inventory)
     else:
-        return jsonify({"message": "Seller's inventory is empty"}), 404
+        return '''
+            <script>
+                alert("You Don't Have Anything in Your Inventory Yet!");
+                window.history.back();  // Redirect back to the previous page or handle as needed
+            </script>
+        '''
 
 @bp.route('/fulfilled_order_history/<int:seller_id>')
 def get_fulfilled_order_history(seller_id):
@@ -23,7 +28,13 @@ def get_fulfilled_order_history(seller_id):
         # Handle the case when there's fulfilled order history
         return render_template('fulfilled_order_history.html', order_history=order_history)
     else:
-        return jsonify({"message": "No fulfilled order history for the seller"}), 404
+        return '''
+            <script>
+                alert("No Orders to Fulfill Yet!");
+                window.history.back();  // Redirect back to the previous page or handle as needed
+            </script>
+        '''
+
     
 @bp.route('/unfulfilled_order_history/<int:seller_id>')
 def get_unfulfilled_order_history(seller_id):
@@ -33,7 +44,13 @@ def get_unfulfilled_order_history(seller_id):
         # Handle the case when there's fulfilled order history
         return render_template('unfulfilled_order_history.html', order_history=order_history)
     else:
-        return jsonify({"message": "No Unfulfillled order history for the seller"}), 404
+        # Use JavaScript alert for the message
+        return '''
+            <script>
+                alert("No Unfulfilled Orders Yet!");
+                window.history.back();  // Redirect back to the previous page or handle as needed
+            </script>
+        '''
 
 
 @bp.route('/add_product', methods=['GET', 'POST'])
@@ -45,8 +62,8 @@ def add_product():
         description = request.form.get('description')
         category = request.form.get('category')
         image_path = request.form.get('image_path')
-        available = request.form.get('available') == 'on'  # Convert to boolean
         quantity=request.form.get('quantity')
+        
 
         # Assume current_user is provided by Flask-Login
         seller_id = current_user.id
@@ -55,15 +72,9 @@ def add_product():
         seller = Seller(seller_id)
 
         # Call the add_product method with the form data
-        result = seller.add_product(name, price, description, category, quantity, image_path, available)
+        result = seller.add_product(name, price, description, category, quantity, image_path)
 
-        result2 = seller.add_to_products_for_sale(name, quantity)
-
-        if result:
-            flash('Product added successfully!', 'success')
-            return redirect(url_for('sellers.get_seller_inventory'))
-        else:
-            flash('Failed to add product', 'error')
+        return redirect(url_for('sellers.get_seller_inventory', seller_id=seller_id))
 
     return render_template('add_product.html')
 
