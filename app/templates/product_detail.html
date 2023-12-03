@@ -100,7 +100,14 @@
             {% for review in reviews %}
             <tr>
                 <td>{{ review.name }}</td>
-                <td>{{ review.rating }}</td>
+                <td>
+                    {% for star in range(review.rating) %}
+                        <i class="fas fa-star" style="color: yellow; font-size: 12px;"></i>
+                    {% endfor %}
+                    {% for blank_star in range(5 - review.rating) %}
+                        <i class="far fa-star" style="color: gray; font-size: 12px;"></i>
+                    {% endfor %}
+                </td>
                 <td>{{ review.comments }}</td>
                 <td>{{ review.date }}</td>
                 {% if review.user_id == current_user.id %}
@@ -152,4 +159,4 @@
   
     {% endif %}
 
-{% endblock %}app/templates/product_detail.html
+{% endblock %}
