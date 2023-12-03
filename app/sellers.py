@@ -1,5 +1,5 @@
 from .models.seller import Seller
-from flask import jsonify, request, render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash, request
 from flask import Blueprint
 from flask_login import current_user
 
@@ -13,7 +13,12 @@ def get_seller_inventory(seller_id):
         # Handle the case when the user has inventory
         return render_template('inventory.html', inventory=inventory)
     else:
-        return jsonify({"message": "Seller's inventory is empty"}), 404
+        return '''
+            <script>
+                alert("You Don't Have Anything in Your Inventory Yet!");
+                window.history.back();  // Redirect back to the previous page or handle as needed
+            </script>
+        '''
 
 @bp.route('/fulfilled_order_history/<int:seller_id>')
 def get_fulfilled_order_history(seller_id):
@@ -23,7 +28,13 @@ def get_fulfilled_order_history(seller_id):
         # Handle the case when there's fulfilled order history
         return render_template('fulfilled_order_history.html', order_history=order_history)
     else:
-        return jsonify({"message": "No fulfilled order history for the seller"}), 404
+        return '''
+            <script>
+                alert("No Orders to Fulfill Yet!");
+                window.history.back();  // Redirect back to the previous page or handle as needed
+            </script>
+        '''
+
     
 @bp.route('/unfulfilled_order_history/<int:seller_id>')
 def get_unfulfilled_order_history(seller_id):
@@ -33,44 +44,48 @@ def get_unfulfilled_order_history(seller_id):
         # Handle the case when there's fulfilled order history
         return render_template('unfulfilled_order_history.html', order_history=order_history)
     else:
-        return jsonify({"message": "No Unfulfillled order history for the seller"}), 404
+        # Use JavaScript alert for the message
+        return '''
+            <script>
+                alert("No Unfulfilled Orders Yet!");
+                window.history.back();  // Redirect back to the previous page or handle as needed
+            </script>
+        '''
 
 
-@bp.route('/add_product', methods=['POST'])
-def add_product_to_inventory():
+@bp.route('/add_product', methods=['GET', 'POST'])
+def add_product():
     if request.method == 'POST':
         # Get the product details from the form
         name = request.form.get('name')
         price = float(request.form.get('price'))
-        quantity_available = int(request.form.get('quantity_available'))
         description = request.form.get('description')
         category = request.form.get('category')
+        image_path = request.form.get('image_path')
+        quantity=request.form.get('quantity')
+        
 
         # Assume current_user is provided by Flask-Login
         seller_id = current_user.id
 
         # Create a Seller object to add the product to the inventory
         seller = Seller(seller_id)
-        result = seller.add_product(name, price, quantity_available, description, category)
 
-        if result:
-            return jsonify({"message": "Product added to inventory"}), 200
-        else:
-            return jsonify({"message": "Failed to add product"}), 400
+        # Call the add_product method with the form data
+        result = seller.add_product(name, price, description, category, quantity, image_path)
+
+        return redirect(url_for('sellers.get_seller_inventory', seller_id=seller_id))
+
+    return render_template('add_product.html')
 
 @bp.route('/modify_product_quantity/<int:product_id>', methods=['GET', 'POST'])
 def modify_product_quantity(product_id):
-    # Assume current_user is provided by Flask-Login
     seller_id = current_user.id
-
-    # Create a Seller object to modify the product quantity in the inventory
     seller = Seller(seller_id)
 
-    form = UpdateForm()
-
-    if request.method == 'POST' and form.validate_on_submit():
+    if request.method == 'POST':
         # Get the new quantity from the form
-        new_quantity = form.new_quantity.data
+        new_quantity = int(request.form.get('new_quantity'))
 
         # Modify the product quantity
         result = seller.modify_product_quantity(product_id, new_quantity)
@@ -81,8 +96,9 @@ def modify_product_quantity(product_id):
         else:
             flash('Failed to modify product quantity', 'danger')
 
-    # Render the template for modifying the quantity
-    return render_template('modify_quantity.html', title='Modify Quantity', form=form, product_id=product_id)
+    # Redirect back to the inventory page
+    return redirect(url_for('sellers.get_seller_inventory', seller_id=seller_id))
+
 
 @bp.route('/remove_product/<int:product_id>', methods=['POST'])
 def remove_product(product_id):
@@ -95,10 +111,9 @@ def remove_product(product_id):
     # Remove the product
     result = seller.remove_product(product_id)
 
-    if result:
-        return jsonify({"message": "Product removed from inventory"}), 200
-    else:
-        return jsonify({"message": "Failed to remove product"}), 400
+    # Redirect back to the inventory page
+    return redirect(url_for('sellers.get_seller_inventory', seller_id=seller_id))
+
 
 @bp.route('/mark_fulfilled/<int:line_item_id>', methods=['POST'])
 def mark_line_item_fulfilled(line_item_id):
