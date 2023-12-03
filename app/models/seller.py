@@ -67,7 +67,48 @@ class Seller:
             WHERE productid = :product_id AND uid = :seller_id
         ''', new_quantity=new_quantity, product_id=product_id, seller_id=self.uid)
 
-    
+    def remove_product(self, product_id):
+        app.db.execute('''
+                    DELETE FROM ProductsForSale
+                    WHERE productid = :product_id
+            ''', product_id=product_id)
+        
+
+        # Now delete the product from Products table
+        app.db.execute('''
+            DELETE FROM Products
+            WHERE productid = :product_id
+        ''', product_id=product_id)
+
+    def add_product(self, name, price, description, category, quantity, image_path=None, available=False, avg_rating=0):
+        # Insert the new product into the Products table
+        app.db.execute('''
+            INSERT INTO Products (name, price, description, category, image_path, available, avg_rating)
+            VALUES (:name, :price, :description, :category, :image_path, :available, :avg_rating)
+        ''', name=name, price=price, description=description, category=category, image_path=image_path, available=available, avg_rating=avg_rating)
+
+
+    def add_to_products_for_sale(self, name, quantity):
+        # Get the product_id of the newly inserted product
+        result = app.db.execute('''
+            SELECT productid
+            FROM Products
+            WHERE name = :name
+        ''', name=name).fetchone()
+
+        print(result)
+
+        product_id = result['productid']
+        # Ensure the uid is the id of the current user (seller)
+        uid = self.id
+
+        # Insert into ProductsForSale
+        app.db.execute('''
+            INSERT INTO ProductsForSale (productid, uid, quantity)
+            VALUES (:product_id, :uid, :quantity)
+        ''', product_id=product_id, uid=uid, quantity=quantity)
+
+        
     def get_fulfilledOrder_history(self):
         # Retrieve the seller's fulfilled order history
         rows = app.db.execute('''

@@ -5,10 +5,10 @@
 
 <h1>Products for Sale</h1>
 
-<!-- Add Button to the Right of "Seller's Profile" -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProductModal" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-    Add Product
-  </button>
+<!-- Direct link to Add Product Form -->
+<a href="{{ url_for('sellers.add_product') }}" class="btn btn-primary" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
+  Add Product
+</a>
 
 
 <table class='table table-hover table-bordered container' style="font-size: 0.8em;">
@@ -28,25 +28,52 @@
           <td>{{ product.description }}</td>
           <td>${{ product.price }}</td>
           <td>{{ product.quantity }}</td>
-          
-          <td style="margin-top: 10px; float: left;">
+        
+          <td>
+            <!-- Modify Quantity Form -->
+            <form method="post" action="{{ url_for('sellers.modify_product_quantity', product_id=product.productid) }}">
 
-            <a href="{{ url_for('sellers.modify_product_quantity', product_id=product.productid) }}" class="btn btn-warning" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-              Modify
-          </a>
-          </td>
+
+                <label for="new_quantity_{{ loop.index }}">New Quantity:</label>
+                <input type="number" id="new_quantity_{{ loop.index }}" name="new_quantity" required>
+                <button type="submit" class="btn btn-warning" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
+                    Modify
+                </button>
+            </form>
+        </td>
           
           <td style="margin-top: 10px; float: left;">
             <!-- Remove Button -->
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeProductModal{{ loop.index }}" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-              Remove
+                Remove
             </button>
-          
+        
             <!-- Remove Product Modal -->
             <div class="modal fade" id="removeProductModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="removeProductModalLabel{{ loop.index }}" aria-hidden="true">
-              <!-- Modal content goes here -->
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="removeProductModalLabel{{ loop.index }}">Remove Product</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to remove this product?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            
+                            <!-- Form for removing the product -->
+                          
+                            <form method="post" action="{{ url_for('sellers.remove_product', product_id=product.productid) }}">
+                              <button type="submit" class="btn btn-danger">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </td>
+        </td>
         </tr>
       {% endfor %}
     </tbody>
