@@ -5,6 +5,7 @@ bp = Blueprint('products', __name__)
 
 from .models.product import Product
 from .models.productsforsale import ProductsForSale
+from .models.review import Reviews
 
 @bp.route('/', methods=['GET', 'POST'])
 def top_products():
@@ -51,6 +52,6 @@ def search_category():
 def product_detail(productid):
     product = Product.get(productid)
     inventory = ProductsForSale.get_all_sellers_for_product(int(productid))
-    #reviews = Review.get_reviews_for_product()
-    return render_template('product_detail.html', product=product, inventory=inventory)
+    reviews = Reviews.get_reviews_by_product_id(productid)
+    return render_template('product_detail.html', product=product, inventory=inventory, reviews=reviews)
 

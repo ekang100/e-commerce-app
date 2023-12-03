@@ -7,6 +7,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
 from .models.purchase import Purchase
+from .models.review import Reviews
 
 import os
 import random
@@ -166,6 +167,8 @@ def logout():
 def account():
     return render_template('account.html')
 
+
+
 #Change name or address (don't need to be unique)
 @bp.route('/update_name_address', methods=['GET', 'POST'])
 def update_name_address():
@@ -245,7 +248,8 @@ def public_profile(account_id):
         #manually save seller and verified booleans to send to html
         sell_stat = info[0][4]
         ver_stat = info[0][5]
-        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat)
+        seller_reviews = Reviews.get_reviews_by_seller_id(account_id) if sell_stat else None
+        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat, seller_reviews=seller_reviews)
     return redirect(url_for('users.account'))
 
 #Added isVerified feature costing $500 and get 10% off 

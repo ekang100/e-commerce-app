@@ -35,3 +35,4 @@ SELECT pg_catalog.setval('public.lineitem_lineid_seq',
 
 
 \COPY Reviews FROM 'Reviews.csv' WITH DELIMITER ',' NULL '' CSV
+SELECT setval('reviews_entity_id_seq', (SELECT MAX(entity_id) FROM Reviews) + 1);
