@@ -120,3 +120,19 @@ FROM Products
         except Exception as e:
             print(str(e))
             return None
+        
+    @staticmethod
+    def get_purchases_by_uid(uid, sid):
+        rows = app.db.execute('''
+SELECT P.productid
+FROM Cart C, Products P, LineItem L
+WHERE C.buyerid = :uid
+AND L.sellerid = :sid
+AND C.cartid = L.cartid
+AND L.buyStatus = TRUE
+AND L.productid = P.productid
+''',
+                              uid=uid, sid=sid
+                              )
+        pid = rows[0][0] if rows else 0
+        return pid

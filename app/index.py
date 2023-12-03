@@ -43,6 +43,8 @@ def index():
 
 @bp.route('/account')
 def index2():
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
     # find the products current user has bought:
     if current_user.is_authenticated:
         # Get all products purchased before earliest date
@@ -64,4 +66,4 @@ def index2():
         purchases = None
         total_saved = 0.00
     return render_template('account.html',
-                           purchase_history=purchases, total_saved=total_saved)
+                           purchase_history=purchases, total_saved=total_saved, categories=clean_text)

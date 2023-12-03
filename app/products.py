@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, Blueprint, render_template
+from flask_login import login_user, logout_user, current_user
 import re
 # from flask_paginate import Pagination
 bp = Blueprint('products', __name__)
@@ -80,6 +81,15 @@ def product_detail(productid):
     inventory = ProductsForSale.get_all_sellers_for_product(int(productid))
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
+    seller_list = [row["sid"] for row in inventory]
+    for seller in seller_list:
+        buy_again = Product.get_purchases_by_uid(current_user.id, seller)
+        if buy_again == productid:
+            #buy_again_status = True
+            inventory[7]["buy_status"] = True
+        else:
+            #buy_again_status = False
+            inventory[7]["buy_status"] = True
     #reviews = Review.get_reviews_for_product()
     return render_template('product_detail.html', product=product, inventory=inventory, categories=clean_text)
 

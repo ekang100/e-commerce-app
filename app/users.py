@@ -166,9 +166,7 @@ def logout():
 #reroute to account page
 @bp.route('/account')
 def account():
-    categories = Product.get_categories()
-    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
-    return render_template('account.html', categories=clean_text)
+    return render_template('account.html')
 
 #Change name or address (don't need to be unique)
 @bp.route('/update_name_address', methods=['GET', 'POST'])
@@ -232,9 +230,9 @@ def become_seller():
 def search_user():
     ##add nonetype error handling- reroute to page 'No names found'
     user_to_search = request.form['query']
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
     try:
-        categories = Product.get_categories()
-        clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
         users = User.search_user(user_to_search)
         if len(users) == 0:
             #Display 'no users found' if nothing matches
