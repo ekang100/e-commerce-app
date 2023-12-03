@@ -2,12 +2,22 @@
 
 {% block content %}
 
-<br><br>
+<form action="/search_product_results" method="GET">
+  <input type="hidden" name="query" value="{{ query }}">
+  <label for="sort_by">Sort By:</label>
+  <select id="sort_by" name="sort_by">
+      <option value="None">Select Sorting</option>
+      <option value="priceLow" {% if sort_by == 'priceLow' %} selected {% endif %}>Price Low to High</option>
+      <option value="priceHigh" {% if sort_by == 'priceHigh' %} selected {% endif %}>Price High to Low</option>
+  </select>
+  <button type="submit">Sort</button>
+</form>
 
-<h2>Product Results:</h2>
+<h2>Product Results: {{ query }}</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
+      <th scope="col">Available</th>
       <th scope="col">Product Image</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
@@ -19,6 +29,13 @@
       {% for product in products %}
         <tr>
           <!--<th scope="row">{{product.productid}}</th>-->
+          <td>
+            {% if product.available %}
+                In Stock
+            {% else %}
+                Out of Stock
+            {% endif %}
+          </td>
           <td><img src="/static/{{ product.productid }}.png" alt="{{product.name}}" width="100" height="100"></td>
           <td>{{product.name}}</td>
           <td>{{product.price}}</td>
@@ -39,28 +56,52 @@
     {% set start_page = page - 2 if page > 2 else 1 %}
     {% set end_page = start_page + 4 if start_page + 4 <= total_pages else total_pages %}
     
+    {# Adjust start page if there's enough room for the last page to be displayed #}
+    {% if total_pages - page <= 3 %}
+        {% set start_page = total_pages - 4 if total_pages > 4 else 1 %}
+    {% endif %}
+    
     {# Previous Button #}
     {% if page > 1 %}
       <li class="page-item">
-        <a href="{{ url_for('products.search_keywords', query=query, page=page-1) }}">Previous</a>
+        <a href="{{ url_for('products.search_keywords', query=query, sort_by=sort_by, page=page-1) }}">Previous</a>
       </li>
     {% endif %}
     
     {# Display page numbers within range #}
+    {% if start_page > 1 %}
+      <li class="page-item">
+        <a href="{{ url_for('products.search_keywords', query=query, sort_by=sort_by, page=1) }}">1</a>
+      </li>
+      {% if start_page > 2 %}
+        <li class="ellipsis">...</li>
+      {% endif %}
+    {% endif %}
+    
     {% for p in range(start_page, end_page + 1) %}
       <li class="page-item {% if p == page %}active{% endif %}">
-        <a href="{{ url_for('products.search_keywords', query=query, page=p) }}">{{ p }}</a>
+        <a href="{{ url_for('products.search_keywords', query=query, sort_by=sort_by, page=p) }}">{{ p }}</a>
       </li>
     {% endfor %}
+    
+    {% if end_page < total_pages %}
+      {% if end_page < total_pages - 1 %}
+        <li class="ellipsis">...</li>
+      {% endif %}
+      <li class="page-item">
+        <a href="{{ url_for('products.search_keywords', query=query, sort_by=sort_by, page=total_pages) }}">{{ total_pages }}</a>
+      </li>
+    {% endif %}
     
     {# Next Button #}
     {% if page < total_pages %}
       <li class="page-item">
-        <a href="{{ url_for('products.search_keywords', query=query, page=page+1) }}">Next</a>
+        <a href="{{ url_for('products.search_keywords', query=query, sort_by=sort_by, page=page+1) }}">Next</a>
       </li>
     {% endif %}
   </ul>
 </div>
+
 
 
 

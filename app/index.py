@@ -19,9 +19,15 @@ def index():
     all_products = Product.get_all()
 
     sort_by = request.args.get('sort_by', default='None')
+    if type(sort_by) is str and sort_by == "priceLow":
+        sort_by_column = "price ASC"
+    elif type(sort_by) is str and sort_by == "priceHigh":
+        sort_by_column = "price DESC"
+    else:
+        sort_by_column = None
 
     total = int(Product.get_num_products())
-    products = Product.get_paginated(sort_by, page)
+    products = Product.get_paginated(sort_by_column, page)
     max_page = int(math.ceil(len(all_products) / per_page))
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
