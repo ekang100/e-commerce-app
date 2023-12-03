@@ -4,6 +4,7 @@
 
 <form action="/search_category_results" method="GET">
   <input type="hidden" name="category" value="{{ selected_category }}">
+  <input type="hidden" name="rating" value="{{ rating }}">
   <label for="sort_by">Sort By:</label>
   <select id="sort_by" name="sort_by">
       <option value="None">Select Sorting</option>
@@ -11,6 +12,21 @@
       <option value="priceHigh" {% if sort_by == 'priceHigh' %} selected {% endif %}>Price High to Low</option>
   </select>
   <button type="submit">Sort</button>
+</form>
+
+<form action="/search_category_results" method="GET">
+  <input type="hidden" name="category" value="{{ selected_category }}">
+  <input type="hidden" name="sort_by" value="{{ sort_by }}">
+  <label for="rating">Select Avg. Rating:</label>
+  <select name="rating" id="rating">
+      <option value="0">None</option>
+      <option value="1" {% if rating == '1' %} selected {% endif %}>One Star & Up</option>
+      <option value="2" {% if rating == '2' %} selected {% endif %}>Two Stars & Up</option>
+      <option value="3" {% if rating == '3' %} selected {% endif %}>Three Stars & Up</option>
+      <option value="4" {% if rating == '4' %} selected {% endif %}>Four Stars & Up</option>
+      <option value="5" {% if rating == '5' %} selected {% endif %}>Five Stars & Up</option>
+  </select>
+  <button type="submit">Show Products</button>
 </form>
 
 <h2>Product Results:</h2>
@@ -64,14 +80,14 @@
     {# Previous Button #}
     {% if page > 1 %}
       <li class="page-item">
-        <a href="{{ url_for('products.search_category', category=selected_category, sort_by=sort_by, page=page-1) }}">Previous</a>
+        <a href="{{ url_for('products.search_category', rating=rating, category=selected_category, sort_by=sort_by, page=page-1) }}">Previous</a>
       </li>
     {% endif %}
     
     {# Display page numbers within range #}
     {% if start_page > 1 %}
       <li class="page-item">
-        <a href="{{ url_for('products.search_category', category=selected_category, sort_by=sort_by, page=1) }}">1</a>
+        <a href="{{ url_for('products.search_category', rating=rating, category=selected_category, sort_by=sort_by, page=1) }}">1</a>
       </li>
       {% if start_page > 2 %}
         <li class="ellipsis">...</li>
@@ -80,7 +96,7 @@
     
     {% for p in range(start_page, end_page + 1) %}
       <li class="page-item {% if p == page %}active{% endif %}">
-        <a href="{{ url_for('products.search_category', category=selected_category, sort_by=sort_by, page=p) }}">{{ p }}</a>
+        <a href="{{ url_for('products.search_category', rating=rating, category=selected_category, sort_by=sort_by, page=p) }}">{{ p }}</a>
       </li>
     {% endfor %}
     
@@ -89,14 +105,14 @@
         <li class="ellipsis">...</li>
       {% endif %}
       <li class="page-item">
-        <a href="{{ url_for('products.search_category', category=selected_category, sort_by=sort_by, page=total_pages) }}">{{ total_pages }}</a>
+        <a href="{{ url_for('products.search_category', rating=rating, category=selected_category, sort_by=sort_by, page=total_pages) }}">{{ total_pages }}</a>
       </li>
     {% endif %}
     
     {# Next Button #}
     {% if page < total_pages %}
       <li class="page-item">
-        <a href="{{ url_for('products.search_category', category=selected_category, sort_by=sort_by, page=page+1) }}">Next</a>
+        <a href="{{ url_for('products.search_category', rating=rating, category=selected_category, sort_by=sort_by, page=page+1) }}">Next</a>
       </li>
     {% endif %}
   </ul>

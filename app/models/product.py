@@ -34,63 +34,64 @@ WHERE available = :available
         return [Product(*row) for row in rows]
     
     @staticmethod
-    def get_num_products():
+    def get_num_products(rating):
         rows = app.db.execute('''
 SELECT COUNT(*)
 FROM Products
-''')
+WHERE avg_rating >= :rating
+''', rating=rating)
         total = rows[0][0] if rows else 0
         return total
     
     @staticmethod
-    def get_paginated(sort_by_column, page):
+    def get_paginated(sort_by_column, page, rating):
         per_page = 10
         offset = (page - 1) * per_page
-            
         rows = app.db.execute(f'''
 SELECT productid, name, price, description, category, image_path, available, avg_rating
 FROM Products
+WHERE avg_rating >= :rating
 {("ORDER BY " + sort_by_column) if sort_by_column is not None else ""}
 LIMIT :per_page
 OFFSET :offset
 ''',
-                            per_page=per_page, offset=offset)
+                            per_page=per_page, offset=offset, rating=rating)
         return [Product(*row) for row in rows]
     
     @staticmethod
-    def search_count(query):
+    def search_count(query, rating):
         rows = app.db.execute(f'''
             SELECT COUNT(*)
             FROM Products
-            WHERE name LIKE :query OR description LIKE :query
-        ''', query='%' + query + '%')
+            WHERE name LIKE :query OR description LIKE :query AND avg_rating >= :rating
+        ''', query='%' + query + '%', rating=rating)
         total = rows[0][0] if rows else 0
         return total
     
     @staticmethod
-    def search_product(sort_by_column, query, page, per_page=10):
+    def search_product(sort_by_column, query, page, rating, per_page=10):
         offset = (page - 1) * per_page
         try:
             rows = app.db.execute(f'''
                 SELECT *
                 FROM Products
-                WHERE name LIKE :query OR description LIKE :query
+                WHERE name LIKE :query OR description LIKE :query AND avg_rating >= :rating
                 {("ORDER BY " + sort_by_column) if sort_by_column is not None else ""}
                 LIMIT :per_page
                 OFFSET :offset
-            ''', query='%' + query + '%', per_page=per_page, offset=offset)
+            ''', query='%' + query + '%', per_page=per_page, offset=offset, rating=rating)
             return rows
         except Exception as e:
             print(str(e))
             return None
         
     @staticmethod
-    def category_search_count(category):
+    def category_search_count(category, rating):
         rows = app.db.execute('''
             SELECT COUNT(*)
             FROM Products
-            WHERE category LIKE :category
-        ''', category='%' + category + '%')
+            WHERE category LIKE :category AND avg_rating >= :rating
+        ''', category='%' + category + '%', rating=rating)
         total = rows[0][0] if rows else 0
         return total
     
@@ -104,17 +105,17 @@ FROM Products
         return [str(row) for row in rows]
     
     @staticmethod
-    def search_categories(sort_by_column, category, page, per_page=10):
+    def search_categories(sort_by_column, category, page, rating, per_page=10):
         offset = (page - 1) * per_page
         try:
             rows = app.db.execute(f'''
                 SELECT *
                 FROM Products
-                WHERE category LIKE :category
+                WHERE category LIKE :category AND avg_rating >= :rating
                 {("ORDER BY " + sort_by_column) if sort_by_column is not None else ""}
                 LIMIT :per_page
                 OFFSET :offset
-            ''', category='%' + category + '%', per_page=per_page, offset=offset)
+            ''', category='%' + category + '%', per_page=per_page, offset=offset, rating=rating)
             return rows
         except Exception as e:
             print(str(e))

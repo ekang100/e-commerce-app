@@ -25,9 +25,12 @@ def index():
         sort_by_column = "price DESC"
     else:
         sort_by_column = None
+    
+    rating = request.args.get('rating', default=0)
+    rate = int(rating)
 
-    total = int(Product.get_num_products())
-    products = Product.get_paginated(sort_by_column, page)
+    total = int(Product.get_num_products(rate))
+    products = Product.get_paginated(sort_by_column, page, rate)
     max_page = int(math.ceil(len(all_products) / per_page))
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
@@ -36,7 +39,7 @@ def index():
 
     # render the page by adding information to the index.html file
     return render_template('index.html',
-                           avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by)
+                           rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by)
 
 @bp.route('/account')
 def index2():

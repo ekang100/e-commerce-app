@@ -4,6 +4,7 @@
 
 <form action="/search_product_results" method="GET">
   <input type="hidden" name="query" value="{{ query }}">
+  <input type="hidden" name="rating" value="{{ rating }}">
   <label for="sort_by">Sort By:</label>
   <select id="sort_by" name="sort_by">
       <option value="None">Select Sorting</option>
@@ -11,6 +12,21 @@
       <option value="priceHigh" {% if sort_by == 'priceHigh' %} selected {% endif %}>Price High to Low</option>
   </select>
   <button type="submit">Sort</button>
+</form>
+
+<form action="/search_product_results" method="GET">
+  <input type="hidden" name="query" value="{{ query }}">
+  <input type="hidden" name="sort_by" value="{{ sort_by }}">
+  <label for="rating">Select Avg. Rating:</label>
+  <select name="rating" id="rating">
+      <option value="0">None</option>
+      <option value="1" {% if rating == '1' %} selected {% endif %}>One Star & Up</option>
+      <option value="2" {% if rating == '2' %} selected {% endif %}>Two Stars & Up</option>
+      <option value="3" {% if rating == '3' %} selected {% endif %}>Three Stars & Up</option>
+      <option value="4" {% if rating == '4' %} selected {% endif %}>Four Stars & Up</option>
+      <option value="5" {% if rating == '5' %} selected {% endif %}>Five Stars & Up</option>
+  </select>
+  <button type="submit">Show Products</button>
 </form>
 
 <h2>Product Results: {{ query }}</h2>

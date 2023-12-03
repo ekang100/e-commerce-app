@@ -12,6 +12,19 @@
   <button type="submit">Sort</button>
 </form>
 
+<form action="/" method="get">
+  <label for="rating">Select Avg. Rating:</label>
+  <select name="rating" id="rating">
+      <option value="0">None</option>
+      <option value="1" {% if rating == '1' %} selected {% endif %}>One Star & Up</option>
+      <option value="2" {% if rating == '2' %} selected {% endif %}>Two Stars & Up</option>
+      <option value="3" {% if rating == '3' %} selected {% endif %}>Three Stars & Up</option>
+      <option value="4" {% if rating == '4' %} selected {% endif %}>Four Stars & Up</option>
+      <option value="5" {% if rating == '5' %} selected {% endif %}>Five Stars & Up</option>
+  </select>
+  <button type="submit">Show Products</button>
+</form>
+
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -59,14 +72,14 @@
     {# Previous Button #}
     {% if page > 1 %}
       <li class="page-item">
-        <a href="{{ url_for('index.index', sort_by=sort_by, page=page-1) }}">Previous</a>
+        <a href="{{ url_for('index.index', sort_by=sort_by, rating=rating, page=page-1) }}">Previous</a>
       </li>
     {% endif %}
     
     {# Display page numbers within range #}
     {% if start_page > 1 %}
       <li class="page-item">
-        <a href="{{ url_for('index.index', sort_by=sort_by, page=1) }}">1</a>
+        <a href="{{ url_for('index.index', sort_by=sort_by, rating=rating, page=1) }}">1</a>
       </li>
       {% if start_page > 2 %}
         <li class="ellipsis">...</li>
@@ -75,7 +88,7 @@
     
     {% for p in range(start_page, end_page + 1) %}
       <li class="page-item {% if p == page %}active{% endif %}">
-        <a href="{{ url_for('index.index', sort_by=sort_by, page=p) }}">{{ p }}</a>
+        <a href="{{ url_for('index.index', sort_by=sort_by, rating=rating, page=p) }}">{{ p }}</a>
       </li>
     {% endfor %}
     
@@ -84,14 +97,14 @@
         <li class="ellipsis">...</li>
       {% endif %}
       <li class="page-item">
-        <a href="{{ url_for('index.index', sort_by=sort_by, page=total_pages) }}">{{ total_pages }}</a>
+        <a href="{{ url_for('index.index', sort_by=sort_by, rating=rating, page=total_pages) }}">{{ total_pages }}</a>
       </li>
     {% endif %}
     
     {# Next Button #}
     {% if page < total_pages %}
       <li class="page-item">
-        <a href="{{ url_for('index.index', sort_by=sort_by, page=page+1) }}">Next</a>
+        <a href="{{ url_for('index.index', sort_by=sort_by, rating=rating, page=page+1) }}">Next</a>
       </li>
     {% endif %}
   </ul>
