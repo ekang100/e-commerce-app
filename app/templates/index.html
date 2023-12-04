@@ -5,14 +5,6 @@
 <form action="/" method="get">
   <label for="sort_by">Sort by:</label>
   <select name="sort_by" id="sort_by">
-<<<<<<< HEAD
-      <option value="none">None</option>
-      <option value="priceLow">Price: Low to High</option>
-      <option value="priceHigh">Price: High to Low</option>
-  </select>
-  <button type="submit">Sort</button>
-</form>
-=======
       <option value="None">Select Sorting</option>
       <option value="priceLow" {% if sort_by == 'priceLow' %} selected {% endif %}>Price: Low to High</option>
       <option value="priceHigh" {% if sort_by == 'priceHigh' %} selected {% endif %}>Price: High to Low</option>
@@ -32,7 +24,6 @@
   </select>
   <button type="submit">Show Products</button>
 </form>
->>>>>>> origin/ellie-productguru
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>

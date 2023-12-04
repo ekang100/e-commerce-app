@@ -19,10 +19,6 @@ def index():
     all_products = Product.get_all()
 
     sort_by = request.args.get('sort_by', default='None')
-<<<<<<< HEAD
-
-    products = Product.get_paginated(True, page, per_page, sort_by)
-=======
     if type(sort_by) is str and sort_by == "priceLow":
         sort_by_column = "price ASC"
     elif type(sort_by) is str and sort_by == "priceHigh":
@@ -35,16 +31,11 @@ def index():
 
     total = int(Product.get_num_products(rate))
     products = Product.get_paginated(sort_by_column, page, rate)
->>>>>>> origin/ellie-productguru
     max_page = int(math.ceil(len(all_products) / per_page))
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/ellie-productguru
     # render the page by adding information to the index.html file
     return render_template('index.html',
                            rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by)

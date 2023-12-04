@@ -34,19 +34,7 @@ WHERE available = :available
         return [Product(*row) for row in rows]
     
     @staticmethod
-<<<<<<< HEAD
-    def get_paginated(available=True, page=1, per_page=10, sort_by=None):
-        offset = (page - 1) * per_page
-        #if type(sort_by) is str and sort_by == "priceLow":
-        #    sort_by_column = "price ASC"
-        #elif type(sort_by) is str and sort_by == "priceHigh":
-        #    sort_by_column = "price DESC"
-        #else:
-        #    sort_by_column = None
-            
-=======
     def get_num_products(rating):
->>>>>>> origin/ellie-productguru
         rows = app.db.execute('''
 SELECT COUNT(*)
 FROM Products
@@ -62,30 +50,6 @@ WHERE avg_rating >= :rating
         rows = app.db.execute(f'''
 SELECT productid, name, price, description, category, image_path, available, avg_rating
 FROM Products
-<<<<<<< HEAD
-WHERE available = :available
-ORDER BY
-
-    case when :sort_by = 'priceHigh' THEN  price end DESC,
-    case when :sort_by = 'priceLow' THEN  price end ASC
-
-LIMIT :per_page
-OFFSET :offset
-''',
-                            available=available, per_page=per_page, offset=offset, sort_by=sort_by)
-        return [Product(*row) for row in rows]
-    
-    @staticmethod
-    def search_product(query, page=1,per_page=10, sort_by=None, available=True):
-        offset = (page - 1) * per_page
-        # implement sort by later
-        #if type(sort_by) is str and sort_by.find(';') != -1:
-            #sort_by = None
-        if type(sort_by) is str and sort_by == "None":
-            sort_by = None
-        if type(sort_by) is str and sort_by == "Price: Low to High":
-            sort_by = "price ASC"
-=======
 WHERE avg_rating >= :rating
 {("ORDER BY " + sort_by_column) if sort_by_column is not None else ""}
 LIMIT :per_page
@@ -107,24 +71,15 @@ OFFSET :offset
     @staticmethod
     def search_product(sort_by_column, query, page, rating, per_page=10):
         offset = (page - 1) * per_page
->>>>>>> origin/ellie-productguru
         try:
             rows = app.db.execute(f'''
                 SELECT *
                 FROM Products
-<<<<<<< HEAD
-                WHERE name LIKE :query OR description LIKE :query AND available =: available
-                {("ORDER BY " + sort_by) if sort_by is not None else ""}
-                LIMIT :per_page
-                OFFSET :offset
-            ''', query='%' + query + '%', per_page=per_page, offset=offset, sort_by=sort_by, available=available)
-=======
                 WHERE name LIKE :query OR description LIKE :query AND avg_rating >= :rating
                 {("ORDER BY " + sort_by_column) if sort_by_column is not None else ""}
                 LIMIT :per_page
                 OFFSET :offset
             ''', query='%' + query + '%', per_page=per_page, offset=offset, rating=rating)
->>>>>>> origin/ellie-productguru
             return rows
         except Exception as e:
             print(str(e))
@@ -164,9 +119,6 @@ FROM Products
             return rows
         except Exception as e:
             print(str(e))
-<<<<<<< HEAD
-            return None
-=======
             return None
         
     @staticmethod
@@ -184,4 +136,3 @@ AND L.productid = P.productid
                               )
         pid = rows[0][0] if rows else 0
         return pid
->>>>>>> origin/ellie-productguru

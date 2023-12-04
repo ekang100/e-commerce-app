@@ -7,11 +7,8 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
 from .models.purchase import Purchase
-<<<<<<< HEAD
 from .models.review import Reviews
-=======
 from .models.product import Product
->>>>>>> origin/ellie-productguru
 
 import os
 import random

@@ -80,10 +80,7 @@ def search_category():
 def product_detail(productid):
     product = Product.get(productid)
     inventory = ProductsForSale.get_all_sellers_for_product(int(productid))
-<<<<<<< HEAD
     reviews = Reviews.get_reviews_by_product_id(productid)
-    return render_template('product_detail.html', product=product, inventory=inventory, reviews=reviews)
-=======
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
     seller_list = [row["sid"] for row in inventory]
@@ -96,6 +93,5 @@ def product_detail(productid):
             #buy_again_status = False
             inventory[7]["buy_status"] = True
     #reviews = Review.get_reviews_for_product()
-    return render_template('product_detail.html', product=product, inventory=inventory, categories=clean_text)
->>>>>>> origin/ellie-productguru
+    return render_template('product_detail.html', product=product, inventory=inventory, categories=clean_text, reviews=reviews)
 
