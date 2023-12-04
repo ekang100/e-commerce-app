@@ -38,51 +38,59 @@
         <p>{{product.description}}</p>
         <h3>Price</h3>
         <p>${{product.price}}</p>
+        <h3>Average Rating</h3>
+        <p>{{product.avg_rating}}</p>
     </div>
 
-    <div class="container">
-      <h2>Available Sellers</h2>
-      <table class='table table-hover table-bordered container'>
-          <thead class="thead-dark">
-          <tr>
-              <th scope="col">Seller</th>
-              <th scope="col">Price</th>
-              <th scope="col">Available quantity</th>
-              <th scope="col">Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-          {% for i in inventory %}
-              <tr>
-                  <th scope="row"><form style="margin-top: 10px;" action="{{ url_for('users.public_profile', account_id=i.sid) }}" method="post">
-                    <button type="submit">
-                        {{ i.seller_firstname }}
-                    </button>
-                </form></th>
-                  
-                  <th scope="row">{{ i.price }}</th>
-                  <td>{{ i.quantity }}</td>
-                  <td>
-                      {% if current_user.is_authenticated %}
-                          <form action="{{ url_for('cart.cart') }}" method="post">
-                              <input type="hidden" name="action" value="add"/>
-                              <input type="hidden" name="seller_id" value="{{ i.sid }}"/>
-                              <input type="hidden" name="product_id" value="{{ product.productid }}"/>
-                              <input type="hidden" name="price" value="{{ i.price }}"/>
-                              <label for="qty">Quantity:</label>
-                              <input type="number" id="qty" name="qty" min="1" max="{{ i.quantity }}" value="1">
-                              <input type="submit" value="Add to Cart">
-                          </form>
-                          {% else %}
-                            <p><a href="{{ url_for('users.login') }}">Log in</a> to add items to your cart</p>
-                        {% endif %}
-                    </td>
+    {% if product.available %}
+      <div class="container">
+        <h2>Available Sellers</h2>
+        <table class='table table-hover table-bordered container'>
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Seller</th>
+                <th scope="col">Price</th>
+                <th scope="col">Available quantity</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in inventory %}
+                <tr>
+                    <th scope="row"><form style="margin-top: 10px;" action="{{ url_for('users.public_profile', account_id=i.sid) }}" method="post">
+                      <button type="submit">
+                          {{ i.seller_firstname }}
+                      </button>
+                  </form></th>
+                    
+                    <th scope="row">{{ i.price }}</th>
+                    <td>{{ i.quantity }}</td>
+                    <td>
+                        {% if current_user.is_authenticated %}
+                            <form action="{{ url_for('cart.cart') }}" method="post">
+                                <input type="hidden" name="action" value="add"/>
+                                <input type="hidden" name="seller_id" value="{{ i.sid }}"/>
+                                <input type="hidden" name="product_id" value="{{ product.productid }}"/>
+                                <input type="hidden" name="price" value="{{ i.price }}"/>
+                                <label for="qty">Quantity:</label>
+                                <input type="number" id="qty" name="qty" min="1" max="{{ i.quantity }}" value="1">
+                                <input type="submit" value="Add to Cart">{% if i.buy_status %}<p>Buy Again!</p>{% endif %}
+                            </form>
+                            {% else %}
+                              <p><a href="{{ url_for('users.login') }}">Log in</a> to add items to your cart</p>
+                          {% endif %}
+      
+                      </td>
 
-              </tr>
-            {% endfor %}
-          </tbody>
-      </table>
-    </div>
+
+                </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    {% else %}
+    <h3>Product is out of stock. Check back soon!</h3>
+    {% endif %}
 
     <div class="container">
       <h2>Reviews</h2>
@@ -159,4 +167,4 @@
   
     {% endif %}
 
-{% endblock %}
+{% endblock %}app/templates/product_detail.html

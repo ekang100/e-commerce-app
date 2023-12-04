@@ -1,5 +1,9 @@
 0,,,31.91
+<<<<<<< HEAD
 1,9,False,39.78
+=======
+1,19,True,39.78
+>>>>>>> origin/ellie-productguru
 2,11,True,18.68
 3,32,False,11.94
 4,48,False,17.23
@@ -16,14 +20,22 @@
 15,46,False,17.49
 16,11,False,25.93
 17,26,False,12.15
+<<<<<<< HEAD
 18,11,False,1.94
+=======
+18,43,True,1.94
+>>>>>>> origin/ellie-productguru
 19,33,False,38.91
 20,19,False,10.12
 21,19,True,32.89
 22,16,False,4.62
 23,17,False,34.62
 24,12,False,5.93
+<<<<<<< HEAD
 25,34,True,44.10
+=======
+25,20,False,44.10
+>>>>>>> origin/ellie-productguru
 26,29,False,17.16
 27,39,False,19.68
 28,37,False,7.07
@@ -31,10 +43,17 @@
 30,2,False,4.20
 31,44,False,15.83
 32,1,False,30.31
+<<<<<<< HEAD
 33,13,False,50.17
 34,36,False,47.79
 35,35,True,22.03
 36,10,False,21.57
+=======
+33,,,50.17
+34,36,False,47.79
+35,35,True,22.03
+36,10,True,21.57
+>>>>>>> origin/ellie-productguru
 37,6,False,47.29
 38,9,True,31.30
 39,28,False,46.83
@@ -47,7 +66,11 @@
 46,29,True,15.58
 47,49,False,49.36
 48,49,True,47.58
+<<<<<<< HEAD
 49,39,False,12.77
+=======
+49,11,False,12.77
+>>>>>>> origin/ellie-productguru
 50,33,False,46.26
 51,,,23.39
 52,36,True,24.94
@@ -57,27 +80,44 @@
 56,,,14.86
 57,20,False,25.84
 58,33,False,0.74
+<<<<<<< HEAD
 59,44,True,38.72
+=======
+59,27,False,38.72
+>>>>>>> origin/ellie-productguru
 60,30,False,10.82
 61,18,False,34.06
 62,20,True,10.39
 63,28,False,8.93
 64,46,False,37.09
 65,43,False,26.75
+<<<<<<< HEAD
 66,15,True,41.70
 67,48,True,27.66
+=======
+66,10,False,41.70
+67,48,False,27.66
+>>>>>>> origin/ellie-productguru
 68,12,False,24.20
 69,3,False,4.63
 70,44,False,14.93
 71,38,True,9.06
+<<<<<<< HEAD
 72,40,False,38.47
 73,30,False,47.60
 74,13,True,5.95
 75,33,False,24.06
+=======
+72,11,False,38.47
+73,30,False,47.60
+74,13,False,5.95
+75,9,False,24.06
+>>>>>>> origin/ellie-productguru
 76,22,False,25.05
 77,14,False,29.71
 78,32,False,4.54
 79,21,False,42.05
+<<<<<<< HEAD
 80,21,True,1.32
 81,30,False,7.49
 82,9,False,27.50
@@ -86,15 +126,33 @@
 85,,,26.04
 86,39,False,6.90
 87,37,True,42.21
+=======
+80,21,False,1.32
+81,30,False,7.49
+82,9,True,27.50
+83,0,False,46.92
+84,,,38.87
+85,30,True,26.04
+86,39,False,6.90
+87,7,True,42.21
+>>>>>>> origin/ellie-productguru
 88,47,False,27.11
 89,32,False,45.08
 90,46,False,39.58
 91,27,False,2.50
 92,24,False,36.47
 93,27,False,39.06
+<<<<<<< HEAD
 94,43,False,25.32
 95,12,False,12.18
 96,,,14.34
 97,28,False,50.65
 98,25,True,2.72
+=======
+94,43,True,25.32
+95,12,False,12.18
+96,,,14.34
+97,28,False,50.65
+98,25,False,2.72
+>>>>>>> origin/ellie-productguru
 99,35,True,0.01

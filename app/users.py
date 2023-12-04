@@ -7,10 +7,15 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
 from .models.purchase import Purchase
+<<<<<<< HEAD
 from .models.review import Reviews
+=======
+from .models.product import Product
+>>>>>>> origin/ellie-productguru
 
 import os
 import random
+import re
 
 from flask import Blueprint
 # Create a Blueprint for the users module. This helps in organizing the app into components.
@@ -231,6 +236,8 @@ def become_seller():
 def search_user():
     ##add nonetype error handling- reroute to page 'No names found'
     user_to_search = request.form['query']
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
     try:
         users = User.search_user(user_to_search)
         if len(users) == 0:
@@ -238,7 +245,7 @@ def search_user():
             return render_template('search_user_results.html')
     except Exception:
         return 'No names found'
-    return render_template('search_user_results.html', users=users)
+    return render_template('search_user_results.html', users=users, categories=clean_text)
 
 # Route for displaying public profile
 @bp.route('/user_profile/<int:account_id>', methods=['GET', 'POST'])
