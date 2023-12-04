@@ -23,6 +23,19 @@ def top_products():
             return "Invalid input. Please enter a valid number for K."
     return render_template('index.html')
 
+def sort_assignment(sort_by):
+    if type(sort_by) is str and sort_by == "priceLow":
+        sort_by_column = "price ASC"
+    elif type(sort_by) is str and sort_by == "priceHigh":
+        sort_by_column = "price DESC"
+    elif type(sort_by) is str and sort_by == "popularityLow":
+        sort_by_column = "ASC"
+    elif type(sort_by) is str and sort_by == "popularityHigh":
+        sort_by_column = "DESC"
+    else:
+        sort_by_column = None
+    return sort_by_column
+
 @bp.route('/search_product_results', methods=['GET', 'POST'])
 def search_keywords():
     try: # an original search
@@ -34,12 +47,7 @@ def search_keywords():
     sort_by = request.args.get('sort_by', default='None')
     rating = request.args.get('rating', default=0)
     rate = int(rating)
-    if type(sort_by) is str and sort_by == "priceLow":
-        sort_by_column = "price ASC"
-    elif type(sort_by) is str and sort_by == "priceHigh":
-        sort_by_column = "price DESC"
-    else:
-        sort_by_column = None
+    sort_by_column = sort_assignment(sort_by)
     try:
         products = Product.search_product(sort_by_column, query, page, rate)
         total = Product.search_count(query, rate)
@@ -61,12 +69,7 @@ def search_category():
     rating = request.args.get('rating', default=0)
     rate = int(rating)
     sort_by = request.args.get('sort_by', default='None')
-    if type(sort_by) is str and sort_by == "priceLow":
-        sort_by_column = "price ASC"
-    elif type(sort_by) is str and sort_by == "priceHigh":
-        sort_by_column = "price DESC"
-    else:
-        sort_by_column = None
+    sort_by_column = sort_assignment(sort_by)
     try:
         products = Product.search_categories(sort_by_column, category, page, rate)
         total = Product.category_search_count(category, rate)

@@ -23,6 +23,10 @@ def index():
         sort_by_column = "price ASC"
     elif type(sort_by) is str and sort_by == "priceHigh":
         sort_by_column = "price DESC"
+    elif type(sort_by) is str and sort_by == "popularityLow":
+        sort_by_column = "ASC"
+    elif type(sort_by) is str and sort_by == "popularityHigh":
+        sort_by_column = "DESC"
     else:
         sort_by_column = None
     

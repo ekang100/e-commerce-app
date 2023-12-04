@@ -8,6 +8,8 @@
       <option value="None">Select Sorting</option>
       <option value="priceLow" {% if sort_by == 'priceLow' %} selected {% endif %}>Price: Low to High</option>
       <option value="priceHigh" {% if sort_by == 'priceHigh' %} selected {% endif %}>Price: High to Low</option>
+      <option value="popularityLow" {% if sort_by == 'popularityLow' %} selected {% endif %}>Popularity: Low to High</option>
+      <option value="popularityHigh" {% if sort_by == 'popularityHigh' %} selected {% endif %}>Popularity: High to Low</option>
   </select>
   <button type="submit">Sort</button>
 </form>
@@ -23,6 +25,11 @@
       <option value="5" {% if rating == '5' %} selected {% endif %}>Five Stars & Up</option>
   </select>
   <button type="submit">Show Products</button>
+</form>
+
+<form id="filterForm" action="/" method="post">
+  <label for="in_stock">Only show products in stock:</label>
+  <input type="checkbox" id="in_stock" name="in_stock" onchange="this.form.submit()">
 </form>
 
 <h2>Products for sale:</h2>
