@@ -239,7 +239,7 @@ def search_user():
         users = User.search_user(user_to_search)
         if len(users) == 0:
             #Display 'no users found' if nothing matches
-            return render_template('search_user_results.html')
+            return render_template('search_user_results.html', categories=clean_text)
     except Exception:
         return 'No names found'
     return render_template('search_user_results.html', users=users, categories=clean_text)
