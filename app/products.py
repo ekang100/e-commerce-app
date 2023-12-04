@@ -83,15 +83,12 @@ def product_detail(productid):
     reviews = Reviews.get_reviews_by_product_id(productid)
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
-    seller_list = [row["sid"] for row in inventory]
-    for seller in seller_list:
-        buy_again = Product.get_purchases_by_uid(current_user.id, seller)
-        if buy_again == productid:
-            #buy_again_status = True
-            inventory[7]["buy_status"] = True
-        else:
-            #buy_again_status = False
-            inventory[7]["buy_status"] = True
-    #reviews = Review.get_reviews_for_product()
+    if current_user.is_authenticated:
+        seller_list = [row["sid"] for row in inventory]
+        for seller in seller_list:
+            buy_again = Product.get_purchases_by_uid(current_user.id, seller)
+            if buy_again == productid:
+                #buy_again_status = True
+                inventory[7]["buy_status"] = True
     return render_template('product_detail.html', product=product, inventory=inventory, categories=clean_text, reviews=reviews)
 

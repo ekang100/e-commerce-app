@@ -16,6 +16,8 @@ faker = "^19.3.1"
 python-dotenv = "^1.0.0"
 flask-paginate = "^2023.10.24"
 werkzeug = "2.3.7"
+requests = "^2.31.0"
+image = "^1.5.33"
 
 [build-system]
 requires = ["poetry-core"]
