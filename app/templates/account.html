@@ -62,6 +62,8 @@
       <tr>
           <td>
             <strong style="color: #FFD700">Balance:</strong> <span style="color: #eee">{{current_user.balance}}</span>
+            <a href="{{ url_for('users.add_giftcard') }}" class="btn btn-primary" style="margin-top: 10px; margin-left: 10px; border: 2px solid #FFD700; float:right; color: #FFD700;"
+            role="'button">Redeem Gift Card</a>
             <a href="{{ url_for('users.add_balance') }}" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float:right; color: #FFD700;"
               role="'button">Add Balance</a>
           </td>
