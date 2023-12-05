@@ -91,7 +91,7 @@ def gen_giftcard(num_giftcard):
         for cardid in range(num_giftcard):
             if cardid % 10 == 0:
                 print(f'{cardid}', end=' ', flush=True)
-            code = fake.pystr(min_chars=12, max_chars=12)
+            code = fake.pystr(min_chars=8, max_chars=8)
             amount = fake.pyint(1, 9999)
             redeem = False
             giftcard.writerow([cardid, code, amount, redeem])
@@ -471,9 +471,7 @@ def gen_seller_reviews(num_reviews, user_ids, seller_ids, csv_file_path):
         print(f'{num_reviews} appended')
     return
 
-
 gen_users(num_users)
-gen_giftcard(num_giftcard)
 gen_products(num_products)
 gen_products_for_sale(sellerid_to_productid)
 gen_carts(num_users)
@@ -485,4 +483,5 @@ user_ids = list(range(50))
 num_reviews = 100
 gen_product_reviews(num_reviews, user_ids, product_id_list)
 gen_seller_reviews(100, user_ids, seller_list, 'db/generated/Reviews.csv')
+gen_giftcard(num_giftcard)
 

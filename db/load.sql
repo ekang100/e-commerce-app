@@ -9,8 +9,8 @@ SELECT pg_catalog.setval('public.users_id_seq',
                          false);
 
 \COPY GiftCard FROM 'GiftCard.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.giftcard_cartid_seq',
-                         (SELECT MAX(id)+1 FROM GiftCard),
+SELECT pg_catalog.setval('public.giftcard_cardid_seq',
+                         (SELECT MAX(cardid)+1 FROM GiftCard),
                          false);
 
 \COPY Products FROM 'Products.csv' WITH DELIMITER ',' NULL '' CSV
