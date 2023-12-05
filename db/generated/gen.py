@@ -9,6 +9,7 @@ from collections import defaultdict
 import random
 
 num_users = 50
+num_giftcard = 50
 num_products = 2000
 num_products_for_sale = 2500
 # num_purchases = 2500
@@ -83,7 +84,19 @@ def gen_users(num_users):
         print(f'{num_users} generated')
     return
 
-
+def gen_giftcard(num_giftcard):
+    with open(csv_path('GiftCard.csv'), 'w') as f:
+        giftcard = get_csv_writer(f)
+        print('GiftCard...', end=' ', flush=True)
+        for cardid in range(num_giftcard):
+            if cardid % 10 == 0:
+                print(f'{cardid}', end=' ', flush=True)
+            code = fake.pystr(min_chars=12, max_chars=12)
+            amount = fake.pyint(1, 9999)
+            redeem = False
+            giftcard.writerow([cardid, code, amount, redeem])
+        print(f'{num_giftcard} generated')
+    return
 
 def gen_product_image(image_path, productid, product_name):
     # Download the image from the URL
@@ -460,6 +473,7 @@ def gen_seller_reviews(num_reviews, user_ids, seller_ids, csv_file_path):
 
 
 gen_users(num_users)
+gen_giftcard(num_giftcard)
 gen_products(num_products)
 gen_products_for_sale(sellerid_to_productid)
 gen_carts(num_users)
