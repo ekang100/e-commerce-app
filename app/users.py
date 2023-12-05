@@ -9,6 +9,7 @@ from .models.user import User
 from .models.purchase import Purchase
 from .models.review import Reviews
 from .models.product import Product
+from .models.giftcard import GiftCard
 
 import os
 import random
@@ -51,11 +52,6 @@ class UpdateForm(FlaskForm):
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
 
-    def validate_email(self, email):
-    # Custom validator to check if the email already exists.
-        if User.email_exists(email.data):
-            raise ValidationError('Already a user with this email.')
-
 # Define a form for updating the user's password.
 class PasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
@@ -73,6 +69,18 @@ class BalanceForm(FlaskForm):
     # Custom validator to ensure the balance added is positive.
         if float(balance.data) <= 0.0:
             raise ValidationError('Must add a positive value!')
+
+# Define a form for updating the user's account balance with a gift card.
+class GiftCardForm(FlaskForm):
+    giftcard = StringField('Gift Card Code', validators=[DataRequired()])
+    submit = SubmitField('Update')
+
+    def validate_giftcard(self, giftcard):
+    # Custom validator to ensure the gift card is real.
+        if GiftCard.status(giftcard.data) is None:
+            raise ValidationError('Code does not exist!')
+        if GiftCard.status(giftcard.data):
+            raise ValidationError('Gift card has been redeemed')
 
 # Define a form for updating the user's bio with a character limit.
 class BioForm(FlaskForm):
@@ -218,6 +226,20 @@ def add_balance():
                         new_balance):
             return redirect(url_for('users.account'))
     return render_template('balance.html', title='Add Balance', form=form)
+
+#Add gift card to account
+@bp.route('/giftcard', methods=['GET', 'POST'])
+def add_giftcard():
+    form = GiftCardForm()
+    #Checks that giftcard exists and has not been redeemed
+    if form.validate_on_submit():
+        #Creates new balance by adding added balance from giftcard to current balance
+        info = GiftCard.redeem_card(form.giftcard.data)
+        new_balance = float(info) + float(current_user.balance)
+        if User.add_balance(current_user.id,
+                        new_balance):
+            return redirect(url_for('users.account'))
+    return render_template('giftcard.html', title='Add Gift Card', form=form)
 
 #Enables user to become a seller
 #Changes isSeller boolean to true (default false)
