@@ -38,6 +38,11 @@ class RegistrationForm(FlaskForm):
                                        EqualTo('password')])
     submit = SubmitField('Register')
 
+    def validate_email(self, email):
+    # Define a form for updating user information.
+        if User.email_exists(email.data):
+            raise ValidationError('Already a user with this email.')
+
 # Define a form for updating user information.
 class UpdateForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
@@ -196,7 +201,8 @@ def update_name_address():
 @bp.route('/change_email', methods=['GET', 'POST'])
 def change_email():
     form = UpdateForm()
-    if request.method == 'POST':
+    # if request.method == 'POST':
+    if form.validate_on_submit():
         if User.change_email(current_user.id,
                         form.email.data):
             return redirect(url_for('users.account'))
