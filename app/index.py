@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, session
 from flask_login import current_user
 import datetime
 import re
@@ -10,13 +10,12 @@ from .models.purchase import Purchase
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
-@bp.route('/')
+@bp.route('/', methods=['POST', 'GET'])
 def index():
 
     # get all available products for sale:
     page = int(request.args.get('page', 1))
     per_page = 10 # can make this adjustable in the future
-    all_products = Product.get_all()
 
     sort_by = request.args.get('sort_by', default='None')
     if type(sort_by) is str and sort_by == "priceLow":
@@ -33,16 +32,32 @@ def index():
     rating = request.args.get('rating', default=0)
     rate = int(rating)
 
-    total = int(Product.get_num_products(rate))
-    products = Product.get_paginated(sort_by_column, page, rate)
-    max_page = int(math.ceil(len(all_products) / per_page))
+    if request.method == 'POST':
+        # Check if the checkbox was submitted and update the in_stock variable accordingly
+        if 'in_stock' in request.form:
+            in_stock = True
+        else:
+            in_stock = False
+    else:
+        in_stock = request.args.get('in_stock')
+
+    
+    if in_stock:
+        available = True
+        products = Product.get_paginated_avail(sort_by_column, page, rate, available)
+        total = int(Product.get_num_products_avail(rate, available))
+    else:
+        total = int(Product.get_num_products(rate))
+        products = Product.get_paginated(sort_by_column, page, rate)
+    
+    max_page = int(math.ceil(total / per_page))
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
 
 
     # render the page by adding information to the index.html file
     return render_template('index.html',
-                           rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by)
+                           rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
 
 @bp.route('/account')
 def index2():
