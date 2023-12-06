@@ -40,5 +40,4 @@ FROM GiftCard
 WHERE code = :code
 ''',
                               code=code)
-        # return GiftCard(*(rows[0])) if rows else None
         return ((rows[0])[0]) if rows else None
