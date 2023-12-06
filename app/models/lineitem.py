@@ -106,7 +106,7 @@ ORDER BY P.name
     @staticmethod
     def get_all_by_cartid_bought(cartid,buyStatus = True):
         rows = app.db.execute('''
-SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.orderid, fulfilledStatus, time_purchased, U.firstname, U.lastname, LineItem.time_fulfilled, LineItem.present
+SELECT P.name, unitPrice, quantities,  LineItem.lineid, LineItem.orderid, fulfilledStatus, time_purchased, U.firstname, U.lastname, LineItem.time_fulfilled, LineItem.present, LineItem.productid
 FROM LineItem, Products P, Users U
 WHERE P.productid = LineItem.productid
 AND LineItem.cartid = :cartid
@@ -116,7 +116,7 @@ AND U.id = LineItem.sellerid
 ORDER BY orderid DESC
 ''',
                               cartid=cartid, buyStatus = buyStatus)
-        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "orderid":row[4], "fulfilledStatus":row[5], "time_purchased":row[6], "firstname":row[7], "lastname":row[8], "time_fulfilled":row[9], "present":row[10]} for row in rows]
+        return [{"name": row[0], "price": row[1], "quantities": row[2], "lineid":row[3], "orderid":row[4], "fulfilledStatus":row[5], "time_purchased":row[6], "firstname":row[7], "lastname":row[8], "time_fulfilled":row[9], "present":row[10], "productid": row[11]} for row in rows]
     
     # make a new line item or update if it already exists when adding to cart
     @staticmethod

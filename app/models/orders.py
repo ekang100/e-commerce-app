@@ -13,11 +13,12 @@ class Orders:
     @staticmethod
     def get_all_orderIDs_by_buyerid(buyerid):
         rows = app.db.execute('''
-SELECT DISTINCT(OrdersInProgress.orderid), entireOrderFulfillmentStatus, tipAmount, LineItem.time_purchased
-FROM OrdersInProgress, LineItem
+SELECT OrdersInProgress.orderid, entireOrderFulfillmentStatus, tipAmount, MAX(LineItem.time_purchased) AS max_time_purchased
+FROM OrdersInProgress
+LEFT JOIN LineItem ON LineItem.orderid = OrdersInProgress.orderid
 WHERE buyerid = :buyerid
-AND LineItem.orderid = OrdersInProgress.orderid
-ORDER by orderid DESC
+GROUP BY OrdersInProgress.orderid, entireOrderFulfillmentStatus, tipAmount
+ORDER BY OrdersInProgress.orderid DESC;
 ''',
                               buyerid=buyerid)
         return [{"orderid": row[0], "entireOrderFulfillmentStatus": row[1], "tipAmount": row[2], "time_purchased": row[3]} for row in rows]

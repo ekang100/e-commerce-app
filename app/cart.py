@@ -257,7 +257,20 @@ def buyerOrder():
                     allFulfilled = False
             if allFulfilled:
                 Orders.update_entireOrderFulfillmentStatus(orderID)
-        
+         
+         #update availability for ellie's additional feature
+        for lineitem in allItemsBought:
+            all_sellers_for_product = ProductsForSale.get_all_sellers_for_product(int(lineitem['productid']))
+            available = False
+            for seller in all_sellers_for_product:
+                if(ProductsForSale.get_quantity(int(lineitem['productid']), seller['sid']) != 0):
+                    available = True
+            
+            if(not available):
+                Product.update_availability(lineitem['productid'], False)
+                print ("availability changed")
+
+
         allOrdersByUser = Orders.get_all_orderIDs_by_buyerid(current_user.id)
 
 
