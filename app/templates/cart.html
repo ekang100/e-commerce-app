@@ -81,7 +81,7 @@
                   </span>
                   <span style="margin-left: 10px; display: inline-block; vertical-align: middle;">
                       <form method="post" action="{{ url_for('cart.cart')}}" style="white-space: nowrap;">
-                          <input type='number' name='newQuantity' style="background-color: #1a1a1a; color: #FFD700; border: 1px solid #FFD700; border-radius: 5px; padding: 8px 12px; margin-right: 10px;">
+                          <input type='number' name='newQuantity' style="background-color: #1a1a1a; color: #FFD700; border: 1px solid #FFD700; border-radius: 5px; padding: 8px 12px; margin-right: 10px;" required min = "1">
                           <input type='hidden' name='lineitem_id' value='{{ lineitem.lineid }}'>
                           <input type='hidden' name='action' value='update'>
                           <input type='submit' value='Modify Quantity' class='btn btn-primary' style="border: 2px solid #FFD700; color: #FFD700; text-decoration: none; padding: 8px 12px; border-radius: 5px;">
