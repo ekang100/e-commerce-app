@@ -126,15 +126,15 @@ ORDER BY orderid DESC
             new_cart_query = f'''INSERT INTO Cart(buyerid, cartid, uniqueItemCount, totalCartPrice)
                                     VALUES (COALESCE((SELECT MAX(id) FROM Users),0), {cart_id}, {0}, {0.00});'''
             rows = app.db.execute(new_cart_query)
-        rows = app.db.execute('''SELECT quantities FROM LineItem WHERE sellerid=:seller_id AND productid=:product_id AND cartid=:cart_id;''', seller_id=seller_id, product_id=product_id, cart_id=cart_id)
+        rows = app.db.execute('''SELECT quantities FROM LineItem WHERE sellerid=:seller_id AND productid=:product_id AND cartid=:cart_id AND buyStatus = False;''', seller_id=seller_id, product_id=product_id, cart_id=cart_id)
         if rows is None or len(rows) == 0:
-            query = f'''INSERT INTO LineItem(lineid, cartid, productid, quantities, unitPrice, sellerid, present)
-                    VALUES (COALESCE((SELECT MAX(lineid)+1 FROM LineItem),0), {cart_id}, {product_id}, {qty}, {price}, {seller_id}, {present});'''
+            query = f'''INSERT INTO LineItem(lineid, cartid, productid, quantities, unitPrice, buyStatus, sellerid, present)
+                    VALUES (COALESCE((SELECT MAX(lineid)+1 FROM LineItem),0), {cart_id}, {product_id}, {qty}, {price}, False, {seller_id}, {present});'''
             rows = app.db.execute(query)
         else:
             rows = app.db.execute('''UPDATE LineItem
                         SET quantities=:qty + quantities
-                        WHERE productid=:product_id AND sellerid=:seller_id AND cartid=:cart_id;''', qty = qty, product_id=product_id, seller_id=seller_id, cart_id=cart_id, present = False)
+                        WHERE productid=:product_id AND sellerid=:seller_id AND cartid=:cart_id AND buyStatus = False;''', qty = qty, product_id=product_id, seller_id=seller_id, cart_id=cart_id, present = False)
                
 
     @staticmethod
