@@ -28,6 +28,8 @@ product_id_list = [] # from ekang for bryant
 # sellers_with_products = set() # will probably overwrite this
 productid_to_price = {}
 productid_to_sellerid = defaultdict(set)
+productid_to_sellerid2 = defaultdict(set)
+
 sellerid_to_productid = defaultdict(set)
 productid_to_available = {}
 
@@ -170,8 +172,11 @@ def gen_products(num_products):
             productid_to_available[productid] = available
 
             for seller_id in seller_id_list: # bc we want multiple sellers for multiple products
-                productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
+                # productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
                 sellerid_to_productid[seller_id].add(productid) # add the product to the set of products for a given seller
+                productid_to_sellerid2[productid].add(seller_id) # add the seller to to the set of sellers for the current product
+
+                productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
 
             # productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
             # sellerid_to_productid[seller_id].add(productid) # add the product to the set of products for a given seller
@@ -205,6 +210,10 @@ def gen_products_for_sale(sellerid_to_productid):
                     quantity = fake.random_int(min=1, max=50)
                 else:
                     quantity = 0
+                    # productid_to_sellerid[productid].remove(seller)
+                    # if(len(productid_to_sellerid[product]) == 0):
+                    #     del productid_to_sellerid[product]
+
                 writer.writerow([productid, uid, quantity])
 
         print('inventory generated')
@@ -300,7 +309,7 @@ def gen_lineitems(num_lineitems):
                     productids_in_cart = cartid_productid_map[cartid]
                 else:
                     productids_in_cart = []
-                while productid in productids_in_cart:
+                while productid in productids_in_cart or not product_id_to_available[productid]:
                     productid = fake.random_element(product_id_list)
                 
                 productids_in_cart.append(productid)
@@ -331,8 +340,11 @@ def gen_lineitems(num_lineitems):
             # gen time_fulfilled only if buyStatus is True
             if buyStatus:
                 time_fulfilled = fake.date_time_between(start_date=time_purchased, end_date='now')  # Generate a time after purchase
+                # sellerid = fake.random_element(productid_to_sellerid2[productid])
             else:
                 time_fulfilled = time_purchased
+                # sellerid = fake.random_element(productid_to_sellerid[productid])
+
 
             sellerid = fake.random_element(productid_to_sellerid[productid])
             present = fake.pybool()
@@ -484,4 +496,3 @@ num_reviews = 100
 gen_product_reviews(num_reviews, user_ids, product_id_list)
 gen_seller_reviews(100, user_ids, seller_list, 'db/generated/Reviews.csv')
 gen_giftcard(num_giftcard)
-

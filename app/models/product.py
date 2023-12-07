@@ -149,7 +149,7 @@ AND available =:available
                     LIMIT :per_page
                     OFFSET :offset
                 ''', query='%' + query + '%', per_page=per_page, offset=offset, rating=rating)
-            return rows
+            return [{"productid": row[0], "name": row[1], "price": row[2], "description": row[3], "category": row[4], "image_path": row[5], "available": row[6], "avg_rating": row[7]} for row in rows]
         except Exception as e:
             print(str(e))
             return None
@@ -190,7 +190,7 @@ AND available =:available
                     LIMIT :per_page
                     OFFSET :offset
                 ''', query='%' + query + '%', per_page=per_page, offset=offset, rating=rating, available=available)
-            return rows
+            return [{"productid": row[0], "name": row[1], "price": row[2], "description": row[3], "category": row[4], "image_path": row[5], "available": row[6], "avg_rating": row[7]} for row in rows]
         except Exception as e:
             print(str(e))
             return None
@@ -249,23 +249,22 @@ FROM Products
                     LIMIT :per_page
                     OFFSET :offset
                 ''', category='%' + category + '%', per_page=per_page, offset=offset, rating=rating)
-            return rows
+            return [{"productid": row[0], "name": row[1], "price": row[2], "description": row[3], "category": row[4], "image_path": row[5], "available": row[6], "avg_rating": row[7]} for row in rows]
         except Exception as e:
             print(str(e))
             return None
         
     @staticmethod
-    def get_purchases_by_uid(uid, sid):
+    def get_purchases_by_uid(uid):
         rows = app.db.execute('''
 SELECT P.productid
 FROM Cart C, Products P, LineItem L
 WHERE C.buyerid = :uid
-AND L.sellerid = :sid
 AND C.cartid = L.cartid
 AND L.buyStatus = TRUE
 AND L.productid = P.productid
 ''',
-                              uid=uid, sid=sid
+                              uid=uid
                               )
         pid = rows[0][0] if rows else 0
         return pid
