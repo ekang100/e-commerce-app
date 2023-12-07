@@ -8,20 +8,18 @@ from .models.product import Product
 from .models.productsforsale import ProductsForSale
 from .models.review import Reviews
 
-@bp.route('/', methods=['GET', 'POST'])
-def top_products():
-    if request.method == 'POST' and request.args.get('action') == 'Get Top Products':
-        try:
-            k = int(request.form['k'])
-            products = Product.get_all(True)
-            if k >= 0 and k <= len(products):
-                sorted_products = sorted(products, key=lambda x: x.price, reverse=True)[:k]
-                return render_template('search.html', top_k_products=sorted_products)
-            else:
-                return "Invalid input. Please enter a valid number for K."
-        except ValueError:
-            return "Invalid input. Please enter a valid number for K."
-    return render_template('index.html')
+def sort_assignment(sort_by):
+    if type(sort_by) is str and sort_by == "priceLow":
+        sort_by_column = "price ASC"
+    elif type(sort_by) is str and sort_by == "priceHigh":
+        sort_by_column = "price DESC"
+    elif type(sort_by) is str and sort_by == "popularityLow":
+        sort_by_column = "ASC"
+    elif type(sort_by) is str and sort_by == "popularityHigh":
+        sort_by_column = "DESC"
+    else:
+        sort_by_column = None
+    return sort_by_column
 
 @bp.route('/search_product_results', methods=['GET', 'POST'])
 def search_keywords():
@@ -34,22 +32,26 @@ def search_keywords():
     sort_by = request.args.get('sort_by', default='None')
     rating = request.args.get('rating', default=0)
     rate = int(rating)
-    if type(sort_by) is str and sort_by == "priceLow":
-        sort_by_column = "price ASC"
-    elif type(sort_by) is str and sort_by == "priceHigh":
-        sort_by_column = "price DESC"
-    else:
-        sort_by_column = None
+    sort_by_column = sort_assignment(sort_by)
+  
+        # Check if the checkbox was submitted and update the in_stock variable accordingly
+    in_stock = request.args.get('in_stock')
+    
     try:
-        products = Product.search_product(sort_by_column, query, page, rate)
-        total = Product.search_count(query, rate)
+        if in_stock == "true":
+            available = True
+            products = Product.search_product_avail(sort_by_column, query, page, rate, available)
+            total = int(Product.search_count_avail(query, rate, available))
+        else:
+            total = int(Product.search_count(query, rate))
+            products = Product.search_product(sort_by_column, query, page, rate)
         categories = Product.get_categories()
         clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
         if len(products) == 0:
             return render_template('search_product_results.html')
     except Exception:
         return 'No products found lol'
-    return render_template('search_product_results.html', rating=rating, sort_by=sort_by, products=products, page=page, total=total, query=query, per_page=per_page, categories=clean_text)
+    return render_template('search_product_results.html', in_stock=in_stock, rating=rating, sort_by=sort_by, products=products, page=page, total=total, query=query, per_page=per_page, categories=clean_text)
 
 @bp.route('/search_category_results', methods=['GET', 'POST'])
 def search_category():
@@ -61,15 +63,17 @@ def search_category():
     rating = request.args.get('rating', default=0)
     rate = int(rating)
     sort_by = request.args.get('sort_by', default='None')
-    if type(sort_by) is str and sort_by == "priceLow":
-        sort_by_column = "price ASC"
-    elif type(sort_by) is str and sort_by == "priceHigh":
-        sort_by_column = "price DESC"
-    else:
-        sort_by_column = None
+    sort_by_column = sort_assignment(sort_by)
     try:
-        products = Product.search_categories(sort_by_column, category, page, rate)
-        total = Product.category_search_count(category, rate)
+        in_stock =  request.args.get('in_stock')
+    
+        if in_stock:
+            available = True
+            products = Product.search_categories_avail(sort_by_column, category, page, rate, available)
+            total = int(Product.category_search_count_avail(category, rate, available))
+        else:
+            total = int(Product.category_search_count(category, rate))
+            products = Product.search_categories(sort_by_column, category, page, rate)
         if len(products) == 0:
             return render_template('search_category_results.html')
     except Exception:
@@ -83,15 +87,11 @@ def product_detail(productid):
     reviews = Reviews.get_reviews_by_product_id(productid)
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
-    seller_list = [row["sid"] for row in inventory]
-    for seller in seller_list:
-        buy_again = Product.get_purchases_by_uid(current_user.id, seller)
-        if buy_again == productid:
-            #buy_again_status = True
-            inventory[7]["buy_status"] = True
-        else:
-            #buy_again_status = False
-            inventory[7]["buy_status"] = True
-    #reviews = Review.get_reviews_for_product()
+    if current_user.is_authenticated:
+        seller_list = [row["sid"] for row in inventory]
+        for seller in seller_list:
+            buy_again = Product.get_purchases_by_uid(current_user.id, seller)
+            if buy_again == productid:
+                #buy_again_status = True
+                inventory[7]["buy_status"] = True
     return render_template('product_detail.html', product=product, inventory=inventory, categories=clean_text, reviews=reviews)
-
