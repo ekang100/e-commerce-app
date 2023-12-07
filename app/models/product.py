@@ -13,6 +13,8 @@ class Product:
         self.avg_rating = avg_rating
         #self.seller_id = seller_id
 
+    # all sort_by columns are checked against a dictionary of allowed columns before being passed to the query to prevent injection attacks
+
     # get product information for a given productid
     @staticmethod
     def get(productid):

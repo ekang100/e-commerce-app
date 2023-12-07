@@ -8,19 +8,16 @@ from .models.product import Product
 from .models.productsforsale import ProductsForSale
 from .models.review import Reviews
 
-# for the repeated process of checking and reassigning sorting preferences before passing to query
+# for the repeated process of checking and reassigning sorting preferences before passing to query. preventing injection attacks
 def sort_assignment(sort_by):
-    if type(sort_by) is str and sort_by == "priceLow":
-        sort_by_column = "price ASC"
-    elif type(sort_by) is str and sort_by == "priceHigh":
-        sort_by_column = "price DESC"
-    elif type(sort_by) is str and sort_by == "popularityLow":
-        sort_by_column = "ASC"
-    elif type(sort_by) is str and sort_by == "popularityHigh":
-        sort_by_column = "DESC"
-    else:
-        sort_by_column = None
-    return sort_by_column
+    allowed_sort_columns = {
+        "priceLow": "price ASC",
+        "priceHigh": "price DESC",
+        "popularityLow": "ASC",
+        "popularityHigh": "DESC"
+    }
+    
+    return allowed_sort_columns.get(sort_by, None)
 
 # search product based on matches in name or description
 @bp.route('/search_product_results', methods=['GET', 'POST'])
@@ -38,7 +35,8 @@ def search_keywords():
     rating = request.args.get('rating', default=0)
 
     rate = int(rating)
-    # rewrite sort preferences
+
+    # check sorting preferences to prohibit vulnerability and assign new variable to something more easily passed to a query
     sort_by_column = sort_assignment(sort_by)
   
     # an old method that I wanted to keep in here just in case...

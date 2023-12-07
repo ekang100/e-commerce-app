@@ -12,6 +12,17 @@ from .models.purchase import Purchase
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
+# check sorting preferences to prohibit vulnerability and assign new variable to something more easily passed to a query
+def sort_assignment(sort_by):
+    allowed_sort_columns = {
+        "priceLow": "price ASC",
+        "priceHigh": "price DESC",
+        "popularityLow": "ASC",
+        "popularityHigh": "DESC"
+    }
+    
+    return allowed_sort_columns.get(sort_by, None)
+
 @bp.route('/', methods=['POST', 'GET'])
 def index():
 
@@ -23,16 +34,7 @@ def index():
     sort_by = request.args.get('sort_by', default='None')
 
     # check sorting preferences to prohibit vulnerability and assign new variable to something more easily passed to a query
-    if type(sort_by) is str and sort_by == "priceLow":
-        sort_by_column = "price ASC"
-    elif type(sort_by) is str and sort_by == "priceHigh":
-        sort_by_column = "price DESC"
-    elif type(sort_by) is str and sort_by == "popularityLow":
-        sort_by_column = "ASC"
-    elif type(sort_by) is str and sort_by == "popularityHigh":
-        sort_by_column = "DESC"
-    else:
-        sort_by_column = None
+    sort_by_column = sort_assignment(sort_by)
     
     # get ratings preferences
     rating = request.args.get('rating', default=0)
