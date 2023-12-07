@@ -119,7 +119,7 @@ AND available =:available
         rows = app.db.execute(f'''
             SELECT COUNT(*)
             FROM Products
-            WHERE name LIKE :query OR description LIKE :query AND avg_rating >= :rating
+            WHERE (LOWER(name) LIKE LOWER(:query) OR LOWER(description) LIKE LOWER(:query)) AND avg_rating >= :rating
         ''', query='%' + query + '%', rating=rating)
         total = rows[0][0] if rows else 0
         return total
@@ -133,7 +133,7 @@ AND available =:available
                     SELECT Products.*, SUM(LineItem.quantities) AS total_quantity
                     FROM Products
                     LEFT JOIN LineItem ON Products.productid = LineItem.productid
-                    WHERE (Products.name LIKE :query OR Products.description LIKE :query)
+                    WHERE (LOWER(Products.name) LIKE LOWER(:query) OR LOWER(Products.description) LIKE LOWER(:query))
                     AND Products.avg_rating >= :rating
                     GROUP BY Products.productid
                     ORDER BY avg_rating {sort_by_column}, total_quantity {sort_by_column}
@@ -144,7 +144,7 @@ AND available =:available
                 rows = app.db.execute(f'''
                     SELECT *
                     FROM Products
-                    WHERE name LIKE :query OR description LIKE :query AND avg_rating >= :rating
+                    WHERE (LOWER(name) LIKE LOWER(:query) OR LOWER(description) LIKE LOWER(:query)) AND avg_rating >= :rating
                     {("ORDER BY " + sort_by_column) if sort_by_column is not None else ""}
                     LIMIT :per_page
                     OFFSET :offset
@@ -159,7 +159,7 @@ AND available =:available
         rows = app.db.execute(f'''
             SELECT COUNT(*)
             FROM Products
-            WHERE name LIKE :query OR description LIKE :query AND avg_rating >= :rating AND available=:available
+            WHERE (LOWER(name) LIKE LOWER(:query) OR LOWER(description) LIKE LOWER(:query)) AND avg_rating >= :rating AND available =:available
         ''', query='%' + query + '%', rating=rating, available=available)
         total = rows[0][0] if rows else 0
         return total
@@ -173,7 +173,7 @@ AND available =:available
                     SELECT Products.*, SUM(LineItem.quantities) AS total_quantity
                     FROM Products
                     LEFT JOIN LineItem ON Products.productid = LineItem.productid
-                    WHERE (Products.name LIKE :query OR Products.description LIKE :query)
+                    WHERE (LOWER(Products.name) LIKE LOWER(:query) OR LOWER(Products.description) LIKE LOWER(:query))
                     AND Products.avg_rating >= :rating
                     AND available =:available
                     GROUP BY Products.productid
@@ -185,7 +185,7 @@ AND available =:available
                 rows = app.db.execute(f'''
                     SELECT *
                     FROM Products
-                    WHERE name LIKE :query OR description LIKE :query AND avg_rating >= :rating AND available =:available
+                    WHERE (LOWER(name) LIKE LOWER(:query) OR LOWER(description) LIKE LOWER(:query)) AND avg_rating >= :rating AND available =:available
                     {("ORDER BY " + sort_by_column) if sort_by_column is not None else ""}
                     LIMIT :per_page
                     OFFSET :offset
@@ -249,6 +249,47 @@ FROM Products
                     LIMIT :per_page
                     OFFSET :offset
                 ''', category='%' + category + '%', per_page=per_page, offset=offset, rating=rating)
+            return [{"productid": row[0], "name": row[1], "price": row[2], "description": row[3], "category": row[4], "image_path": row[5], "available": row[6], "avg_rating": row[7]} for row in rows]
+        except Exception as e:
+            print(str(e))
+            return None
+        
+    @staticmethod
+    def category_search_count_avail(category, rating, available):
+        rows = app.db.execute('''
+            SELECT COUNT(*)
+            FROM Products
+            WHERE category LIKE :category AND avg_rating >= :rating AND available =:available
+        ''', category='%' + category + '%', rating=rating, available=available)
+        total = rows[0][0] if rows else 0
+        return total
+        
+    @staticmethod
+    def search_categories_avail(sort_by_column, category, page, rating, available, per_page=10):
+        offset = (page - 1) * per_page
+        try:
+            if sort_by_column == "ASC" or sort_by_column == "DESC":
+                rows = app.db.execute(f'''
+                    SELECT Products.*, SUM(LineItem.quantities) AS total_quantity
+                    FROM Products
+                    LEFT JOIN LineItem ON Products.productid = LineItem.productid
+                    WHERE Products.category LIKE :category
+                    AND Products.avg_rating >= :rating
+                    AND available =:available
+                    GROUP BY Products.productid
+                    ORDER BY avg_rating {sort_by_column}, total_quantity {sort_by_column}
+                    LIMIT :per_page
+                    OFFSET :offset
+                ''', category='%' + category + '%', per_page=per_page, offset=offset, rating=rating, available=available)
+            else:
+                rows = app.db.execute(f'''
+                    SELECT *
+                    FROM Products
+                    WHERE category LIKE :category AND avg_rating >= :rating AND available =:available
+                    {("ORDER BY " + sort_by_column) if sort_by_column is not None else ""}
+                    LIMIT :per_page
+                    OFFSET :offset
+                ''', category='%' + category + '%', per_page=per_page, offset=offset, rating=rating, available=available)
             return [{"productid": row[0], "name": row[1], "price": row[2], "description": row[3], "category": row[4], "image_path": row[5], "available": row[6], "avg_rating": row[7]} for row in rows]
         except Exception as e:
             print(str(e))

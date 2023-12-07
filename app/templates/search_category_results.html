@@ -5,7 +5,7 @@
 <form action="/search_category_results" method="GET">
   <input type="hidden" name="category" value="{{ selected_category }}">
   <input type="hidden" name="rating" value="{{ rating }}">
-  <input type="hidden" name="in_stock" value="{{ in_stock }}">
+  <input type="hidden" name="in_stock_filter" value="{{ in_stock }}">
   <label for="sort_by">Sort By:</label>
   <select id="sort_by" name="sort_by">
       <option value="None">Select Sorting</option>
@@ -20,7 +20,7 @@
 <form action="/search_category_results" method="GET">
   <input type="hidden" name="category" value="{{ selected_category }}">
   <input type="hidden" name="sort_by" value="{{ sort_by }}">
-  <input type="hidden" name="in_stock" value="{{ in_stock }}">
+  <input type="hidden" name="in_stock_filter" value="{{ in_stock }}">
   <label for="rating">Select Avg. Rating:</label>
   <select name="rating" id="rating">
       <option value="0">None</option>
@@ -33,16 +33,16 @@
   <button type="submit">Show Products</button>
 </form>
 
-<form action="/search_category_results" method="post">
+<form action="/search_category_results" method="get">
   <input type="hidden" name="category" value="{{ selected_category }}">
   <input type="hidden" name="rating" value="{{ rating }}">
   <input type="hidden" name="sort_by" value="{{ sort_by }}">
   <label for="in_stock">Only show available products</label>
-  <input type="checkbox" id="in_stock" name="in_stock" value="true" {% if in_stock %}checked{% endif %}>
+  <input type="checkbox" id="in_stock" name="in_stock" {% if in_stock %}checked{% endif %}>
   <input type="submit" value="Show Products">
 </form>
 
-<h2>Product Results:</h2>
+<h2>Product Results: {{selected_category}}</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
@@ -93,14 +93,14 @@
     {# Previous Button #}
     {% if page > 1 %}
       <li class="page-item">
-        <a href="{{ url_for('products.search_category', buy_status=buy_status, rating=rating, category=selected_category, sort_by=sort_by, page=page-1) }}">Previous</a>
+        <a href="{{ url_for('products.search_category', in_stock=in_stock, buy_status=buy_status, rating=rating, category=selected_category, sort_by=sort_by, page=page-1) }}">Previous</a>
       </li>
     {% endif %}
     
     {# Display page numbers within range #}
     {% if start_page > 1 %}
       <li class="page-item">
-        <a href="{{ url_for('products.search_category', buy_status=buy_status, rating=rating, category=selected_category, sort_by=sort_by, page=1) }}">1</a>
+        <a href="{{ url_for('products.search_category', in_stock=in_stock, buy_status=buy_status, rating=rating, category=selected_category, sort_by=sort_by, page=1) }}">1</a>
       </li>
       {% if start_page > 2 %}
         <li class="ellipsis">...</li>
@@ -109,7 +109,7 @@
     
     {% for p in range(start_page, end_page + 1) %}
       <li class="page-item {% if p == page %}active{% endif %}">
-        <a href="{{ url_for('products.search_category', buy_status=buy_status, rating=rating, category=selected_category, sort_by=sort_by, page=p) }}">{{ p }}</a>
+        <a href="{{ url_for('products.search_category', in_stock=in_stock, buy_status=buy_status, rating=rating, category=selected_category, sort_by=sort_by, page=p) }}">{{ p }}</a>
       </li>
     {% endfor %}
     
@@ -118,14 +118,14 @@
         <li class="ellipsis">...</li>
       {% endif %}
       <li class="page-item">
-        <a href="{{ url_for('products.search_category', buy_status=buy_status, rating=rating, category=selected_category, sort_by=sort_by, page=total_pages) }}">{{ total_pages }}</a>
+        <a href="{{ url_for('products.search_category', in_stock=in_stock, buy_status=buy_status, rating=rating, category=selected_category, sort_by=sort_by, page=total_pages) }}">{{ total_pages }}</a>
       </li>
     {% endif %}
     
     {# Next Button #}
     {% if page < total_pages %}
       <li class="page-item">
-        <a href="{{ url_for('products.search_category', buy_status=buy_status, rating=rating, category=selected_category, sort_by=sort_by, page=page+1) }}">Next</a>
+        <a href="{{ url_for('products.search_category', in_stock=in_stock, buy_status=buy_status, rating=rating, category=selected_category, sort_by=sort_by, page=page+1) }}">Next</a>
       </li>
     {% endif %}
   </ul>
