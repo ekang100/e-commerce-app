@@ -91,10 +91,10 @@ class Seller:
     def remove_product(self, product_id):
         app.db.execute('''
                     DELETE FROM ProductsForSale
-                    WHERE productid = :product_id
+                    WHERE productid = :product_id 
             ''', product_id=product_id)
 
-        #delete associated reviews now 
+        #delete in the cart now 
         app.db.execute('''
                     DELETE FROM LineItem
                     WHERE productid = :product_id AND sellerid = :seller_id AND buyStatus = FALSE
@@ -159,7 +159,7 @@ class Seller:
             VALUES (:productid, :seller_id, :quantity)
         ''', productid=productid, seller_id=self.uid, quantity=quantity)
 
-        if quantity > 0: 
+        if int (quantity) > 0: 
             app.db.execute('''
                 UPDATE Products
                 SET available = TRUE
@@ -236,48 +236,7 @@ class Seller:
 
     from datetime import datetime, timedelta
 
-    def get_top_seller_of_month(self):
-        # Calculate the date one month ago from today
-        one_month_ago = datetime.now() - timedelta(days=30)
-
-        # Retrieve the current top seller
-        current_top_seller_row = app.db.execute('''
-            SELECT sellerid
-            FROM Sellers
-            WHERE isStarseller = TRUE
-            LIMIT 1;
-        ''')
-
-        current_top_seller = current_top_seller_row.fetchone()
-
-        # If there is a current top seller, update their isStarseller attribute to False
-        if current_top_seller:
-            current_top_seller_id = current_top_seller[0]
-            app.db.execute('UPDATE Sellers SET isStarseller = FALSE WHERE sellerid = :seller_id;', seller_id=current_top_seller_id)
-
-        # Retrieve the counts of fulfilled orders for each seller in the past month
-        rows = app.db.execute('''
-            SELECT li.sellerid, COUNT(li.orderid) AS order_count
-            FROM LineItem li
-            JOIN OrdersInProgress o ON li.orderid = o.orderid
-            WHERE li.fulfilledStatus = TRUE AND li.time_purchased >= :one_month_ago
-            GROUP BY li.sellerid
-            ORDER BY order_count DESC
-            LIMIT 1;
-        ''', one_month_ago=one_month_ago)
-
-        top_seller = rows.fetchone()
-
-        if top_seller:
-            # Get the seller ID and order count
-            seller_id, order_count = top_seller
-
-            # Add a star to the new top seller's profile
-            app.db.execute('UPDATE Sellers SET isStarseller = TRUE, stars = stars + 1 WHERE sellerid = :seller_id;', seller_id=seller_id)
-
-        return top_seller
-
-
+    
 
 
 
