@@ -19,6 +19,9 @@ CREATE TABLE Users (
     PRIMARY KEY (id) 
 );
 
+ALTER TABLE Users
+ADD COLUMN five_star_review_count INT DEFAULT 0;
+
 --withdraw needs to be a function to add or remove balance
 --pubProfile should be a view from User (name, accountID, PubProfileID)
 
@@ -104,6 +107,16 @@ CREATE TABLE Reviews (
     ),
     UNIQUE(uid, product_id, type),
     UNIQUE(uid, seller_id, type)  
+);
+
+
+CREATE TABLE ReviewVotes (
+    id SERIAL PRIMARY KEY,
+    review_id INT NOT NULL REFERENCES Reviews(entity_id),
+    user_id INT NOT NULL REFERENCES Users(id),
+    vote BOOLEAN NOT NULL,
+    timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (review_id, user_id)
 );
 
 

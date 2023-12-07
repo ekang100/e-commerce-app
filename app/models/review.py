@@ -148,3 +148,76 @@ ORDER BY R.date DESC
             return reviews
         except Exception as e:
             raise ValueError(f"Error fetching reviews for seller: {str(e)}")
+        
+    @staticmethod
+    def get_product_rating_summary(product_id):
+        query = '''
+        SELECT AVG(R.rating) AS average_rating, COUNT(R.entity_id) AS number_of_ratings
+        FROM Reviews R
+        WHERE R.product_id = :product_id
+        '''
+        result = app.db.execute(query, product_id=product_id)
+
+        if result and result[0] and result[0][0] is not None:
+            # If there are ratings, return the summary
+            return {'average_rating': round(result[0][0], 2), 'number_of_ratings': result[0][1]}
+        else:
+            # If there are no ratings, return default values
+            return {'average_rating': 0, 'number_of_ratings': 0}
+
+
+    @staticmethod
+    def get_seller_rating_summary(seller_id):
+        # SQL query to calculate average rating and count number of ratings
+        query = '''
+            SELECT AVG(R.rating) as average_rating, COUNT(R.rating) as number_of_ratings
+            FROM Reviews R
+            WHERE R.seller_id = :seller_id
+        '''
+        result = app.db.execute(query, seller_id=seller_id)
+        if result and result[0] and result[0][0] is not None:
+            # If there are ratings, return the summary
+            return {'average_rating': round(result[0][0], 2), 'number_of_ratings': result[0][1]}
+        else:
+            # If there are no ratings, return default values
+            return {'average_rating': 0, 'number_of_ratings': 0}
+        
+    @staticmethod
+    def add_vote(review_id, user_id, vote):
+        try:
+            query = '''
+            INSERT INTO ReviewVotes (review_id, user_id, vote)
+            VALUES (:review_id, :user_id, :vote)
+            ON CONFLICT (review_id, user_id) DO UPDATE
+            SET vote = EXCLUDED.vote;
+            '''
+            app.db.execute(query, review_id=review_id, user_id=user_id, vote=vote)
+        except Exception as e:
+            raise ValueError(f"Error adding vote: {str(e)}")
+
+    @staticmethod
+    def get_votes_by_review_id(review_id):
+        try:
+            query = '''
+            SELECT COUNT(*) FROM ReviewVotes
+            WHERE review_id = :review_id AND vote = TRUE;
+            '''
+            result = app.db.execute(query, review_id=review_id)
+            return result[0][0] if result else 0
+        except Exception as e:
+            raise ValueError(f"Error fetching votes: {str(e)}")
+    
+    @staticmethod
+    def get_five_star_review_count(seller_id):
+        try:
+            query = '''
+                SELECT COUNT(*)
+                FROM Reviews
+                WHERE seller_id = :seller_id AND rating = 5
+            '''
+            result = app.db.execute(query, seller_id=seller_id)
+            return result.fetchone()[0] if result else 0
+        except Exception as e:
+            raise ValueError(f"Error fetching five-star review count: {str(e)}")
+
+

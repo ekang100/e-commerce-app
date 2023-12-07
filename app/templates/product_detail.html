@@ -83,7 +83,6 @@
           </tbody>
       </table>
     </div>
-
     <div class="container">
       <h2>Reviews</h2>
       <table class='table table-hover table-bordered'>
@@ -93,67 +92,77 @@
               <th scope="col">Rating</th>
               <th scope="col">Comments</th>
               <th scope="col">Date</th>
+              <th scope="col">Helpful</th>
               <th scope="col">Edit</th>
           </tr>
           </thead>
           <tbody>
-            {% for review in reviews %}
-            <tr>
-                <td>{{ review.name }}</td>
-                <td>
-                    {% for star in range(review.rating) %}
-                        <i class="fas fa-star" style="color: yellow; font-size: 12px;"></i>
-                    {% endfor %}
-                    {% for blank_star in range(5 - review.rating) %}
-                        <i class="far fa-star" style="color: gray; font-size: 12px;"></i>
-                    {% endfor %}
-                </td>
-                <td>{{ review.comments }}</td>
-                <td>{{ review.date }}</td>
-                {% if review.user_id == current_user.id %}
-                    <td>
-                        <form action="{{ url_for('feedback.update_review', review_id=review.id) }}" method="post">
-                            <input type="number" name="rating" value="{{ review.rating }}" min="1" max="5">
-                            <input type="text" name="comments" value="{{ review.comments }}">
-                            <input type="submit" value="Update">
-                        </form>
-                        <form action="{{ url_for('feedback.delete_review', review_id=review.id) }}" method="post">
-                            <input type="submit" value="Delete" onclick="return confirm('Are you sure?');">
-                        </form>
-                    </td>
-                {% endif %}
-            </tr>
-        {% else %}
-            <tr><td colspan="5">No reviews found for this product.</td></tr>
-        {% endfor %}
+          {% for review in reviews %}
+              <tr>
+                  <td>{{ review.name }}</td>
+                  <td>
+                      {% for star in range(review.rating) %}
+                          <i class="fas fa-star" style="color: yellow; font-size: 12px;"></i>
+                      {% endfor %}
+                      {% for blank_star in range(5 - review.rating) %}
+                          <i class="far fa-star" style="color: gray; font-size: 12px;"></i>
+                      {% endfor %}
+                  </td>
+                  <td>{{ review.comments }}</td>
+                  <td>{{ review.date }}</td>
+                  <td>
+                      {% if current_user.is_authenticated %}
+                          <form action="{{ url_for('feedback.vote_review', review_id=review.id, vote=1) }}" method="post">
+                              <button type="submit">Helpful ({{ review.helpful_count }})</button>
+                          </form>
+                      {% else %}
+                          Helpful: {{ review.helpful_count }}
+                      {% endif %}
+                  </td>
+                  <td>
+                      {% if review.user_id == current_user.id %}
+                          <form action="{{ url_for('feedback.update_review', review_id=review.id, review_type=review.type) }}" method="post">
+                              <input type="number" name="rating" value="{{ review.rating }}" min="1" max="5">
+                              <input type="text" name="comments" value="{{ review.comments }}">
+                              <input type="submit" value="Update">
+                          </form>
+                          <form action="{{ url_for('feedback.delete_review', review_id=review.id, review_type=review.type) }}" method="post">
+                              <input type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+                          </form>
+                      {% endif %}
+                  </td>
+              </tr>
+          {% else %}
+              <tr><td colspan="6">No reviews found for this product.</td></tr>
+          {% endfor %}
           </tbody>
       </table>
-        
+  
       {% if current_user.is_authenticated %}
-      <form action="{{ url_for('feedback.post_review') }}" method="post">
-          <input type="hidden" name="user_id" value="{{ current_user.id }}"/>
-          <input type="hidden" name="product_id" value="{{ product.productid }}"/>          
-          <div class="form-group">
-              <label for="rating">Rating:</label>
-              <select id="rating" name="rating" class="form-control">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-              </select>
-          </div>
-
-          <div class="form-group">
-              <label for="comments">Comments:</label>
-              <textarea id="comments" name="comments" class="form-control" rows="3"></textarea>
-          </div>
-
-          <input type="submit" value="Post Review" class="btn btn-primary">
-      </form>
-    {% else %}
-      <p><a href="{{ url_for('users.login') }}">Log in</a> to add reviews</p>
-    {% endif %}
+        <form action="{{ url_for('feedback.post_review') }}" method="post">
+            <input type="hidden" name="user_id" value="{{ current_user.id }}"/>
+            <input type="hidden" name="product_id" value="{{ product.productid }}"/>          
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+  
+            <div class="form-group">
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments" class="form-control" rows="3"></textarea>
+            </div>
+  
+            <input type="submit" value="Post Review" class="btn btn-primary">
+        </form>
+      {% else %}
+        <p><a href="{{ url_for('users.login') }}">Log in</a> to add reviews</p>
+      {% endif %}
   </div>
     </div>
   

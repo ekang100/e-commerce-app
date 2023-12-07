@@ -275,3 +275,15 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
+        
+    @staticmethod
+    def update_five_star_review_count(seller_id, five_star_count):
+        try:
+            query = '''
+                UPDATE Users
+                SET five_star_review_count = :five_star_count
+                WHERE id = :seller_id
+            '''
+            app.db.execute(query, five_star_count=five_star_count, seller_id=seller_id)
+        except Exception as e:
+            raise ValueError(f"Error updating five-star review count: {str(e)}")

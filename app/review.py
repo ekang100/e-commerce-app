@@ -1,6 +1,7 @@
 from flask import redirect, request, jsonify, Blueprint, render_template, flash, url_for, session
 from flask_login import current_user
 from .models.review import Reviews
+from .models.user import User
 
 bp = Blueprint('feedback', __name__)
 
@@ -50,6 +51,27 @@ def get_recent_reviews_by_uid(uid):
 
 #     return jsonify({'error': 'Invalid request method'}), 405
 
+# @bp.route('/post_review', methods=['POST'])
+# def post_review():
+#     if request.method == 'POST':
+#         product_id = request.form.get('product_id')
+#         seller_id = request.form.get('seller_id')
+#         user_id = request.form.get('user_id')
+#         rating = request.form.get('rating')
+#         comments = request.form.get('comments')
+#         review_type = 'product' if product_id else 'seller'
+#         if not all([user_id, rating, (product_id or seller_id)]):
+#             flash('Missing data', 'error')
+#             return redirect(url_for('product.product_detail', productid=product_id))
+
+#         try:
+#             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)
+#             flash('Review added successfully', 'success')
+#             return redirect(url_for('products.product_detail', productid=product_id))
+#         except Exception as e:
+#             flash(str(e), 'error')
+
+#     return redirect(url_for('products.product_detail', productid=product_id))
 @bp.route('/post_review', methods=['POST'])
 def post_review():
     if request.method == 'POST':
@@ -58,21 +80,31 @@ def post_review():
         user_id = request.form.get('user_id')
         rating = request.form.get('rating')
         comments = request.form.get('comments')
-        review_type = 'product' if product_id else 'seller'
+        review_type = 'seller' if seller_id else 'product'
+
         if not all([user_id, rating, (product_id or seller_id)]):
             flash('Missing data', 'error')
-            return redirect(url_for('product.product_detail', productid=product_id))
+            redirect_url = url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id)
+            return redirect(redirect_url)
+        if review_type == 'seller' and rating == 5:
+            count = Reviews.get_five_star_review_count(seller_id)
+            User.update_five_star_review_count(seller_id, count)
 
         try:
             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)
             flash('Review added successfully', 'success')
-            return redirect(url_for('products.product_detail', productid=product_id))
+            redirect_url = url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id)
+            return redirect(redirect_url)
+        
         except Exception as e:
             flash(str(e), 'error')
 
-    return redirect(url_for('products.product_detail', productid=product_id))
+    redirect_url = url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id)
+    return redirect(redirect_url)
 
-from flask import request, redirect, url_for, flash
+
+
+
 
 @bp.route('/update_review/<int:review_id>', methods=['POST'])
 def update_review(review_id):
@@ -86,13 +118,19 @@ def update_review(review_id):
     if review and review['uid'] == current_user_id:
         Reviews.update_review(review_id, new_rating, new_comments)
         flash('Review updated successfully', 'success')
-        return redirect(url_for('products.product_detail', productid=review['product_id']))
+
+        # Redirect based on review type
+        if review['type'] == 'product':
+            return redirect(url_for('products.product_detail', productid=review['product_id']))
+        else:
+            return redirect(url_for('users.public_profile', account_id=review['seller_id']))
 
     else:
         flash('You do not have permission to update this review', 'error')
     return "Uh oh"
 
-@bp.route('/delete_review/<int:review_id>', methods=['POST'])
+
+@bp.route('/delete_review/<int:review_id>/', methods=['POST'])
 def delete_review(review_id):
     current_user_id = current_user.id
     # Fetch the review and check if the current user is the author
@@ -100,12 +138,31 @@ def delete_review(review_id):
     if review and review['uid'] == current_user_id:
         Reviews.delete_review(review_id)
         flash('Review deleted successfully', 'success')
+
+        # Redirect based on review type
+        if review['type'] == 'product':
+            return redirect(url_for('products.product_detail', productid=review['product_id']))
+        else:  # assuming review_type is 'seller'
+            return redirect(url_for('users.public_profile', account_id=review['seller_id']))
     else:
         flash('You do not have permission to delete this review', 'error')
+    return "Uh oh"
 
-    return redirect(url_for('products.product_detail', productid=review['product_id']))
 
+@bp.route('/vote_review/<int:review_id>/<int:vote>', methods=['POST'])
+def vote_review(review_id, vote):
+    if not current_user.is_authenticated:
+        flash("You need to be logged in to vote.", "error")
+        return redirect(url_for('users.login'))
 
+    try:
+        Reviews.add_vote(review_id, current_user.id, vote)
+        flash("Your vote has been recorded.", "success")
+    except ValueError as e:
+        flash(str(e), "error")
+
+    # Redirect back to the referring page
+    return redirect(request.referrer)
 
 
 
