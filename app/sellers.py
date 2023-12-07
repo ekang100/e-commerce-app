@@ -1,5 +1,5 @@
 from .models.seller import Seller
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, request, session
 from flask import Blueprint
 from flask_login import current_user
 
@@ -42,7 +42,8 @@ def get_unfulfilled_order_history(seller_id):
     order_history = seller.get_unfulfilledOrder_history()  # Use the get_fulfilledOrder_history method
     if order_history:
         # Handle the case when there's fulfilled order history
-        return render_template('unfulfilled_order_history.html', order_history=order_history)
+        new_sale_flag = session.pop('new_sale_flag', False)  # Pop the flag and default to False if not present
+        return render_template('unfulfilled_order_history.html', order_history=order_history, new_sale_flag=new_sale_flag)
     else:
         # Use JavaScript alert for the message
         return '''
@@ -51,10 +52,9 @@ def get_unfulfilled_order_history(seller_id):
                 window.history.back();  // Redirect back to the previous page or handle as needed
             </script>
         '''
-
-
-@bp.route('/add_product', methods=['GET', 'POST'])
-def add_product():
+    
+@bp.route('/make_new_product', methods=['GET', 'POST'])
+def make_new_product():
     if request.method == 'POST':
         # Get the product details from the form
         name = request.form.get('name')
@@ -72,31 +72,44 @@ def add_product():
         seller = Seller(seller_id)
 
         # Call the add_product method with the form data
-        result = seller.add_product(name, price, description, category, quantity, image_path)
+        seller.make_new_product(name, price, description, category, quantity, image_path)
 
         return redirect(url_for('sellers.get_seller_inventory', seller_id=seller_id))
 
-    return render_template('add_product.html')
+    return render_template('make_new_product.html')
+
+@bp.route('/add_existing_product', methods=['GET', 'POST'])
+def add_existing_product():
+
+    seller_id = current_user.id
+    # Create a Seller object to get all products
+    seller = Seller(seller_id)
+
+    products = seller.get_all_products()
+
+    if request.method == 'POST':
+
+        quantity = request.form.get('quantity')
+        productid = request.form.get('product_id')
+
+        seller.add_existing_product(productid, quantity)
+
+        return redirect(url_for('sellers.get_seller_inventory', seller_id=seller_id))
+
+    return render_template('add_existing_product.html', products = products)
 
 @bp.route('/modify_product_quantity/<int:product_id>', methods=['GET', 'POST'])
 def modify_product_quantity(product_id):
     seller_id = current_user.id
     seller = Seller(seller_id)
 
-    if request.method == 'POST':
-        # Get the new quantity from the form
-        new_quantity = int(request.form.get('new_quantity'))
 
-        # Modify the product quantity
-        result = seller.modify_product_quantity(product_id, new_quantity)
+    # Get the new quantity from the form
+    new_quantity = int(request.form.get('new_quantity'))
 
-        if result:
-            flash('Product quantity modified successfully', 'success')
-            return redirect(url_for('sellers.get_seller_inventory', seller_id=seller_id))
-        else:
-            flash('Failed to modify product quantity', 'danger')
+    # Modify the product quantity
+    result = seller.modify_product_quantity(product_id, new_quantity)
 
-    # Redirect back to the inventory page
     return redirect(url_for('sellers.get_seller_inventory', seller_id=seller_id))
 
 

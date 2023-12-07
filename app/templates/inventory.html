@@ -37,8 +37,13 @@
 <h1 style="font-size: 1.2em;">Products for Sale</h1>
 
 <!-- Direct link to Add Product Form -->
-<a href="{{ url_for('sellers.add_product') }}" class="btn btn-primary flash-green" style="border: 1px solid #FFFF00; color: #FFFF00; font-size: 0.9em; margin-top: 10px;">
-  Add Product
+<a href="{{ url_for('sellers.make_new_product') }}" class="btn btn-primary flash-green" style="border: 1px solid #FFFF00; color: #FFFF00; font-size: 0.9em; margin-top: 10px;">
+  Make New Product
+</a>
+
+<!-- Direct link to Add Existing Product Form -->
+<a href="{{ url_for('sellers.add_existing_product') }}" class="btn btn-primary flash-green" style="border: 1px solid #FFFF00; color: #FFFF00; font-size: 0.9em; margin-top: 10px;">
+  Add Existing Product
 </a>
 
 <div class="table-container" style="overflow-x: auto; height: 300px; margin-top: 10px;">

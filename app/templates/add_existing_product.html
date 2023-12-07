@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Display existing products -->
+    <div class="products-container" style="overflow-x: auto; height: 300px; margin-top: 10px;">
+        <h2>Add Existing Products</h2>
+        <div class="scrollable-container">
+            <!-- Display products from the database here -->
+            <table class='table table-hover table-bordered container' style="font-size: 0.7em;">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ProductID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Average Rating</th>
+                        <th>Sell this Product?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <!-- Render each product -->
+                        <tr>
+                            <td>{{ product.productid }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>${{ product.price }}</td>
+                            <td>{{ product.description }}</td>
+                            <td>{{ product.category }}</td>
+                            <td>{{ product.avg_rating }}</td>
+
+                            <td>
+                                <form method="post" action="{{ url_for('sellers.add_existing_product') }}">
+                                    <input type="hidden" name="product_id" value="{{ product.productid }}">
+                                    <input type="number" name="quantity" min="1" value="1">
+                                    <button type="submit">Add to Inventory</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <style>
+        /* Your existing styles */
+
+        /* Full-screen width for the products container */
+        .products-container {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .scrollable-container {
+            max-height: 400px; /* Set a maximum height for the scrollable container */
+            overflow-y: auto; /* Enable vertical scrolling if needed */
+        }
+
+        /* Additional styles for product items if needed */
+        .product-item {
+            margin-bottom: 10px;
+        }
+    </style>
+{% endblock %}

@@ -2,6 +2,70 @@
 
 {% block content %}
 
+<style>
+    /* Adjusted CSS to center the supernova message */
+    .supernova {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .supernova p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff; /* Text color */
+            background-color: #f8d847; /* Background color */
+            padding: 20px;
+            border-radius: 8px;
+            opacity: 0;
+            animation: explode 6s; /* Delayed animation for 5 seconds */
+        }
+
+        .star-gif {
+            display: block;
+            margin-top: 10px; /* Adjust as needed */
+            max-width: 400px; /* Adjust the max-width for the GIF */
+            width: 100%; /* Make the width 100% to maintain aspect ratio */
+            height: auto; /* Auto-adjust the height */
+            margin: 0 auto; /* Center the GIF */
+            opacity: 0;
+            animation: explode-gif 5s; /* Delayed animation for 5 seconds */
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes explode-gif {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+</style>
+
+{% if new_sale_flag %}
+    <div class="supernova">
+        <p>Congrats Superstar! You've Sold a Product!</p>
+        <img src="../static/kepler-exploding-star-nasa.gif" alt="Exploding Star" class="star-gif" />
+    </div>
+{% endif %}
+
 <h1>Unfulfilled Order History</h1>
 
 <table class="table table-hover table-bordered container" style="font-size: 0.8em;">

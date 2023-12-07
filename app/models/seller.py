@@ -1,4 +1,7 @@
 from flask import current_app as app
+from flask import session
+
+from datetime import datetime, timedelta
 
 #reference the user module for the seller (seller a subset of users)
 from .user import User
@@ -30,6 +33,30 @@ class Seller:
             for row in rows
         ]
         return products
+
+    def get_all_products(self):
+        rows = app.db.execute('''
+                            SELECT *
+                            FROM Products
+                            WHERE productid NOT IN (
+                                SELECT p.productid
+                                FROM ProductsForSale pfs
+                                JOIN Products p ON pfs.productid = p.productid
+                                WHERE pfs.uid = :seller_id);
+                              ''', seller_id = self.uid)
+        products = [
+            {   
+                'productid': row[0],
+                'name': row[1],
+                'price': row[2],
+                'description': row[3],
+                'category': row[4],
+                'avg_rating': row[7]
+
+            }
+            for row in rows
+        ]
+        return products
     
     def modify_product_quantity(self, product_id, new_quantity):
     # Modify the product quantity in the inventory
@@ -44,14 +71,15 @@ class Seller:
                     DELETE FROM ProductsForSale
                     WHERE productid = :product_id
             ''', product_id=product_id)
-        
-        # Now delete the product from Products table
-        app.db.execute('''
-            DELETE FROM Products
-            WHERE productid = :product_id
-        ''', product_id=product_id)
 
-    def add_product(self, name, price, description, category, quantity, image_path, avg_rating=0):
+        #review from the cart now 
+        app.db.execute('''
+                    DELETE FROM LineItem
+                    WHERE productid = :product_id AND sellerid = :seller_id AND buyStatus = FALSE
+            ''', product_id=product_id, seller_id = self.uid)
+
+
+    def make_new_product(self, name, price, description, category, quantity, image_path, avg_rating=0):
         # Determine the availability based on the quantity
         quantity = int(quantity)
         available = quantity > 0
@@ -62,7 +90,29 @@ class Seller:
             VALUES (:name, :price, :description, :category, :image_path, :available, :avg_rating)
         ''', name=name, price=price, description=description, category=category, image_path=image_path, available=available, avg_rating=avg_rating)
 
+        # Execute the SELECT query
+        result = app.db.execute('''
+            SELECT productid
+            FROM Products
+            WHERE name = :name
+        ''', name=name)
         
+        # Fetch the first row from the result
+        productid = result[0][0]
+
+        # Insert the product into the ProductsForSale table
+        app.db.execute('''
+            INSERT INTO ProductsForSale (productid, uid, quantity)
+            VALUES (:productid, :seller_id, :quantity)
+        ''', productid=productid, seller_id=self.uid, quantity=quantity)
+
+    def add_existing_product(self, productid, quantity):
+
+        # Insert the new product into the ProductsForSale table
+        app.db.execute('''
+            INSERT INTO ProductsForSale (productid, uid, quantity)
+            VALUES (:productid, :seller_id, :quantity)
+        ''', productid=productid, seller_id=self.uid, quantity=quantity)
 
     def get_fulfilledOrder_history(self):
         # Retrieve the seller's fulfilled order history
@@ -96,6 +146,19 @@ class Seller:
             ORDER BY li.time_purchased DESC;
         ''', seller_id=self.uid)
 
+        current_unfulfilled_count = len(rows)
+
+        # Get the previously stored unfulfilled count
+        prev_unfulfilled_count = session.get('prev_unfulfilled_count', 0)
+
+        # Compare the current count with the previous count
+        if current_unfulfilled_count > prev_unfulfilled_count:
+            # Set a session flag indicating a new sale
+            session['new_sale_flag'] = True
+
+        # Store the current unfulfilled count for the next comparison
+        session['prev_unfulfilled_count'] = current_unfulfilled_count
+
         order_history = [
             {
                 'quantities': row[0],
@@ -114,6 +177,50 @@ class Seller:
             SET fulfilledStatus = TRUE
             WHERE lineid = :line_id 
         ''', line_id=line_id)
+
+    from datetime import datetime, timedelta
+
+    def get_top_seller_of_month(self):
+        # Calculate the date one month ago from today
+        one_month_ago = datetime.now() - timedelta(days=30)
+
+        # Retrieve the current top seller
+        current_top_seller_row = app.db.execute('''
+            SELECT sellerid
+            FROM Sellers
+            WHERE isStarseller = TRUE
+            LIMIT 1;
+        ''')
+
+        current_top_seller = current_top_seller_row.fetchone()
+
+        # If there is a current top seller, update their isStarseller attribute to False
+        if current_top_seller:
+            current_top_seller_id = current_top_seller[0]
+            app.db.execute('UPDATE Sellers SET isStarseller = FALSE WHERE sellerid = :seller_id;', seller_id=current_top_seller_id)
+
+        # Retrieve the counts of fulfilled orders for each seller in the past month
+        rows = app.db.execute('''
+            SELECT li.sellerid, COUNT(li.orderid) AS order_count
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            WHERE li.fulfilledStatus = TRUE AND li.time_purchased >= :one_month_ago
+            GROUP BY li.sellerid
+            ORDER BY order_count DESC
+            LIMIT 1;
+        ''', one_month_ago=one_month_ago)
+
+        top_seller = rows.fetchone()
+
+        if top_seller:
+            # Get the seller ID and order count
+            seller_id, order_count = top_seller
+
+            # Add a star to the new top seller's profile
+            app.db.execute('UPDATE Sellers SET isStarseller = TRUE, stars = stars + 1 WHERE sellerid = :seller_id;', seller_id=seller_id)
+
+        return top_seller
+
 
 
 
