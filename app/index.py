@@ -15,11 +15,14 @@ bp = Blueprint('index', __name__)
 @bp.route('/', methods=['POST', 'GET'])
 def index():
 
-    # get all available products for sale:
+    # get page for pagination
     page = int(request.args.get('page', 1))
-    per_page = 10 # can make this adjustable in the future
+    per_page = 10 # can make this adjustable in the future, displays given amount of products on a page
 
+    # get sorting preferences
     sort_by = request.args.get('sort_by', default='None')
+
+    # check sorting preferences to prohibit vulnerability and assign new variable to something more easily passed to a query
     if type(sort_by) is str and sort_by == "priceLow":
         sort_by_column = "price ASC"
     elif type(sort_by) is str and sort_by == "priceHigh":
@@ -31,11 +34,13 @@ def index():
     else:
         sort_by_column = None
     
+    # get ratings preferences
     rating = request.args.get('rating', default=0)
     rate = int(rating)
 
+    # get availability status preferences
     if request.method == 'POST':
-        # Check if the checkbox was submitted and update the in_stock variable accordingly
+        # check if the checkbox was submitted and update in_stock variable
         if 'in_stock' in request.form:
             in_stock = True
         else:
@@ -43,28 +48,24 @@ def index():
     else:
         in_stock = request.args.get('in_stock')
 
-    
+    # if the user only wants to see available products...
     if in_stock:
         available = True
-        products = Product.get_paginated_avail(sort_by_column, page, rate, available)
+        products = Product.get_paginated_avail(sort_by_column, page, rate, available) # only returns available products
         total = int(Product.get_num_products_avail(rate, available))
     else:
         total = int(Product.get_num_products(rate))
-        products = Product.get_paginated(sort_by_column, page, rate)
+        products = Product.get_paginated(sort_by_column, page, rate) # does not take into account availability status
     
-    max_page = int(math.ceil(total / per_page))
-    categories = Product.get_categories()
-    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
+    max_page = int(math.ceil(total / per_page)) # calculate the last page of pagination
+    categories = Product.get_categories() # get a list of categories to display in the dropdown
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories] # remove formatting from category list
 
-    productid = products[0].get('productid')
     if current_user.is_authenticated:
         buy_again = Product.get_purchases_by_uid(current_user.id)
-        if buy_again == productid:
-            buy_again_status = True
-        else:
-            buy_again_status = False
+        product_ids = [product.get("productid") for product in buy_again]
         return render_template('index.html',
-                           buy_status=buy_again_status, rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
+                           product_ids=product_ids, rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
 
 
 

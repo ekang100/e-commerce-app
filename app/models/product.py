@@ -13,6 +13,7 @@ class Product:
         self.avg_rating = avg_rating
         #self.seller_id = seller_id
 
+    # get product information for a given productid
     @staticmethod
     def get(productid):
         rows = app.db.execute('''
@@ -23,6 +24,7 @@ WHERE productid = :productid
                               productid=productid)
         return Product(*(rows[0])) if rows is not None else None
 
+    # get all available products
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
@@ -33,6 +35,7 @@ WHERE available = :available
                               available=available)
         return [Product(*row) for row in rows]
     
+    # get the number of products with avg_rating greater than or equal to input
     @staticmethod
     def get_num_products(rating):
         rows = app.db.execute('''
@@ -43,6 +46,7 @@ WHERE avg_rating >= :rating
         total = rows[0][0] if rows else 0
         return total
     
+    # get number of products with avg_rating greater than or equal to input and depending on available
     @staticmethod
     def get_num_products_avail(rating, available):
         rows = app.db.execute('''
@@ -54,12 +58,12 @@ AND available =:available
         total = rows[0][0] if rows else 0
         return total
 
-    
+    # get paginated product information with avg_rating greater than or equal to input and sorted by input
     @staticmethod
     def get_paginated(sort_by_column, page, rating):
         per_page = 10
         offset = (page - 1) * per_page
-        if sort_by_column == "ASC" or sort_by_column == "DESC":
+        if sort_by_column == "ASC" or sort_by_column == "DESC": # columns for sorting by popularity, named for ease of use in query
                 rows = app.db.execute(f'''
                     SELECT Products.*, SUM(LineItem.quantities) AS total_quantity
                     FROM Products
@@ -83,6 +87,7 @@ AND available =:available
                                 per_page=per_page, offset=offset, rating=rating)
             return [{"productid": row[0], "name": row[1], "price": row[2], "description": row[3], "category": row[4], "image_path": row[5], "available": row[6], "avg_rating": row[7]} for row in rows]
     
+    # same as above, but take into account availability status
     @staticmethod
     def get_paginated_avail(sort_by_column, page, rating, available):
         per_page = 10
@@ -113,7 +118,7 @@ AND available =:available
                                 per_page=per_page, offset=offset, rating=rating, available=available)
             return [{"productid": row[0], "name": row[1], "price": row[2], "description": row[3], "category": row[4], "image_path": row[5], "available": row[6], "avg_rating": row[7]} for row in rows]
 
-
+    # count how many products are returned by a given search query
     @staticmethod
     def search_count(query, rating):
         rows = app.db.execute(f'''
@@ -124,6 +129,7 @@ AND available =:available
         total = rows[0][0] if rows else 0
         return total
     
+    # search for a product given a query, sort and filter as needed
     @staticmethod
     def search_product(sort_by_column, query, page, rating, per_page=10):
         offset = (page - 1) * per_page
@@ -154,6 +160,7 @@ AND available =:available
             print(str(e))
             return None
     
+    # count how many products are returned for a given search query, taking into account availability status
     @staticmethod
     def search_count_avail(query, rating, available):
         rows = app.db.execute(f'''
@@ -164,6 +171,7 @@ AND available =:available
         total = rows[0][0] if rows else 0
         return total
     
+    # search for products that meet a given query, sort and filter as needed, and take into account availability status
     @staticmethod
     def search_product_avail(sort_by_column, query, page, rating, available, per_page=10):
         offset = (page - 1) * per_page
@@ -194,7 +202,8 @@ AND available =:available
         except Exception as e:
             print(str(e))
             return None
-        
+    
+    # count the total sales made (across all sellers) for a given productid
     @staticmethod
     def count_total_sales(productid):
         rows = app.db.execute('''
@@ -204,7 +213,8 @@ AND available =:available
                             GROUP BY productid''', productid=productid)
         total = rows[0][0] if rows else 0
         return total
-        
+    
+    # count how many products are returned for a certain category
     @staticmethod
     def category_search_count(category, rating):
         rows = app.db.execute('''
@@ -215,6 +225,7 @@ AND available =:available
         total = rows[0][0] if rows else 0
         return total
     
+    # return a list of categories for the dropdown menu
     @staticmethod
     def get_categories():
         rows = app.db.execute('''
@@ -224,6 +235,7 @@ FROM Products
                             )
         return [str(row) for row in rows]
     
+    # search for products that are in a given category, sort and filter as needed
     @staticmethod
     def search_categories(sort_by_column, category, page, rating, per_page=10):
         offset = (page - 1) * per_page
@@ -254,6 +266,7 @@ FROM Products
             print(str(e))
             return None
         
+    # count how many products are returned for a certain category, taking into account availability status
     @staticmethod
     def category_search_count_avail(category, rating, available):
         rows = app.db.execute('''
@@ -264,6 +277,7 @@ FROM Products
         total = rows[0][0] if rows else 0
         return total
         
+    # search products that are within given category, taking into account availability status - filter and sort as needed
     @staticmethod
     def search_categories_avail(sort_by_column, category, page, rating, available, per_page=10):
         offset = (page - 1) * per_page
@@ -295,8 +309,9 @@ FROM Products
             print(str(e))
             return None
         
+    # determine if a user has bought a product before but only display "buy again" if product is in stock
     @staticmethod
-    def get_purchases_by_uid(uid):
+    def get_purchases_by_uid(uid, available=True):
         rows = app.db.execute('''
 SELECT P.productid
 FROM Cart C, Products P, LineItem L
@@ -304,14 +319,14 @@ WHERE C.buyerid = :uid
 AND C.cartid = L.cartid
 AND L.buyStatus = TRUE
 AND L.productid = P.productid
+AND P.available = :available
 ''',
-                              uid=uid
+                              uid=uid, available=available
                               )
-        pid = rows[0][0] if rows else 0
-        return pid
+        return [{"productid": row[0]} for row in rows]
     
 
-
+    # update availability of a product (ex: seller decrements quantity, buyer purchases all of them)
     @staticmethod
     def update_availability(productid, available):
      rows = app.db.execute('''
