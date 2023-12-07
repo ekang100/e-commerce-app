@@ -44,10 +44,14 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Already a user with this email.')
 
 # Define a form for updating user information.
-class UpdateForm(FlaskForm):
+class UserForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
     address = StringField('Address', validators=[DataRequired()])
+
+    submit = SubmitField('Update')
+        
+class EmailForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
 
     submit = SubmitField('Update')
@@ -187,7 +191,7 @@ def account():
 #Change name or address (don't need to be unique)
 @bp.route('/update_name_address', methods=['GET', 'POST'])
 def update_name_address():
-    form = UpdateForm()
+    form = UserForm()
     #checks that name contains only letters upper or lowercase
     if request.method == 'POST':
         if User.update_name_address(current_user.id,
@@ -200,7 +204,7 @@ def update_name_address():
 #Change email (must be unique)
 @bp.route('/change_email', methods=['GET', 'POST'])
 def change_email():
-    form = UpdateForm()
+    form = EmailForm()
     # if request.method == 'POST':
     if form.validate_on_submit():
         if User.change_email(current_user.id,

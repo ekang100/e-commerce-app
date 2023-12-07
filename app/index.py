@@ -108,10 +108,11 @@ def index2():
 
         # check if verified and display total saved from verification since verification date
         if current_user.isVerified:
-            result = Purchase.get_all_by_uid_price_since(current_user.id, current_user.verifiedDate)
+            result = Purchase.get_all_by_uid_price_since_saved(current_user.id, current_user.verifiedDate)
             print(result)
             if len(result) > 0:
                 total_saved = sum(item['price'] for item in result)
+                total_saved = round(float(total_saved)*0.1, 2)
             else:
                 #if nothing bought since verification return 0
                 total_saved = 0.00
