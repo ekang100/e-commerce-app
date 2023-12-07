@@ -32,7 +32,7 @@
                             <td>
                                 <form method="post" action="{{ url_for('sellers.add_existing_product') }}">
                                     <input type="hidden" name="product_id" value="{{ product.productid }}">
-                                    <input type="number" name="quantity" min="1" value="1">
+                                    <input type="number" name="quantity" min="0" value="0">
                                     <button type="submit">Add to Inventory</button>
                                 </form>
                             </td>
