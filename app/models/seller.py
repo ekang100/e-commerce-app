@@ -117,7 +117,7 @@ class Seller:
     def get_fulfilledOrder_history(self):
         # Retrieve the seller's fulfilled order history
         rows = app.db.execute('''
-            SELECT li.quantities, li.time_purchased, u.address
+            SELECT li.quantities, li.time_purchased, u.address, li.present
             FROM LineItem li
             JOIN OrdersInProgress o ON li.orderid = o.orderid
             JOIN Users u ON o.buyerid = u.id
@@ -129,7 +129,8 @@ class Seller:
             {
                 'quantities': row[0],
                 'time_purchased': row[1],
-                'address': row[2]
+                'address': row[2],
+                'present': row[3]
             }
             for row in rows
         ]
@@ -138,7 +139,7 @@ class Seller:
     def get_unfulfilledOrder_history(self):
         # Retrieve the seller's fulfilled order history
         rows = app.db.execute('''
-            SELECT li.quantities, li.time_purchased, u.address, li.lineid
+            SELECT li.quantities, li.time_purchased, u.address, li.lineid, li.present
             FROM LineItem li
             JOIN OrdersInProgress o ON li.orderid = o.orderid
             JOIN Users u ON o.buyerid = u.id
@@ -164,7 +165,8 @@ class Seller:
                 'quantities': row[0],
                 'time_purchased': row[1],
                 'address': row[2],
-                'itemid': row[3]
+                'itemid': row[3],
+                'present': row[4]
             }
             for row in rows
         ]
