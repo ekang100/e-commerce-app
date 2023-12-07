@@ -34,14 +34,14 @@ def search_keywords():
     rate = int(rating)
     sort_by_column = sort_assignment(sort_by)
   
-    if request.method == 'POST':
+    #if request.method == 'POST':
         # Check if the checkbox was submitted and update the in_stock variable accordingly
-        if 'in_stock' in request.form:
-            in_stock = True
-        else:
-            in_stock = False
-    else:
-        in_stock = request.args.get('in_stock')
+    #    if 'in_stock' in request.form:
+    #        in_stock = True
+    #    else:
+    #        in_stock = False
+    #else:
+    in_stock = request.args.get('in_stock')
     
     try:
         if in_stock:
@@ -81,14 +81,7 @@ def search_category():
     rate = int(rating)
     sort_by = request.args.get('sort_by', default='None')
     sort_by_column = sort_assignment(sort_by)
-    if request.method == 'POST':
-        # Check if the checkbox was submitted and update the in_stock variable accordingly
-        if 'in_stock' in request.form:
-            in_stock = True
-        else:
-            in_stock = False
-    else:
-        in_stock = request.args.get('in_stock')
+    in_stock = request.args.get('in_stock')
     try:
     
         if in_stock:

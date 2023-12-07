@@ -4,7 +4,7 @@
 
 <form action="/" method="get">
   <input type="hidden" name="rating" value="{{ rating }}">
-  <input type="hidden" name="in_stock" value="{{ in_stock }}">
+  <input type="hidden" name="in_stock_filter" value="{{ in_stock }}">
   <label for="sort_by">Sort by:</label>
   <select name="sort_by" id="sort_by">
       <option value="None">Select Sorting</option>
@@ -18,7 +18,7 @@
 
 <form action="/" method="get">
   <input type="hidden" name="sort_by" value="{{ sort_by }}">
-  <input type="hidden" name="in_stock" value="{{ in_stock }}">
+  <input type="hidden" name="in_stock_filter" value="{{ in_stock }}">
   <label for="rating">Select Avg. Rating:</label>
   <select name="rating" id="rating">
       <option value="0">None</option>
@@ -32,6 +32,8 @@
 </form>
 
 <form action="/" method="get">
+  <input type="hidden" name="sort_by" value="{{ sort_by }}">
+  <input type="hidden" name="rating" value="{{ rating }}">
   <label for="in_stock">Only show available products</label>
   <input type="checkbox" id="in_stock" name="in_stock" {% if in_stock %}checked{% endif %}>
   <input type="submit" value="Show Products">

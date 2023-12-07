@@ -159,7 +159,7 @@ AND available =:available
         rows = app.db.execute(f'''
             SELECT COUNT(*)
             FROM Products
-            WHERE LOWER(name) LIKE LOWER(:query) OR LOWER(description) LIKE LOWER(:query) AND avg_rating >= :rating AND available =:available
+            WHERE (LOWER(name) LIKE LOWER(:query) OR LOWER(description) LIKE LOWER(:query)) AND avg_rating >= :rating AND available =:available
         ''', query='%' + query + '%', rating=rating, available=available)
         total = rows[0][0] if rows else 0
         return total
