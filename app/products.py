@@ -54,11 +54,12 @@ def search_keywords():
                 buy_again_status = True
             else:
                 buy_again_status = False
+            return render_template('search_product_results.html', buy_status=buy_again_status, in_stock=in_stock, rating=rating, sort_by=sort_by, products=products, page=page, total=total, query=query, per_page=per_page, categories=clean_text)
         if len(products) == 0:
             return render_template('search_product_results.html')
     except Exception:
         return 'No products found lol'
-    return render_template('search_product_results.html', buy_status=buy_again_status, in_stock=in_stock, rating=rating, sort_by=sort_by, products=products, page=page, total=total, query=query, per_page=per_page, categories=clean_text)
+    return render_template('search_product_results.html', in_stock=in_stock, rating=rating, sort_by=sort_by, products=products, page=page, total=total, query=query, per_page=per_page, categories=clean_text)
 
 @bp.route('/search_category_results', methods=['GET', 'POST'])
 def search_category():
@@ -88,11 +89,12 @@ def search_category():
                 buy_again_status = True
             else:
                 buy_again_status = False
+            return render_template('search_category_results.html', buy_status=buy_again_status, rating=rating, sort_by=sort_by, selected_category=category, products=products, page=page, categories=clean_text, total=total, per_page=per_page)
         if len(products) == 0:
             return render_template('search_category_results.html')
     except Exception:
         return 'No products found AH'
-    return render_template('search_category_results.html', buy_status=buy_again_status, rating=rating, sort_by=sort_by, selected_category=category, products=products, page=page, categories=clean_text, total=total, per_page=per_page)
+    return render_template('search_category_results.html', rating=rating, sort_by=sort_by, selected_category=category, products=products, page=page, categories=clean_text, total=total, per_page=per_page)
 
 @bp.route('/product/<int:productid>')
 def product_detail(productid):

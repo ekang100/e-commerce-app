@@ -63,11 +63,14 @@ def index():
             buy_again_status = True
         else:
             buy_again_status = False
+        return render_template('index.html',
+                           buy_status=buy_again_status, rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
+
 
 
     # render the page by adding information to the index.html file
     return render_template('index.html',
-                           buy_status=buy_again_status, rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
+                           rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
 
 @bp.route('/account')
 def index2():
