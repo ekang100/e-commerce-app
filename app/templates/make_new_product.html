@@ -21,7 +21,15 @@
                 </div>
                 <div class="form-group">
                     <label for="category">Category</label>
-                    <input type="text" class="form-control" id="category" name="category" required>
+                    <select class="form-control" id="category" name="category" required>
+                        {% for category in categories %}
+                            {% if category == selected_category %}
+                                <option value="{{ selected_category }}" selected>{{ selected_category }}</option>
+                            {% else %}
+                                <option value="{{ category }}">{{ category }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="image_path">Image Path</label>

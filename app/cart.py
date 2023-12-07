@@ -93,7 +93,8 @@ def buyerOrder():
         # for order in allOrderIDs:
         #     lineitems.append(LineItem.get_all_lineitems_by_orderid(order))
 
-
+        categories = Product.get_categories() # get categories to display in dropdown
+        clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories] # reformat categories
 
         #post for submitting entire cart
         if request.method == 'POST': 
@@ -127,7 +128,7 @@ def buyerOrder():
                         print(errorMessageString)
                         can_order = True
                         errorMessageString = 'Please input a valid dollar tip amount.'
-                        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
+                        return render_template('cart.html', categories=clean_text, singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
                         
 
                     can_order = True
@@ -190,7 +191,7 @@ def buyerOrder():
                         singleCart = Cart.get_cart_from_buyerid(current_user.id)
                         print(errorMessageString)
                         can_order = True
-                        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
+                        return render_template('cart.html', categories=clean_text, singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
                 
                 #if constraints have been met
                     else:
@@ -274,7 +275,7 @@ def buyerOrder():
         allOrdersByUser = Orders.get_all_orderIDs_by_buyerid(current_user.id)
 
 
-        return render_template('buyer-order.html', allItemsBought = allItemsBought, allOrdersByUser = allOrdersByUser)
+        return render_template('buyer-order.html', categories=clean_text, allItemsBought = allItemsBought, allOrdersByUser = allOrdersByUser)
     else:
         return jsonify({}), 404
     

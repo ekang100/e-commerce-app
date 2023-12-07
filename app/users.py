@@ -281,7 +281,9 @@ def public_profile(account_id):
         sell_stat = info[0][4]
         ver_stat = info[0][5]
         seller_reviews = Reviews.get_reviews_by_seller_id(account_id) if sell_stat else None
-        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat, seller_reviews=seller_reviews)
+        categories = Product.get_categories() # get categories to display in dropdown
+        clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories] # reformat categories
+        return render_template('user_profile.html', categories=clean_text, user=info, sell_stat=sell_stat, ver_stat=ver_stat, seller_reviews=seller_reviews)
     return redirect(url_for('users.account'))
 
 #Added isVerified feature costing $500 and get 10% off 
