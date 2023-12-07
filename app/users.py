@@ -250,8 +250,8 @@ def public_profile(account_id):
         ver_stat = info[0][5]
         seller_reviews = Reviews.get_reviews_by_seller_id(account_id) if sell_stat else None
         seller_reviews_summary = Reviews.get_seller_rating_summary(account_id)
-        super_seller_status = Reviews.get_five_star_review_count(account_id)
-        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat, seller_reviews=seller_reviews, seller_rating_summary=seller_reviews_summary, super_seller_status=super_seller_status)
+        # five_star_review_count = Reviews.get_five_star_review_count(account_id)
+        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat, seller_reviews=seller_reviews, seller_rating_summary=seller_reviews_summary)
     return redirect(url_for('users.account'))
 
 #Added isVerified feature costing $500 and get 10% off 

@@ -216,8 +216,34 @@ ORDER BY R.date DESC
                 WHERE seller_id = :seller_id AND rating = 5
             '''
             result = app.db.execute(query, seller_id=seller_id)
-            return result.fetchone()[0] if result else 0
+            return result[0] if result else 0
         except Exception as e:
             raise ValueError(f"Error fetching five-star review count: {str(e)}")
+        
+    @staticmethod
+    def get_all_reviews_by_user_id(user_id):
+        try:
+            query = '''
+                SELECT R.entity_id, R.type, COALESCE(P.name, U.firstname || ' ' || U.lastname) AS reviewed_entity,
+                       R.rating, R.comments, R.date
+                FROM Reviews R
+                LEFT JOIN Products P ON R.product_id = P.productid
+                LEFT JOIN Users U ON R.seller_id = U.id
+                WHERE R.uid = :user_id
+                ORDER BY R.date DESC
+            '''
+            rows = app.db.execute(query, user_id=user_id)
 
+            # Construct a list of review information
+            reviews = [{
+                'id': row[0],
+                'type': row[1],
+                'product_or_seller_name': row[2],
+                'rating': row[3],
+                'comments': row[4],
+                'date': row[5]
+            } for row in rows]
+            return reviews
+        except Exception as e:
+            raise ValueError(f"Error fetching user reviews: {str(e)}")
 

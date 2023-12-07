@@ -6,6 +6,7 @@ import math
 
 from .models.product import Product
 from .models.purchase import Purchase
+from .models.review import Reviews
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -33,6 +34,7 @@ def index():
 @bp.route('/account')
 def index2():
     # find the products current user has bought:
+    user_reviews = Reviews.get_all_reviews_by_user_id(current_user.id)
     if current_user.is_authenticated:
         # Get all products depending on how user specifies sorting
         if request.args.get('sort', 'date_desc') is not None:
@@ -75,4 +77,4 @@ def index2():
         purchases = None
         total_saved = 0.00
     return render_template('account.html',
-                           purchase_history=purchases, total_saved=total_saved)
+                           purchase_history=purchases, total_saved=total_saved, user_reviews=user_reviews)

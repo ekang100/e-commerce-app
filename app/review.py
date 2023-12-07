@@ -86,10 +86,6 @@ def post_review():
             flash('Missing data', 'error')
             redirect_url = url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id)
             return redirect(redirect_url)
-        if review_type == 'seller' and rating == 5:
-            count = Reviews.get_five_star_review_count(seller_id)
-            User.update_five_star_review_count(seller_id, count)
-
         try:
             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)
             flash('Review added successfully', 'success')
@@ -167,4 +163,10 @@ def vote_review(review_id, vote):
 
 
 
-
+# some html for Super Seller that doesn't work yet, but saving because comments in html don't work
+#     <!-- {% if user.five_star_review_count >= 1 %}
+#     <div class="super-seller-badge">
+#         <h3 style="color: green;">Super Seller!</h3>
+#         <img src="app/static/super_seller.png" alt="Super Seller Symbol">
+#     </div>
+# {% endif %} -->
