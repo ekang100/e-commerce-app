@@ -268,3 +268,16 @@ AND L.productid = P.productid
                               )
         pid = rows[0][0] if rows else 0
         return pid
+    
+
+
+    @staticmethod
+    def update_availability(productid, available):
+     rows = app.db.execute('''
+UPDATE Products
+SET available = :available
+WHERE productid = :productid
+''',
+                              productid=productid, available=available)
+     return None
+    

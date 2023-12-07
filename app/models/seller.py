@@ -91,8 +91,8 @@ class Seller:
     def remove_product(self, product_id):
         app.db.execute('''
                     DELETE FROM ProductsForSale
-                    WHERE productid = :product_id 
-            ''', product_id=product_id)
+                    WHERE productid = :product_id AND uid= :seller_id
+            ''', product_id=product_id, seller_id =self.uid)
 
         #delete in the cart now 
         app.db.execute('''
@@ -159,6 +159,7 @@ class Seller:
             VALUES (:productid, :seller_id, :quantity)
         ''', productid=productid, seller_id=self.uid, quantity=quantity)
 
+        if int (quantity) > 0: 
         if int (quantity) > 0: 
             app.db.execute('''
                 UPDATE Products
