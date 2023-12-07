@@ -160,6 +160,7 @@ class Seller:
         ''', productid=productid, seller_id=self.uid, quantity=quantity)
 
         if int (quantity) > 0: 
+        if int (quantity) > 0: 
             app.db.execute('''
                 UPDATE Products
                 SET available = TRUE
