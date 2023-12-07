@@ -76,13 +76,14 @@
           <td>
             <!-- Modify Quantity Form -->
             <form method="post" action="{{ url_for('sellers.modify_product_quantity', product_id=product.productid) }}">
-              <label for="new_quantity_{{ loop.index }}">New Quantity:</label>
-              <input type="number" id="new_quantity_{{ loop.index }}" name="new_quantity" required>
-              <button type="submit" class="btn btn-warning flash-yellow" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.7em;">
-                Modify
-              </button>
+                <label for="new_quantity_{{ loop.index }}">New Quantity:</label>
+                <input type="number" id="new_quantity_{{ loop.index }}" name="new_quantity" required min="0">
+                <button type="submit" class="btn btn-warning flash-yellow" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.7em;">
+                    Modify
+                </button>
             </form>
           </td>
+        
           
           <td>
             <!-- Remove Button -->

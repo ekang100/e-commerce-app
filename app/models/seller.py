@@ -66,17 +66,62 @@ class Seller:
             WHERE productid = :product_id AND uid = :seller_id
         ''', new_quantity=new_quantity, product_id=product_id, seller_id=self.uid)
 
+        # Check if the sum of quantities is greater than 0 for the given product
+        result = app.db.execute('''
+            SELECT COALESCE(SUM(quantity), 0)
+            FROM ProductsForSale
+            WHERE productid = :product_id
+        ''', product_id=product_id)
+
+        total_quantity = result[0][0]
+
+        if total_quantity > 0:
+            app.db.execute('''
+                UPDATE Products
+                SET available = TRUE
+                WHERE productid = :product_id 
+            ''', product_id=product_id)
+        else:
+            app.db.execute('''
+                UPDATE Products
+                SET available = FALSE
+                WHERE productid = :product_id 
+            ''', product_id=product_id)
+
     def remove_product(self, product_id):
         app.db.execute('''
                     DELETE FROM ProductsForSale
                     WHERE productid = :product_id
             ''', product_id=product_id)
 
-        #review from the cart now 
+        #delete associated reviews now 
         app.db.execute('''
                     DELETE FROM LineItem
                     WHERE productid = :product_id AND sellerid = :seller_id AND buyStatus = FALSE
             ''', product_id=product_id, seller_id = self.uid)
+        
+        #update availability
+        # Check if the sum of quantities is greater than 0 for the given product
+        result = app.db.execute('''
+            SELECT COALESCE(SUM(quantity), 0)
+            FROM ProductsForSale
+            WHERE productid = :product_id
+        ''', product_id=product_id)
+
+        total_quantity = result[0][0]
+
+        if total_quantity > 0:
+            app.db.execute('''
+                UPDATE Products
+                SET available = TRUE
+                WHERE productid = :product_id 
+            ''', product_id=product_id)
+        else:
+            app.db.execute('''
+                UPDATE Products
+                SET available = FALSE
+                WHERE productid = :product_id 
+            ''', product_id=product_id)
 
 
     def make_new_product(self, name, price, description, category, quantity, image_path, avg_rating=0):
@@ -114,6 +159,14 @@ class Seller:
             VALUES (:productid, :seller_id, :quantity)
         ''', productid=productid, seller_id=self.uid, quantity=quantity)
 
+        if quantity > 0: 
+            app.db.execute('''
+                UPDATE Products
+                SET available = TRUE
+                WHERE productid = :product_id 
+            ''', product_id=productid)
+
+
     def get_fulfilledOrder_history(self):
         # Retrieve the seller's fulfilled order history
         rows = app.db.execute('''
@@ -134,6 +187,7 @@ class Seller:
             }
             for row in rows
         ]
+
         return order_history
     
     def get_unfulfilledOrder_history(self):
