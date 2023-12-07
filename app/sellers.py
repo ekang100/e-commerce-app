@@ -20,9 +20,41 @@ def get_seller_inventory(seller_id):
 def get_fulfilled_order_history(seller_id):
     seller = Seller(seller_id)
     order_history = seller.get_fulfilledOrder_history()  # Use the get_fulfilledOrder_history method
+
+    if request.args.get('sort') is not None:
+        sort_order = request.args.get('sort')
+        if sort_order == 'date_desc':
+            order_history = seller.order_fulfilledOrder_history_desc()
+        #sort by ascending date
+        elif sort_order == 'date_asc':
+            order_history = seller.order_fulfilledOrder_history_asc()
+        #sort by quantity
+        elif sort_order == 'quantityLow':
+            order_history = seller.order_fulfilledOrder_history_quantitiesLH()
+        elif sort_order == 'quantityHigh':
+            order_history = seller.order_fulfilledOrder_history_quantitiesHL()
+        elif sort_order == 'priceLow':
+            order_history = seller.order_fulfilledOrder_history_pricesLH()
+        elif sort_order == 'priceHigh':
+            order_history = seller.order_fulfilledOrder_history_pricesHL()
+        elif sort_order == 'Home Improvement':
+            order_history = seller.get_fulfilledOrder_history_category('Home Improvement')
+        elif sort_order == 'Electronics':
+            order_history = seller.get_fulfilledOrder_history_category('Electronics')
+        elif sort_order == 'Health&Personal Care':
+            order_history = seller.get_fulfilledOrder_history_category('Health&Personal Care')
+        elif sort_order == 'Office Products':
+            order_history = seller.get_fulfilledOrder_history_category('Office Products')
+        elif sort_order == 'Computers&Accessories':
+            order_history = seller.get_fulfilledOrder_history_category('Computers&Accessories')
+        elif sort_order == 'Toys & Games':
+            order_history = seller.get_fulfilledOrder_history_category('Toys & Games')
+        elif sort_order == 'Home&Kitchen':
+            order_history = seller.get_fulfilledOrder_history_category('Home&Kitchen')
+
     if order_history:
         # Handle the case when there's fulfilled order history
-        return render_template('fulfilled_order_history.html', order_history=order_history)
+        return render_template('fulfilled_order_history.html', order_history=order_history, seller_id = seller_id)
     else:
         return '''
             <script>
@@ -38,10 +70,42 @@ def get_unfulfilled_order_history(seller_id):
     order_history = seller.get_unfulfilledOrder_history()  # Use the get_fulfilledOrder_history method
     categories = Product.get_categories() # get categories to display in dropdown
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories] # reformat categories
+
+    if request.args.get('sort') is not None:
+        sort_order = request.args.get('sort')
+        if sort_order == 'date_desc':
+            order_history = seller.order_unfulfilledOrder_history_desc()
+        #sort by ascending date
+        elif sort_order == 'date_asc':
+            order_history = seller.order_unfulfilledOrder_history_asc()
+        #sort by quantity
+        elif sort_order == 'quantityLow':
+            order_history = seller.order_unfulfilledOrder_history_quantitiesLH()
+        elif sort_order == 'quantityHigh':
+            order_history = seller.order_unfulfilledOrder_history_quantitiesHL()
+        elif sort_order == 'priceLow':
+            order_history = seller.order_unfulfilledOrder_history_pricesLH()
+        elif sort_order == 'priceHigh':
+            order_history = seller.order_unfulfilledOrder_history_pricesHL()
+        elif sort_order == 'Home Improvement':
+            order_history = seller.get_unfulfilledOrder_history_category('Home Improvement')
+        elif sort_order == 'Electronics':
+            order_history = seller.get_unfulfilledOrder_history_category('Electronics')
+        elif sort_order == 'Health&Personal Care':
+            order_history = seller.get_unfulfilledOrder_history_category('Health&Personal Care')
+        elif sort_order == 'Office Products':
+            order_history = seller.get_unfulfilledOrder_history_category('Office Products')
+        elif sort_order == 'Computers&Accessories':
+            order_history = seller.get_unfulfilledOrder_history_category('Computers&Accessories')
+        elif sort_order == 'Toys & Games':
+            order_history = seller.get_unfulfilledOrder_history_category('Toys & Games')
+        elif sort_order == 'Home&Kitchen':
+            order_history = seller.get_unfulfilledOrder_history_category('Home&Kitchen')
+
     if order_history:
         # Handle the case when there's fulfilled order history
         new_sale_flag = session.pop('new_sale_flag', False)  # Pop the flag and default to False if not present
-        return render_template('unfulfilled_order_history.html', categories=clean_text, order_history=order_history, new_sale_flag=new_sale_flag)
+        return render_template('unfulfilled_order_history.html', categories=clean_text, order_history=order_history, new_sale_flag=new_sale_flag, seller_id = seller_id)
     else:
         # Use JavaScript alert for the message
         return '''

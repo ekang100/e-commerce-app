@@ -4,11 +4,34 @@
 
 <h1>Fulfilled Order History</h1>
 
+<form action="{{ url_for('sellers.get_fulfilled_order_history', seller_id=seller_id) }}" method="get">
+
+    <label for="sort">Sort by:</label>
+    <select name="sort" id="sort" onchange="this.form.submit()">
+        <option value="date_desc" {% if request.args.get('sort') == 'date_desc' %}selected{% endif %}>Most Recent Date</option>
+        <option value="date_asc" {% if request.args.get('sort') == 'date_asc' %}selected{% endif %}>Oldest Date</option>
+        <option value="quantityLow" {% if request.args.get('sort') == 'quantityLow' %}selected{% endif %}>Quantity: Low to High</option>
+        <option value="quantityHigh" {% if request.args.get('sort') == 'quantityHigh' %}selected{% endif %}>Quantity: High to Low</option>
+        <option value="priceLow" {% if request.args.get('sort') == 'priceLow' %}selected{% endif %}>Price: Low to High</option>
+        <option value="priceHigh" {% if request.args.get('sort') == 'priceHigh' %}selected{% endif %}>Price: High to Low</option>
+        <option value="Home Improvement" {% if request.args.get('sort') == 'Home Improvement' %}selected{% endif %}>Category: Home Improvement</option>
+        <option value="Electronics" {% if request.args.get('sort') == 'Electronics' %}selected{% endif %}>Category: Electronics</option>
+        <option value="Health&Personal Care" {% if request.args.get('sort') == 'Health&Personal Care' %}selected{% endif %}>Category: Health & Personal Care</option>
+        <option value="Office Products" {% if request.args.get('sort') == 'Office Products' %}selected{% endif %}>Category: Office Products</option>
+        <option value="Computers&Accessories" {% if request.args.get('sort') == 'Computers&Accessories' %}selected{% endif %}>Category: Computers & Accessories</option>
+        <option value="Toys & Games" {% if request.args.get('sort') == 'Toys & Games' %}selected{% endif %}>Category: Toys & Games</option>
+        <option value="Home&Kitchen" {% if request.args.get('sort') == 'Home&Kitchen' %}selected{% endif %}>Category: Home & Kitchen</option>
+    </select>
+</form>
+
+
 <table class="table table-hover table-bordered container" style="font-size: 0.8em;">
     <thead class="thead-dark">
         <tr>
             <th scope="col">Present?</th>
+            <th scope="col">Category</th>
             <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
             <th scope="col">Time Purchased</th>
             <th scope="col">Buyer Address</th>
         </tr>
@@ -21,7 +44,9 @@
                         <img src="/static/gift_icon.png" alt="Gift Image" style="width: 20px; height: 20px; margin-right: 5px;">
                     {% endif %}
                 </td>
+                <td>{{ order.category }}</td>
                 <td>{{ order.quantities }}</td>
+                <td>{{ order.price }}</td>
                 <td>{{ order.time_purchased }}</td>
                 <td>{{ order.address }}</td>
             </tr>
