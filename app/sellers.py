@@ -13,17 +13,9 @@ def get_seller_inventory(seller_id):
     inventory = seller.get_products_for_sale()  # Use the get_products_for_sale method
     categories = Product.get_categories() # get categories to display in dropdown
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories] # reformat categories
-    if inventory:
-        # Handle the case when the user has inventory
-        return render_template('inventory.html', inventory=inventory, categories=clean_text)
-    else:
-        return '''
-            <script>
-                alert("You Don't Have Anything in Your Inventory Yet!");
-                window.history.back();  // Redirect back to the previous page or handle as needed
-            </script>
-        '''
-
+    
+    return render_template('inventory.html', inventory=inventory, categories=clean_text)
+    
 @bp.route('/fulfilled_order_history/<int:seller_id>')
 def get_fulfilled_order_history(seller_id):
     seller = Seller(seller_id)
