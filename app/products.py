@@ -47,11 +47,18 @@ def search_keywords():
             products = Product.search_product(sort_by_column, query, page, rate)
         categories = Product.get_categories()
         clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
+        productid = products[0].get('productid')
+        if current_user.is_authenticated:
+            buy_again = Product.get_purchases_by_uid(current_user.id)
+            if buy_again == productid:
+                buy_again_status = True
+            else:
+                buy_again_status = False
         if len(products) == 0:
             return render_template('search_product_results.html')
     except Exception:
         return 'No products found lol'
-    return render_template('search_product_results.html', in_stock=in_stock, rating=rating, sort_by=sort_by, products=products, page=page, total=total, query=query, per_page=per_page, categories=clean_text)
+    return render_template('search_product_results.html', buy_status=buy_again_status, in_stock=in_stock, rating=rating, sort_by=sort_by, products=products, page=page, total=total, query=query, per_page=per_page, categories=clean_text)
 
 @bp.route('/search_category_results', methods=['GET', 'POST'])
 def search_category():
@@ -74,11 +81,18 @@ def search_category():
         else:
             total = int(Product.category_search_count(category, rate))
             products = Product.search_categories(sort_by_column, category, page, rate)
+        productid = products[0].get('productid')
+        if current_user.is_authenticated:
+            buy_again = Product.get_purchases_by_uid(current_user.id)
+            if buy_again == productid:
+                buy_again_status = True
+            else:
+                buy_again_status = False
         if len(products) == 0:
             return render_template('search_category_results.html')
     except Exception:
         return 'No products found AH'
-    return render_template('search_category_results.html', rating=rating, sort_by=sort_by, selected_category=category, products=products, page=page, categories=clean_text, total=total, per_page=per_page)
+    return render_template('search_category_results.html', buy_status=buy_again_status, rating=rating, sort_by=sort_by, selected_category=category, products=products, page=page, categories=clean_text, total=total, per_page=per_page)
 
 @bp.route('/product/<int:productid>')
 def product_detail(productid):
@@ -87,11 +101,5 @@ def product_detail(productid):
     reviews = Reviews.get_reviews_by_product_id(productid)
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
-    if current_user.is_authenticated:
-        seller_list = [row["sid"] for row in inventory]
-        for seller in seller_list:
-            buy_again = Product.get_purchases_by_uid(current_user.id, seller)
-            if buy_again == productid:
-                #buy_again_status = True
-                inventory[7]["buy_status"] = True
+
     return render_template('product_detail.html', product=product, inventory=inventory, categories=clean_text, reviews=reviews)
