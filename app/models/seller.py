@@ -170,10 +170,11 @@ class Seller:
     def get_fulfilledOrder_history(self):
         # Retrieve the seller's fulfilled order history
         rows = app.db.execute('''
-            SELECT li.quantities, li.time_purchased, u.address, li.present
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
             FROM LineItem li
             JOIN OrdersInProgress o ON li.orderid = o.orderid
             JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
             WHERE li.sellerid = :seller_id AND li.fulfilledStatus = TRUE
             ORDER BY li.time_purchased DESC;
         ''', seller_id=self.uid)
@@ -183,20 +184,206 @@ class Seller:
                 'quantities': row[0],
                 'time_purchased': row[1],
                 'address': row[2],
-                'present': row[3]
+                'present': row[3],
+                'price': row[4],
+                'category': row[5]
             }
             for row in rows
         ]
 
         return order_history
     
-    def get_unfulfilledOrder_history(self):
+    def order_fulfilledOrder_history_desc(self):
         # Retrieve the seller's fulfilled order history
         rows = app.db.execute('''
-            SELECT li.quantities, li.time_purchased, u.address, li.lineid, li.present
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
             FROM LineItem li
             JOIN OrdersInProgress o ON li.orderid = o.orderid
             JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = TRUE
+            ORDER BY li.time_purchased DESC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5]
+            }
+            for row in rows
+        ]
+
+        return order_history
+    
+    def order_fulfilledOrder_history_asc(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = TRUE
+            ORDER BY li.time_purchased ASC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5]
+            }
+            for row in rows
+        ]
+
+        return order_history
+
+    def order_fulfilledOrder_history_quantitiesHL(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = TRUE
+            ORDER BY li.quantities DESC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5]
+            }
+            for row in rows
+        ]
+
+        return order_history
+    
+    def order_fulfilledOrder_history_quantitiesLH(self):
+        # Retrieve the seller's fulfilled order history
+        
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = TRUE
+            ORDER BY li.quantities ASC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5]
+            }
+            for row in rows
+        ]
+
+        return order_history
+
+    def order_fulfilledOrder_history_pricesLH(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = TRUE
+            ORDER BY p.price ASC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5]
+            }
+            for row in rows
+        ]
+
+        return order_history
+    
+    def order_fulfilledOrder_history_pricesHL(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = TRUE
+            ORDER BY p.price DESC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5]
+            }
+            for row in rows
+        ]
+        return order_history
+    
+    def get_fulfilledOrder_history_category(self, category):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = TRUE AND p.category = :category
+            ORDER BY li.time_purchased DESC;
+        ''', seller_id=self.uid, category = category)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5]
+            }
+            for row in rows
+        ]
+
+        return order_history
+
+    def get_unfulfilledOrder_history(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
             WHERE li.sellerid = :seller_id AND li.fulfilledStatus = FALSE
             ORDER BY li.time_purchased DESC;
         ''', seller_id=self.uid)
@@ -219,12 +406,206 @@ class Seller:
                 'quantities': row[0],
                 'time_purchased': row[1],
                 'address': row[2],
-                'itemid': row[3],
-                'present': row[4]
+                'present': row[3],
+                'price': row[4],
+                'category': row[5],
+                'itemid': row[6]
+            }
+            for row in rows
+        
+        ]
+        return order_history
+
+    def order_unfulfilledOrder_history_desc(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = FALSE
+            ORDER BY li.time_purchased DESC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5],
+                'itemid': row[6]
+            }
+            for row in rows
+        ]
+
+        return order_history
+    
+    def order_unfulfilledOrder_history_asc(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = FALSE
+            ORDER BY li.time_purchased ASC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5],
+                'itemid': row[6]
+            }
+            for row in rows
+        ]
+
+        return order_history
+
+    def order_unfulfilledOrder_history_quantitiesHL(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = FALSE
+            ORDER BY li.quantities DESC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5],
+                'itemid': row[6]
+            }
+            for row in rows
+        ]
+
+        return order_history
+    
+    def order_unfulfilledOrder_history_quantitiesLH(self):
+        # Retrieve the seller's fulfilled order history
+        
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = FALSE
+            ORDER BY li.quantities ASC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5],
+                'itemid': row[6]
+            }
+            for row in rows
+        ]
+
+        return order_history
+
+    def order_unfulfilledOrder_history_pricesLH(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = FALSE
+            ORDER BY p.price ASC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5],
+                'itemid': row[6]
+            }
+            for row in rows
+        ]
+
+        return order_history
+    
+    def order_unfulfilledOrder_history_pricesHL(self):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = FALSE
+            ORDER BY p.price DESC;
+        ''', seller_id=self.uid)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5],
+                'itemid': row[6]
             }
             for row in rows
         ]
         return order_history
+    
+    def get_unfulfilledOrder_history_category(self, category):
+        # Retrieve the seller's fulfilled order history
+        rows = app.db.execute('''
+            SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
+            FROM LineItem li
+            JOIN OrdersInProgress o ON li.orderid = o.orderid
+            JOIN Users u ON o.buyerid = u.id
+            JOIN Products p ON li.productid = p.productid
+            WHERE li.sellerid = :seller_id AND li.fulfilledStatus = FALSE AND p.category = :category
+            ORDER BY li.time_purchased DESC;
+        ''', seller_id=self.uid, category = category)
+
+        order_history = [
+            {
+                'quantities': row[0],
+                'time_purchased': row[1],
+                'address': row[2],
+                'present': row[3],
+                'price': row[4],
+                'category': row[5],
+                'itemid': row[6]
+            }
+            for row in rows
+        ]
+
+        return order_history
+
     
     def mark_line_item_fulfilled(self, line_id):
         # Mark a specific LineItem as fulfilled
@@ -233,8 +614,6 @@ class Seller:
             SET fulfilledStatus = TRUE
             WHERE lineid = :line_id 
         ''', line_id=line_id)
-
-    from datetime import datetime, timedelta
 
     
 
