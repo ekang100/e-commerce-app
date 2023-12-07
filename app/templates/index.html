@@ -31,7 +31,7 @@
   <button type="submit">Show Products</button>
 </form>
 
-<form action="/" method="post">
+<form action="/" method="get">
   <label for="in_stock">Only show available products</label>
   <input type="checkbox" id="in_stock" name="in_stock" {% if in_stock %}checked{% endif %}>
   <input type="submit" value="Show Products">

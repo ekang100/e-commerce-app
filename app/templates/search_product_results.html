@@ -33,12 +33,12 @@
   <button type="submit">Show Products</button>
 </form>
 
-<form action="/search_product_results" method="get">
+<form action="/search_product_results" method="POST">
   <input type="hidden" name="rating" value="{{ rating }}">
   <input type="hidden" name="sort_by" value="{{ sort_by }}">
   <input type="hidden" name="query" value="{{ query }}">
   <label for="in_stock">Only show available products</label>
-  <input type="checkbox" id="in_stock" name="in_stock" value="true" {% if in_stock %}checked{% endif %}>
+  <input type="checkbox" id="in_stock" name="in_stock" {% if in_stock %}checked{% endif %}>
   <input type="submit" value="Show Products">
 </form>
 

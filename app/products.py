@@ -34,11 +34,17 @@ def search_keywords():
     rate = int(rating)
     sort_by_column = sort_assignment(sort_by)
   
+    if request.method == 'POST':
         # Check if the checkbox was submitted and update the in_stock variable accordingly
-    in_stock = request.args.get('in_stock')
+        if 'in_stock' in request.form:
+            in_stock = True
+        else:
+            in_stock = False
+    else:
+        in_stock = request.args.get('in_stock')
     
     try:
-        if in_stock == "true":
+        if in_stock:
             available = True
             products = Product.search_product_avail(sort_by_column, query, page, rate, available)
             total = int(Product.search_count_avail(query, rate, available))
@@ -63,7 +69,10 @@ def search_keywords():
 
 @bp.route('/search_category_results', methods=['GET', 'POST'])
 def search_category():
-    category = request.args.get('category')
+    try: # an original search
+        category = request.form['category']
+    except: # for maintaining the search query throughout pagination
+        category = request.args.get('category')
     page = int(request.args.get('page', 1))
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
@@ -72,8 +81,15 @@ def search_category():
     rate = int(rating)
     sort_by = request.args.get('sort_by', default='None')
     sort_by_column = sort_assignment(sort_by)
+    if request.method == 'POST':
+        # Check if the checkbox was submitted and update the in_stock variable accordingly
+        if 'in_stock' in request.form:
+            in_stock = True
+        else:
+            in_stock = False
+    else:
+        in_stock = request.args.get('in_stock')
     try:
-        in_stock =  request.args.get('in_stock')
     
         if in_stock:
             available = True
@@ -89,12 +105,12 @@ def search_category():
                 buy_again_status = True
             else:
                 buy_again_status = False
-            return render_template('search_category_results.html', buy_status=buy_again_status, rating=rating, sort_by=sort_by, selected_category=category, products=products, page=page, categories=clean_text, total=total, per_page=per_page)
+            return render_template('search_category_results.html', in_stock=in_stock, buy_status=buy_again_status, rating=rating, sort_by=sort_by, selected_category=category, products=products, page=page, categories=clean_text, total=total, per_page=per_page)
         if len(products) == 0:
             return render_template('search_category_results.html')
     except Exception:
         return 'No products found AH'
-    return render_template('search_category_results.html', rating=rating, sort_by=sort_by, selected_category=category, products=products, page=page, categories=clean_text, total=total, per_page=per_page)
+    return render_template('search_category_results.html', in_stock=in_stock, rating=rating, sort_by=sort_by, selected_category=category, products=products, page=page, categories=clean_text, total=total, per_page=per_page)
 
 @bp.route('/product/<int:productid>')
 def product_detail(productid):
