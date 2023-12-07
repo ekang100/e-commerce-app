@@ -4,6 +4,8 @@ import datetime
 import re
 import math
 
+from app.models.productsforsale import ProductsForSale
+
 from .models.product import Product
 from .models.purchase import Purchase
 
@@ -54,10 +56,18 @@ def index():
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
 
+    productid = products[0].get('productid')
+    if current_user.is_authenticated:
+        buy_again = Product.get_purchases_by_uid(current_user.id)
+        if buy_again == productid:
+            buy_again_status = True
+        else:
+            buy_again_status = False
+
 
     # render the page by adding information to the index.html file
     return render_template('index.html',
-                           rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
+                           buy_status=buy_again_status, rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
 
 @bp.route('/account')
 def index2():
