@@ -49,7 +49,8 @@ class UserForm(FlaskForm):
     address = StringField('Address', validators=[DataRequired()])
 
     submit = SubmitField('Update')
-        
+
+# Define a form for updating user email (must be unique)
 class EmailForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
 
