@@ -6,6 +6,7 @@
 
 <form action="{{ url_for('sellers.get_fulfilled_order_history', seller_id=seller_id) }}" method="get">
 
+    <!-- Sorting Categories -->
     <label for="sort">Sort by:</label>
     <select name="sort" id="sort" onchange="this.form.submit()">
         <option value="date_desc" {% if request.args.get('sort') == 'date_desc' %}selected{% endif %}>Most Recent Date</option>

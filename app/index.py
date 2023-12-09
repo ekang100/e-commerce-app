@@ -109,6 +109,7 @@ def index2():
         if current_user.isVerified:
             result = Purchase.get_all_by_uid_price_since_saved(current_user.id, current_user.verifiedDate)
             print(result)
+            # multiplies total price of items by 0.1 to calculated amount saved
             if len(result) > 0:
                 total_saved = sum(item['price'] for item in result)
                 total_saved = round(float(total_saved)*0.1, 2)

@@ -34,6 +34,7 @@ class Seller:
         ]
         return products
 
+    #gets all products sold by all sellers for sellers to view and add in "Add Existing Products"
     def get_all_products(self):
         rows = app.db.execute('''
                             SELECT *
@@ -194,7 +195,7 @@ class Seller:
         return order_history
     
     def order_fulfilledOrder_history_desc(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's fulfilled order history sorted by descending order chronologically 
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
             FROM LineItem li
@@ -220,7 +221,7 @@ class Seller:
         return order_history
     
     def order_fulfilledOrder_history_asc(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's fulfilled order history by ascending order chronologically 
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
             FROM LineItem li
@@ -246,7 +247,7 @@ class Seller:
         return order_history
 
     def order_fulfilledOrder_history_quantitiesHL(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's fulfilled order history ordered by descending quantity
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
             FROM LineItem li
@@ -272,9 +273,8 @@ class Seller:
         return order_history
     
     def order_fulfilledOrder_history_quantitiesLH(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's fulfilled order history  by ascending quantity
         
-        # Retrieve the seller's fulfilled order history
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
             FROM LineItem li
@@ -300,7 +300,7 @@ class Seller:
         return order_history
 
     def order_fulfilledOrder_history_pricesLH(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's fulfilled order history by ascending price
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
             FROM LineItem li
@@ -326,7 +326,7 @@ class Seller:
         return order_history
     
     def order_fulfilledOrder_history_pricesHL(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's fulfilled order history by descending price
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
             FROM LineItem li
@@ -351,7 +351,7 @@ class Seller:
         return order_history
     
     def get_fulfilledOrder_history_category(self, category):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's fulfilled order history by the various categories
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category
             FROM LineItem li
@@ -377,7 +377,7 @@ class Seller:
         return order_history
 
     def get_unfulfilledOrder_history(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's unfulfilled order history
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
             FROM LineItem li
@@ -417,7 +417,7 @@ class Seller:
         return order_history
 
     def order_unfulfilledOrder_history_desc(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's unfulfilled order history by chronologically descending order
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
             FROM LineItem li
@@ -444,7 +444,7 @@ class Seller:
         return order_history
     
     def order_unfulfilledOrder_history_asc(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's unfulfilled order history by chronologically ascending order
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
             FROM LineItem li
@@ -471,7 +471,7 @@ class Seller:
         return order_history
 
     def order_unfulfilledOrder_history_quantitiesHL(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's unfulfilled order history by descending quantities
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
             FROM LineItem li
@@ -498,9 +498,8 @@ class Seller:
         return order_history
     
     def order_unfulfilledOrder_history_quantitiesLH(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's unfulfilled order history by ascending quantities
         
-        # Retrieve the seller's fulfilled order history
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
             FROM LineItem li
@@ -527,7 +526,7 @@ class Seller:
         return order_history
 
     def order_unfulfilledOrder_history_pricesLH(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's unfulfilled order history by ascending prices
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
             FROM LineItem li
@@ -554,7 +553,7 @@ class Seller:
         return order_history
     
     def order_unfulfilledOrder_history_pricesHL(self):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's unfulfilled order history by descending prices
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
             FROM LineItem li
@@ -580,7 +579,7 @@ class Seller:
         return order_history
     
     def get_unfulfilledOrder_history_category(self, category):
-        # Retrieve the seller's fulfilled order history
+        # Retrieve the seller's unfulfilled order history by categories
         rows = app.db.execute('''
             SELECT li.quantities, li.time_purchased, u.address, li.present, p.price, p.category, li.lineid
             FROM LineItem li
