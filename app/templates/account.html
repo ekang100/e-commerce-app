@@ -173,7 +173,9 @@
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
 <div class="d-flex justify-content-between">
   <h1><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
-
+  {% if five_star_review_count >= 1 %}
+  <img src="/static/super_seller.png" alt="Super Seller" style="width: 5%; height: 5%; object-fit: cover;">
+  {% endif %}
   <!-- Products for Sale Button -->
 <a href="{{ url_for('sellers.get_seller_inventory', seller_id=current_user.id) }}" class="btn btn-info" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
   Products for Sale

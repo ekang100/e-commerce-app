@@ -113,7 +113,7 @@
                   <td>
                       {% if current_user.is_authenticated %}
                           <form action="{{ url_for('feedback.vote_review', review_id=review.id, vote=1) }}" method="post">
-                              <button type="submit">Helpful ({{ review.helpful_count }})</button>
+                              <button type="submit">Helpful {{ review.helpful_count }}</button>
                           </form>
                       {% else %}
                           Helpful: {{ review.helpful_count }}

@@ -245,13 +245,13 @@ def search_user():
 def public_profile(account_id):
     if request.method == 'POST':
         info = User.pubprofile_search(account_id)
-        #manually save seller and verified booleans to send to html
         sell_stat = info[0][4]
         ver_stat = info[0][5]
         seller_reviews = Reviews.get_reviews_by_seller_id(account_id) if sell_stat else None
         seller_reviews_summary = Reviews.get_seller_rating_summary(account_id)
-        # five_star_review_count = Reviews.get_five_star_review_count(account_id)
-        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat, seller_reviews=seller_reviews, seller_rating_summary=seller_reviews_summary)
+        # is_super_seller = User.is_super_seller(account_id)
+        five_star_review_count = Reviews.get_five_star_review_count(account_id)
+        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat, seller_reviews=seller_reviews, seller_rating_summary=seller_reviews_summary, five_star_review_count=five_star_review_count[0])
     return redirect(url_for('users.account'))
 
 #Added isVerified feature costing $500 and get 10% off 

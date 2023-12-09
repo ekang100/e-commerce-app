@@ -93,6 +93,9 @@
 {% if sell_stat %}
     <hr style="border-top: 2px solid #FFD700; margin-top: 70px;">
     <h1><span style="color: yellow;">Seller Profile</span></h1>
+    {% if five_star_review_count >= 1 %}
+    <img src="/static/super_seller.png" alt="Super Seller" style="width: 5%; height: 5%; object-fit: cover;">
+    {% endif %}
     <div class="star-rating">
       <div class="empty-stars" style="position: relative;">
           <i class="far fa-star"></i>

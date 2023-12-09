@@ -16,11 +16,11 @@ CREATE TABLE Users (
     verifiedDate timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'), --date of verification
     bio VARCHAR(500) DEFAULT NULL, --user bio
     avatar INT NOT NULL DEFAULT 1, --user avatar icon
-    PRIMARY KEY (id) 
+    five_star_review_count INT DEFAULT 0,
+    PRIMARY KEY (id)
 );
 
-ALTER TABLE Users
-ADD COLUMN five_star_review_count INT DEFAULT 0;
+
 
 --withdraw needs to be a function to add or remove balance
 --pubProfile should be a view from User (name, accountID, PubProfileID)
@@ -110,14 +110,14 @@ CREATE TABLE Reviews (
 );
 
 
-CREATE TABLE ReviewVotes (
-    id SERIAL PRIMARY KEY,
-    review_id INT NOT NULL REFERENCES Reviews(entity_id),
-    user_id INT NOT NULL REFERENCES Users(id),
-    vote BOOLEAN NOT NULL,
-    timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (review_id, user_id)
-);
+-- CREATE TABLE ReviewVotes (
+--     id SERIAL PRIMARY KEY,
+--     review_id INT NOT NULL REFERENCES Reviews(entity_id),
+--     user_id INT NOT NULL REFERENCES Users(id),
+--     vote BOOLEAN NOT NULL,
+--     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     UNIQUE (review_id, user_id)
+-- );
 
 
 

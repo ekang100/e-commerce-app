@@ -27,77 +27,41 @@ def get_recent_reviews_by_uid(uid):
         reviews_sorted = sorted(reviews, key=lambda x: x.date, reverse=True)
         return reviews_sorted
     except Exception as e:
-        # Handle database errors
         raise ValueError(f"Error fetching reviews: {str(e)}")
 
 
-
-# @bp.route('/post_review', methods=['POST'])
-# def post_review():
-#     if request.method == 'POST':
-#         product_id = request.form.get('product_id')
-#         seller_id = request.form.get('seller_id')
-#         user_id = request.form.get('user_id')
-#         rating = request.form.get('rating')
-#         comments = request.form.get('comments')
-#         review_type = 'product' if product_id else 'seller'
-#         if not all([user_id, rating, (product_id or seller_id)]):
-#             return jsonify({'error': 'Missing data'}), 400
-#         try:
-#             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)
-#             return jsonify({'success': 'Review added successfully'}), 200
-#         except Exception as e:
-#             return jsonify({'error': str(e)}), 500
-
-#     return jsonify({'error': 'Invalid request method'}), 405
-
-# @bp.route('/post_review', methods=['POST'])
-# def post_review():
-#     if request.method == 'POST':
-#         product_id = request.form.get('product_id')
-#         seller_id = request.form.get('seller_id')
-#         user_id = request.form.get('user_id')
-#         rating = request.form.get('rating')
-#         comments = request.form.get('comments')
-#         review_type = 'product' if product_id else 'seller'
-#         if not all([user_id, rating, (product_id or seller_id)]):
-#             flash('Missing data', 'error')
-#             return redirect(url_for('product.product_detail', productid=product_id))
-
-#         try:
-#             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)
-#             flash('Review added successfully', 'success')
-#             return redirect(url_for('products.product_detail', productid=product_id))
-#         except Exception as e:
-#             flash(str(e), 'error')
-
-#     return redirect(url_for('products.product_detail', productid=product_id))
+# Posts the review and then redirects 
 @bp.route('/post_review', methods=['POST'])
 def post_review():
     if request.method == 'POST':
         product_id = request.form.get('product_id')
         seller_id = request.form.get('seller_id')
         user_id = request.form.get('user_id')
-        rating = request.form.get('rating')
+        rating = int(request.form.get('rating'))
         comments = request.form.get('comments')
-        review_type = 'seller' if seller_id else 'product'
+        review_type = 'product' if product_id else 'seller'
 
         if not all([user_id, rating, (product_id or seller_id)]):
             flash('Missing data', 'error')
-            redirect_url = url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id)
-            return redirect(redirect_url)
+            return redirect(url_for('product.product_detail', productid=product_id))
+
         try:
             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)
+
+            if review_type == 'seller' and rating == 5:
+                current_five_star_count = User.get_five_star_review_count(seller_id)
+                User.update_five_star_review_count(seller_id, current_five_star_count + 1)
+
             flash('Review added successfully', 'success')
-            redirect_url = url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id)
-            return redirect(redirect_url)
-        
+
+            if review_type == 'product':
+                return redirect(url_for('products.product_detail', productid=product_id))
+            else:
+                return redirect(url_for('users.public_profile', account_id=seller_id))
         except Exception as e:
             flash(str(e), 'error')
 
-    redirect_url = url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id)
-    return redirect(redirect_url)
-
+    return redirect(url_for('products.product_detail', productid=product_id))
 
 
 
@@ -108,13 +72,10 @@ def update_review(review_id):
     new_rating = request.form.get('rating')
     new_comments = request.form.get('comments')
 
-    # Fetch the review and check if the current user is the author
     review = Reviews.get_review_by_id(review_id)
 
     if review and review['uid'] == current_user_id:
         Reviews.update_review(review_id, new_rating, new_comments)
-        flash('Review updated successfully', 'success')
-
         # Redirect based on review type
         if review['type'] == 'product':
             return redirect(url_for('products.product_detail', productid=review['product_id']))
@@ -156,17 +117,6 @@ def vote_review(review_id, vote):
         flash("Your vote has been recorded.", "success")
     except ValueError as e:
         flash(str(e), "error")
-
-    # Redirect back to the referring page
     return redirect(request.referrer)
 
 
-
-
-# some html for Super Seller that doesn't work yet, but saving because comments in html don't work
-#     <!-- {% if user.five_star_review_count >= 1 %}
-#     <div class="super-seller-badge">
-#         <h3 style="color: green;">Super Seller!</h3>
-#         <img src="app/static/super_seller.png" alt="Super Seller Symbol">
-#     </div>
-# {% endif %} -->

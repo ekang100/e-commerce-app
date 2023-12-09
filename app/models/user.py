@@ -275,7 +275,9 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
-        
+    
+
+    # Updates the number of five star reviews
     @staticmethod
     def update_five_star_review_count(seller_id, five_star_count):
         try:
@@ -287,3 +289,18 @@ RETURNING id
             app.db.execute(query, five_star_count=five_star_count, seller_id=seller_id)
         except Exception as e:
             raise ValueError(f"Error updating five-star review count: {str(e)}")
+
+    # Gets the number of the five star reviews
+    @staticmethod
+    def get_five_star_review_count(seller_id):
+        try:
+            query = '''
+                SELECT COUNT(*)
+                FROM Reviews
+                WHERE seller_id = :seller_id AND rating = 5
+            '''
+            result = app.db.execute(query, seller_id=seller_id)
+            return result[0][0] if result else 0
+        except Exception as e:
+            raise ValueError(f"Error fetching five-star review count: {str(e)}")
+
