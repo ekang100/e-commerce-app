@@ -48,9 +48,7 @@ def post_review():
             # Check if a review already exists
             existing_review = Reviews.check_review_exists(review_type, product_id, seller_id, user_id)
             if existing_review:
-                print("HERE IS THE ERROR")
                 flash('You have already posted a review for this entity.')
-                print("HERE IS THE ERROR")
                 return redirect(url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id))
 
             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)

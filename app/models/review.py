@@ -36,6 +36,8 @@ ORDER BY R.date DESC
                         comments=row[4], 
                         date=row[5]) for row in rows]
     
+
+    # Inserts the review into the database
     @staticmethod
     def insert_product_review(review_type, product_id, seller_id, user_id, rating, comments):
         query = '''
@@ -49,7 +51,9 @@ ORDER BY R.date DESC
                     uid=user_id, 
                     rating=rating, 
                     comments=comments)
-        
+    
+    # For use in updating and deleting
+    # Retrieves one review by its id
     @staticmethod
     def get_review_by_id(review_id):
         try:
@@ -123,7 +127,9 @@ ORDER BY R.date DESC
             app.db.execute(query, review_id=review_id)
         except Exception as e:
             raise ValueError(f"Error deleting review: {str(e)}")
-        
+
+
+    # Finds all reviews for a given seller    
     @staticmethod
     def get_reviews_by_seller_id(seller_id):
         try:
@@ -148,7 +154,7 @@ ORDER BY R.date DESC
         except Exception as e:
             raise ValueError(f"Error fetching reviews for seller: {str(e)}")
         
-    # Finds the averages and the number of reviews 
+    # Finds the averages and the number of reviews for products 
     @staticmethod
     def get_product_rating_summary(product_id):
         query = '''
@@ -162,7 +168,8 @@ ORDER BY R.date DESC
             return {'average_rating': round(result[0][0], 2), 'number_of_ratings': result[0][1]}
         else:
             return {'average_rating': 0, 'number_of_ratings': 0}
-
+        
+    # Finds the averages and the number of reviews for products 
     @staticmethod
     def get_seller_rating_summary(seller_id):
         query = '''
@@ -176,7 +183,7 @@ ORDER BY R.date DESC
         else:
             return {'average_rating': 0, 'number_of_ratings': 0}
         
-
+    # Part of super seller feature, checks the number of five star reviews
     @staticmethod
     def get_five_star_review_count(seller_id):
         try:
@@ -190,6 +197,8 @@ ORDER BY R.date DESC
         except Exception as e:
             raise ValueError(f"Error fetching five-star review count: {str(e)}")
         
+
+    # Fetches all reviews posted by one user
     @staticmethod
     def get_all_reviews_by_user_id(user_id):
         try:
@@ -244,6 +253,7 @@ ORDER BY R.date DESC
             raise ValueError(f"Error fetching votes: {str(e)}")
     
     
+    # Checks if a review with given uid and product_id/seller_id already exists
     @staticmethod
     def check_review_exists(review_type, product_id, seller_id, user_id):
         try:
