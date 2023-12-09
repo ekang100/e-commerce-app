@@ -285,7 +285,6 @@ def public_profile(account_id):
         ver_stat = info[0][5]
         seller_reviews = Reviews.get_reviews_by_seller_id(account_id) if sell_stat else None
         seller_reviews_summary = Reviews.get_seller_rating_summary(account_id)
-        # is_super_seller = User.is_super_seller(account_id)
         five_star_review_count = Reviews.get_five_star_review_count(account_id)
         categories = Product.get_categories() # get categories to display in dropdown
         clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories] # reformat categories
