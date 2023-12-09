@@ -244,17 +244,17 @@ ORDER BY R.date DESC
     #         raise ValueError(f"Error fetching votes: {str(e)}")
     
     
-    # @staticmethod
-    # def check_review_exists(review_type, product_id, seller_id, user_id):
-    #     try:
-    #         if review_type == 'product':
-    #             query = "SELECT COUNT(*) FROM Reviews WHERE product_id = :product_id AND uid = :uid"
-    #             result = app.db.execute(query, product_id=product_id, uid=user_id)
-    #         else:  # 'seller'
-    #             query = "SELECT COUNT(*) FROM Reviews WHERE seller_id = :seller_id AND uid = :uid"
-    #             result = app.db.execute(query, seller_id=seller_id, uid=user_id)
+    @staticmethod
+    def check_review_exists(review_type, product_id, seller_id, user_id):
+        try:
+            if review_type == 'product':
+                query = "SELECT COUNT(*) FROM Reviews WHERE product_id = :product_id AND uid = :uid"
+                result = app.db.execute(query, product_id=product_id, uid=user_id)
+            else:  # 'seller'
+                query = "SELECT COUNT(*) FROM Reviews WHERE seller_id = :seller_id AND uid = :uid"
+                result = app.db.execute(query, seller_id=seller_id, uid=user_id)
 
-    #         return result[0][0] > 0
-    #     except Exception as e:
-    #         raise ValueError(f"Error checking existing review: {str(e)}")
+            return result[0][0] > 0
+        except Exception as e:
+            raise ValueError(f"Error checking existing review: {str(e)}")
 
