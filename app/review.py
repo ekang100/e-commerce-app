@@ -30,7 +30,37 @@ def get_recent_reviews_by_uid(uid):
         raise ValueError(f"Error fetching reviews: {str(e)}")
 
 
-# Posts the review and then redirects 
+# # Posts the review and then redirects 
+# @bp.route('/post_review', methods=['POST'])
+# def post_review():
+#     if request.method == 'POST':
+#         product_id = request.form.get('product_id')
+#         seller_id = request.form.get('seller_id')
+#         user_id = request.form.get('user_id')
+#         rating = int(request.form.get('rating'))
+#         comments = request.form.get('comments')
+#         review_type = 'product' if product_id else 'seller'
+
+#         if not all([user_id, rating, (product_id or seller_id)]):
+#             flash('Missing data', 'error')
+#             return redirect(url_for('product.product_detail', productid=product_id))
+
+#         try:
+#             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)
+
+#             if review_type == 'seller' and rating == 5:
+#                 current_five_star_count = User.get_five_star_review_count(seller_id)
+#                 User.update_five_star_review_count(seller_id, current_five_star_count + 1)
+#             if review_type == 'product':
+#                 return redirect(url_for('products.product_detail', productid=product_id))
+#             else:
+#                 return redirect(url_for('users.public_profile', account_id=seller_id))
+#         except Exception as e:
+#             flash(str(e), 'error')
+
+#     return redirect(url_for('products.product_detail', productid=product_id))
+
+
 @bp.route('/post_review', methods=['POST'])
 def post_review():
     if request.method == 'POST':
@@ -46,22 +76,26 @@ def post_review():
             return redirect(url_for('product.product_detail', productid=product_id))
 
         try:
+            # Check if a review already exists
+            existing_review = Reviews.check_review_exists(review_type, product_id, seller_id, user_id)
+            if existing_review:
+                flash('You have already posted a review for this entity.')
+                return redirect(url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id))
+
             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)
 
+            # Update five-star review count for sellers
             if review_type == 'seller' and rating == 5:
                 current_five_star_count = User.get_five_star_review_count(seller_id)
                 User.update_five_star_review_count(seller_id, current_five_star_count + 1)
 
-            flash('Review added successfully', 'success')
+            return redirect(url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id))
 
-            if review_type == 'product':
-                return redirect(url_for('products.product_detail', productid=product_id))
-            else:
-                return redirect(url_for('users.public_profile', account_id=seller_id))
         except Exception as e:
             flash(str(e), 'error')
+            return redirect(url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id))
 
-    return redirect(url_for('products.product_detail', productid=product_id))
+    return redirect(url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id))
 
 
 
@@ -94,7 +128,6 @@ def delete_review(review_id):
     review = Reviews.get_review_by_id(review_id)
     if review and review['uid'] == current_user_id:
         Reviews.delete_review(review_id)
-        flash('Review deleted successfully', 'success')
 
         # Redirect based on review type
         if review['type'] == 'product':
