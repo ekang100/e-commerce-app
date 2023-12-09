@@ -68,7 +68,8 @@ def index():
         product_ids = [product.get("productid") for product in buy_again]
         return render_template('index.html',
                            product_ids=product_ids, rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
-
+    return render_template('index.html',
+                           product_ids=None, rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
 
 
 @bp.route('/account')
@@ -122,3 +123,4 @@ def index2():
         total_saved = 0.00
     return render_template('account.html',
                            purchase_history=purchases, total_saved=total_saved, user_reviews=user_reviews, five_star_review_count=five_star_review_count, categories=clean_text)
+

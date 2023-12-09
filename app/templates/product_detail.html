@@ -185,6 +185,17 @@
             </div>
   
             <input type="submit" value="Post Review" class="btn btn-primary">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+        
+            <ul>
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+        
+            {% endif %}
+            {% endwith %}
         </form>
       {% else %}
         <p><a href="{{ url_for('users.login') }}">Log in</a> to add reviews</p>
