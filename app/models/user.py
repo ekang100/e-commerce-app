@@ -304,3 +304,4 @@ RETURNING id
         except Exception as e:
             raise ValueError(f"Error fetching five-star review count: {str(e)}")
 
+    # Might do average rating in addition to five star reviews for the Super Seller status
