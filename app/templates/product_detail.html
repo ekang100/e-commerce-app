@@ -38,8 +38,7 @@
         <p>{{product.description}}</p>
         <h3>Price</h3>
         <p>${{product.price}}</p>
-        <h3>Average Rating</h3>
-        <p>{{product.avg_rating}}</p>
+
     </div>
 
     {% if product.available %}
@@ -90,7 +89,26 @@
     {% else %}
     <h3>Product is out of stock. Check back soon!</h3>
     {% endif %}
-
+    <div class="product-rating-summary">
+      <h3>Rating Summary</h3>
+      <div class="star-rating">
+          <div class="empty-stars" style="position: relative;">
+              <i class="far fa-star"></i>
+              <i class="far fa-star"></i>
+              <i class="far fa-star"></i>
+              <i class="far fa-star"></i>
+              <i class="far fa-star"></i>
+              <div class="filled-stars" style="position: absolute; top: 0; left: 0; overflow: hidden; white-space: nowrap; width: {{ product_rating_summary.average_rating / 5 * 100 }}%;">
+                  <i class="fas fa-star" style="color: yellow;"></i>
+                  <i class="fas fa-star" style="color: yellow;"></i>
+                  <i class="fas fa-star" style="color: yellow;"></i>
+                  <i class="fas fa-star" style="color: yellow;"></i>
+                  <i class="fas fa-star" style="color: yellow;"></i>
+              </div>
+          </div>
+      </div>
+      <p>Number of Ratings: {{ product_rating_summary.number_of_ratings }}</p>
+  </div>
     <div class="container">
       <h2>Reviews</h2>
       <table class='table table-hover table-bordered'>
