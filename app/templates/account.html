@@ -219,9 +219,9 @@
     Unfulfilled Orders History
   </a>
 
-  <!-- Unfulfilled Orders Button with flashing red effect -->
-  <a href="{{ url_for('sellers.get_unfulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-danger flash-red" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-    Unfulfilled Orders History
+  <!-- Fulfilled Orders Button with flashing red effect -->
+  <a href="{{ url_for('sellers.get_fulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-danger flash-red" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
+    Fulfilled Orders History
   </a>
 </div>
 {% endif %}
