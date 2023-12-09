@@ -139,3 +139,20 @@ ORDER BY L.time_purchased DESC
                               uid=uid,
                               since=since)
         return [{"price": row[0]} for row in rows]
+    
+#get total purchase price for a user since a given date (used to check total savings for user since verification)
+    @staticmethod
+    def get_all_by_uid_price_since_saved(uid, since):
+        rows = app.db.execute('''
+SELECT P.price * L.quantities
+FROM Cart C, Products P, LineItem L
+WHERE C.buyerid = :uid
+AND L.time_purchased >= :since
+AND C.cartid = L.cartid
+AND L.buyStatus = TRUE
+AND L.productid = P.productid
+ORDER BY L.time_purchased DESC
+''',
+                              uid=uid,
+                              since=since)
+        return [{"price": row[0]} for row in rows]

@@ -1,0 +1,94 @@
+<!-- add_product_form.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="split-container">
+        <div class="add-product-container">
+            <h2>Make Your Own Products!</h2>
+            <form method="post" action="{{ url_for('sellers.add_product') }}">
+                <div class="form-group">
+                    <label for="name">Product Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <input type="text" class="form-control" id="category" name="category" required>
+                </div>
+                <div class="form-group">
+                    <label for="image_path">Image Path</label>
+                    <input type="text" class="form-control" id="image_path" name="image_path" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" required>
+                </div>
+                
+                <button type="submit" class="btn btn-success flash-green" id="flash-button" style="border: 1px solid #FFFF00; color: #FFFF00;">Add Product</button>
+            </form>
+        </div>
+
+        <div class="products-container">
+            <h2>Sell Existing Products!</h2>
+            <div class="scrollable-container">
+                <!-- Display products from the database here -->
+                {% for product in products %}
+                    <!-- Render each product -->
+                    <div class="product-item">
+                        <p>{{ product.name }} - ${{ product.price }}</p>
+                        <!-- Add more details if needed -->
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* CSS for flashing effect on hover */
+        @keyframes flash-green {
+            from {
+                background-color: #00FF00;
+                color: #FFFF00;
+            }
+            to {
+                background-color: #007700;
+                color: #FFFF00;
+            }
+        }
+
+        /* Apply the flashing effect on hover */
+        .flash-green:hover {
+            animation: flash-green 0.5s infinite alternate;
+        }
+
+        /* New styles for the split-container */
+        .split-container {
+            display: flex;
+        }
+
+        .add-product-container,
+        .products-container {
+            width: 50%;
+            padding: 20px;
+        }
+
+        .scrollable-container {
+            max-height: 400px; /* Set a maximum height for the scrollable container */
+            overflow-y: auto; /* Enable vertical scrolling if needed */
+        }
+
+        /* Additional styles for product items if needed */
+        .product-item {
+            margin-bottom: 10px;
+        }
+    </style>
+{% endblock %}
+

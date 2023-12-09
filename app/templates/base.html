@@ -182,6 +182,43 @@ p {
     .btn:hover {
       color: white;
     }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .pagination-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+  }
+
+  .page-item {
+    margin: 0 5px;
+  }
+
+  .page-item a {
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    color: #333;
+    background-color: #ccc;
+  }
+
+  .page-item.active a {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .page-item a:hover {
+    background-color: #f1f1f1;
+  }
+
+
+   
   </style>
 </head>
 
@@ -216,11 +253,15 @@ p {
       </div>
 
       <div id ="search-bar">
-        <form id="search-form" action="/search_category_results" method="GET">
+        <form id="search-form" action="{{ url_for('products.search_category') }}" method="GET">
             <select name="category">
-                {% for category in categories %}
+              {% for category in categories %}
+                {% if category == selected_category %}
+                    <option value="{{ selected_category }}" selected>{{ selected_category }}</option>
+                {% else %}
                     <option value="{{ category }}">{{ category }}</option>
-                {% endfor %}
+                {% endif %}
+            {% endfor %}
             </select>
             <input type="submit" value="Show Products">
         </form>

@@ -62,6 +62,8 @@
       <tr>
           <td>
             <strong style="color: #FFD700">Balance:</strong> <span style="color: #eee">{{current_user.balance}}</span>
+            <a href="{{ url_for('users.add_giftcard') }}" class="btn btn-primary" style="margin-top: 10px; margin-left: 10px; border: 2px solid #FFD700; float:right; color: #FFD700;"
+            role="'button">Redeem Gift Card</a>
             <a href="{{ url_for('users.add_balance') }}" class="btn btn-primary" style="margin-top: 10px; border: 2px solid #FFD700; float:right; color: #FFD700;"
               role="'button">Add Balance</a>
           </td>
@@ -169,6 +171,37 @@
   </tbody>
 </table>
 
+<style>
+  /* CSS for flashing effect on hover */
+  @keyframes flash-green {
+    from { background-color: #00FF00; color: #FFFF00; }
+    to { background-color: #007700; color: #FFFF00; }
+  }
+
+  @keyframes flash-blue {
+    from { background-color: #00b7ff; color: #FFFFFF; }
+    to { background-color: #005eff; color: #FFFFFF; }
+  }
+
+  @keyframes flash-red {
+    from { background-color: #FF0000; color: #FFFFFF; }
+    to { background-color: #8B0000; color: #FFFFFF; }
+  }
+
+  /* Apply the flashing effect on hover for each button */
+  .flash-green:hover {
+    animation: flash-green 0.5s infinite alternate;
+  }
+
+  .flash-blue:hover {
+    animation: flash-blue 0.5s infinite alternate;
+  }
+
+  .flash-red:hover {
+    animation: flash-red 0.5s infinite alternate;
+  }
+</style>
+
 {% if current_user.isSeller %}
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
 <div class="d-flex justify-content-between">
@@ -181,10 +214,10 @@
     Products for Sale
   </a>
 
-<!-- Fulfilled Orders Button -->
-<a href="{{ url_for('sellers.get_fulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-success" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-  Fulfilled Orders History
-</a>
+  <!-- Unfulfilled Orders Button with flashing red effect -->
+  <a href="{{ url_for('sellers.get_unfulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-danger flash-red" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
+    Unfulfilled Orders History
+  </a>
 
   <!-- Unfulfilled Orders Button with flashing red effect -->
   <a href="{{ url_for('sellers.get_unfulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-danger flash-red" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
@@ -192,6 +225,7 @@
   </a>
 </div>
 {% endif %}
+
 
 
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">

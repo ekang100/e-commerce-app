@@ -3,19 +3,48 @@
 {% block content %}
 
 <form action="/" method="get">
+  <input type="hidden" name="rating" value="{{ rating }}">
+  <input type="hidden" name="in_stock_filter" value="{{ in_stock }}">
   <label for="sort_by">Sort by:</label>
   <select name="sort_by" id="sort_by">
-      <option value="none">None</option>
-      <option value="priceLow">Price: Low to High</option>
-      <option value="priceHigh">Price: High to Low</option>
+      <option value="None">Select Sorting</option>
+      <option value="priceLow" {% if sort_by == 'priceLow' %} selected {% endif %}>Price: Low to High</option>
+      <option value="priceHigh" {% if sort_by == 'priceHigh' %} selected {% endif %}>Price: High to Low</option>
+      <option value="popularityLow" {% if sort_by == 'popularityLow' %} selected {% endif %}>Popularity: Low to High</option>
+      <option value="popularityHigh" {% if sort_by == 'popularityHigh' %} selected {% endif %}>Popularity: High to Low</option>
   </select>
   <button type="submit">Sort</button>
 </form>
+
+<form action="/" method="get">
+  <input type="hidden" name="sort_by" value="{{ sort_by }}">
+  <input type="hidden" name="in_stock_filter" value="{{ in_stock }}">
+  <label for="rating">Select Avg. Rating:</label>
+  <select name="rating" id="rating">
+      <option value="0">None</option>
+      <option value="1" {% if rating == '1' %} selected {% endif %}>One Star & Up</option>
+      <option value="2" {% if rating == '2' %} selected {% endif %}>Two Stars & Up</option>
+      <option value="3" {% if rating == '3' %} selected {% endif %}>Three Stars & Up</option>
+      <option value="4" {% if rating == '4' %} selected {% endif %}>Four Stars & Up</option>
+      <option value="5" {% if rating == '5' %} selected {% endif %}>Five Stars & Up</option>
+  </select>
+  <button type="submit">Show Products</button>
+</form>
+
+<form action="/" method="get">
+  <input type="hidden" name="sort_by" value="{{ sort_by }}">
+  <input type="hidden" name="rating" value="{{ rating }}">
+  <label for="in_stock">Only show available products</label>
+  <input type="checkbox" id="in_stock" name="in_stock" {% if in_stock %}checked{% endif %}>
+  <input type="submit" value="Show Products">
+</form>
+
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
+      <th scope="col">Available</th>
       <th scope="col">Product Image</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
@@ -26,39 +55,83 @@
     {% for product in avail_products %}
       <tr>
         <!--<th scope="row">{{product.productid}}</th>-->
+        <td>
+          {% if product.available %}
+              In Stock
+          {% else %}
+              Out of Stock
+          {% endif %}
+        </td>
         <td><img src="/static/{{ product.productid }}.png" alt="{{product.name}}" width="100" height="100"></td>
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
-        <td><a href="/product/{{ product.productid }}">View Details</a></td>
+        <td><a href="/product/{{ product.productid }}">View Details</a>{% if current_user.is_authenticated %}{% if product.productid in product_ids %}<p>Buy Again!</p>{% endif %}{% endif %}</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
 
 <div class="pagination">
-  <ul>
-    {% if page > 1 %}
-      <a href="/?page={{ page-1 }}" style="padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; margin: 5px; border: none; cursor: pointer; border-radius: 4px;">Previous</a>
+  <ul class="pagination-list">
+    {% set total_pages = (total // per_page) + (1 if total % per_page > 0 else 0) %}
+    
+    {# Determine start and end pages to display #}
+    {% set start_page = page - 2 if page > 2 else 1 %}
+    {% set end_page = start_page + 4 if start_page + 4 <= total_pages else total_pages %}
+    
+    {# Adjust start page if there's enough room for the last page to be displayed #}
+    {% if total_pages - page <= 3 %}
+        {% set start_page = total_pages - 4 if total_pages > 4 else 1 %}
     {% endif %}
-      <span class="pagination-info" style="font-size: 18px; margin: 0 10px;">Page {{ page }} / {{ max_page }}</span>
-      <a href="/?page={{ page+1 }}" style="padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; margin: 5px; border: none; cursor: pointer; border-radius: 4px;">Next</a>
+    
+    {# Previous Button #}
+    {% if page > 1 %}
+      <li class="page-item">
+        <a href="{{ url_for('index.index', buy_status=buy_status, sort_by=sort_by, rating=rating, in_stock=in_stock, page=page-1) }}">Previous</a>
+      </li>
+    {% endif %}
+    
+    {# Display page numbers within range #}
+    {% if start_page > 1 %}
+      <li class="page-item">
+        <a href="{{ url_for('index.index', buy_status=buy_status, sort_by=sort_by, rating=rating, in_stock=in_stock, page=1) }}">1</a>
+      </li>
+      {% if start_page > 2 %}
+        <li class="ellipsis">...</li>
+      {% endif %}
+    {% endif %}
+    
+    {% for p in range(start_page, end_page + 1) %}
+      <li class="page-item {% if p == page %}active{% endif %}">
+        <a href="{{ url_for('index.index', buy_status=buy_status, sort_by=sort_by, rating=rating, in_stock=in_stock, page=p) }}">{{ p }}</a>
+      </li>
+    {% endfor %}
+    
+    {% if end_page < total_pages %}
+      {% if end_page < total_pages - 1 %}
+        <li class="ellipsis">...</li>
+      {% endif %}
+      <li class="page-item">
+        <a href="{{ url_for('index.index', buy_status=buy_status, sort_by=sort_by, rating=rating, in_stock=in_stock, page=total_pages) }}">{{ total_pages }}</a>
+      </li>
+    {% endif %}
+    
+    {# Next Button #}
+    {% if page < total_pages %}
+      <li class="page-item">
+        <a href="{{ url_for('index.index', buy_status=buy_status, sort_by=sort_by, rating=rating, in_stock=in_stock, page=page+1) }}">Next</a>
+      </li>
+    {% endif %}
   </ul>
 </div>
 
-<br><br>
 
-<h1>Enter K:</h1>
-<form method="post">
-    <input type="number" name="k" required>
-    <input type="submit" value="Get Top Products">
-</form>
-
-<br><br>
+<!-- <br><br>
 <h1>Enter User ID:</h1>
 <form method="post" action="{{ url_for('feedback.get_feedbacks') }}"> 
     <input type="number" name="user_id" required>
     <input type="submit" value="Get User Feedbacks">
-</form>
+</form> -->
 
 {% if current_user.is_authenticated %}
 

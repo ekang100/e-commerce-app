@@ -37,6 +37,6 @@ WHERE productid = :productid AND uid = :uid
            AND ProductsForSale.productid={pid}
            ORDER BY price ASC
            ''')
-        return rows
+        return [{"productid": row[0], "name": row[1], "price": row[2], "quantity": row[3], "sid": row[4], "seller_firstname": row[5], "seller_lastname": row[6]} for row in rows]
 
 

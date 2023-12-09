@@ -9,6 +9,7 @@ from collections import defaultdict
 import random
 
 num_users = 50
+num_giftcard = 50
 num_products = 2000
 num_products_for_sale = 2500
 # num_purchases = 2500
@@ -27,6 +28,8 @@ product_id_list = [] # from ekang for bryant
 # sellers_with_products = set() # will probably overwrite this
 productid_to_price = {}
 productid_to_sellerid = defaultdict(set)
+productid_to_sellerid2 = defaultdict(set)
+
 sellerid_to_productid = defaultdict(set)
 productid_to_available = {}
 
@@ -84,7 +87,19 @@ def gen_users(num_users):
         print(f'{num_users} generated')
     return
 
-
+def gen_giftcard(num_giftcard):
+    with open(csv_path('GiftCard.csv'), 'w') as f:
+        giftcard = get_csv_writer(f)
+        print('GiftCard...', end=' ', flush=True)
+        for cardid in range(num_giftcard):
+            if cardid % 10 == 0:
+                print(f'{cardid}', end=' ', flush=True)
+            code = fake.pystr(min_chars=8, max_chars=8)
+            amount = fake.pyint(1, 9999)
+            redeem = False
+            giftcard.writerow([cardid, code, amount, redeem])
+        print(f'{num_giftcard} generated')
+    return
 
 def gen_product_image(image_path, productid, product_name):
     # Download the image from the URL
@@ -158,8 +173,11 @@ def gen_products(num_products):
             productid_to_available[productid] = available
 
             for seller_id in seller_id_list: # bc we want multiple sellers for multiple products
-                productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
+                # productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
                 sellerid_to_productid[seller_id].add(productid) # add the product to the set of products for a given seller
+                productid_to_sellerid2[productid].add(seller_id) # add the seller to to the set of sellers for the current product
+
+                productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
 
             # productid_to_sellerid[productid].add(seller_id) # add the seller to to the set of sellers for the current product
             # sellerid_to_productid[seller_id].add(productid) # add the product to the set of products for a given seller
@@ -193,6 +211,10 @@ def gen_products_for_sale(sellerid_to_productid):
                     quantity = fake.random_int(min=1, max=50)
                 else:
                     quantity = 0
+                    # productid_to_sellerid[productid].remove(seller)
+                    # if(len(productid_to_sellerid[product]) == 0):
+                    #     del productid_to_sellerid[product]
+
                 writer.writerow([productid, uid, quantity])
 
         print('inventory generated')
@@ -288,7 +310,7 @@ def gen_lineitems(num_lineitems):
                     productids_in_cart = cartid_productid_map[cartid]
                 else:
                     productids_in_cart = []
-                while productid in productids_in_cart:
+                while productid in productids_in_cart or not product_id_to_available[productid]:
                     productid = fake.random_element(product_id_list)
                 
                 productids_in_cart.append(productid)
@@ -319,8 +341,11 @@ def gen_lineitems(num_lineitems):
             # gen time_fulfilled only if buyStatus is True
             if buyStatus:
                 time_fulfilled = fake.date_time_between(start_date=time_purchased, end_date='now')  # Generate a time after purchase
+                # sellerid = fake.random_element(productid_to_sellerid2[productid])
             else:
                 time_fulfilled = time_purchased
+                # sellerid = fake.random_element(productid_to_sellerid[productid])
+
 
             sellerid = fake.random_element(productid_to_sellerid[productid])
             present = fake.pybool()
@@ -459,7 +484,6 @@ def gen_seller_reviews(num_reviews, user_ids, seller_ids, csv_file_path):
         print(f'{num_reviews} appended')
     return
 
-
 gen_users(num_users)
 gen_products(num_products)
 gen_products_for_sale(sellerid_to_productid)
@@ -472,4 +496,4 @@ user_ids = list(range(50))
 num_reviews = 100
 gen_product_reviews(num_reviews, user_ids, product_id_list)
 gen_seller_reviews(100, user_ids, seller_list, 'db/generated/Reviews.csv')
-
+gen_giftcard(num_giftcard)

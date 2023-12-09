@@ -37,22 +37,26 @@ class RegistrationForm(FlaskForm):
                                        EqualTo('password')])
     submit = SubmitField('Register')
 
+    def validate_email(self, email):
+    # Define a form for updating user information.
+        if User.email_exists(email.data):
+            raise ValidationError('Already a user with this email.')
+
 # Define a form for updating user information.
-class UpdateForm(FlaskForm):
+class UserForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
     address = StringField('Address', validators=[DataRequired()])
+
+    submit = SubmitField('Update')
+        
+class EmailForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
 
     submit = SubmitField('Update')
 
     def validate_email(self, email):
     # Define a form for updating user information.
-        if User.email_exists(email.data):
-            raise ValidationError('Already a user with this email.')
-
-    def validate_email(self, email):
-    # Custom validator to check if the email already exists.
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
 
@@ -73,6 +77,18 @@ class BalanceForm(FlaskForm):
     # Custom validator to ensure the balance added is positive.
         if float(balance.data) <= 0.0:
             raise ValidationError('Must add a positive value!')
+
+# Define a form for updating the user's account balance with a gift card.
+class GiftCardForm(FlaskForm):
+    giftcard = StringField('Gift Card Code', validators=[DataRequired()])
+    submit = SubmitField('Update')
+
+    def validate_giftcard(self, giftcard):
+    # Custom validator to ensure the gift card is real.
+        if GiftCard.status(giftcard.data) is None:
+            raise ValidationError('Code does not exist!')
+        if GiftCard.status(giftcard.data):
+            raise ValidationError('Gift card has been redeemed')
 
 # Define a form for updating the user's bio with a character limit.
 class BioForm(FlaskForm):
@@ -174,7 +190,7 @@ def account():
 #Change name or address (don't need to be unique)
 @bp.route('/update_name_address', methods=['GET', 'POST'])
 def update_name_address():
-    form = UpdateForm()
+    form = UserForm()
     #checks that name contains only letters upper or lowercase
     if request.method == 'POST':
         if User.update_name_address(current_user.id,
@@ -187,8 +203,9 @@ def update_name_address():
 #Change email (must be unique)
 @bp.route('/change_email', methods=['GET', 'POST'])
 def change_email():
-    form = UpdateForm()
-    if request.method == 'POST':
+    form = EmailForm()
+    # if request.method == 'POST':
+    if form.validate_on_submit():
         if User.change_email(current_user.id,
                         form.email.data):
             return redirect(url_for('users.account'))
@@ -219,6 +236,20 @@ def add_balance():
             return redirect(url_for('users.account'))
     return render_template('balance.html', title='Add Balance', form=form)
 
+#Add gift card to account
+@bp.route('/giftcard', methods=['GET', 'POST'])
+def add_giftcard():
+    form = GiftCardForm()
+    #Checks that giftcard exists and has not been redeemed
+    if form.validate_on_submit():
+        #Creates new balance by adding added balance from giftcard to current balance
+        info = GiftCard.redeem_card(form.giftcard.data)
+        new_balance = float(info) + float(current_user.balance)
+        if User.add_balance(current_user.id,
+                        new_balance):
+            return redirect(url_for('users.account'))
+    return render_template('giftcard.html', title='Add Gift Card', form=form)
+
 #Enables user to become a seller
 #Changes isSeller boolean to true (default false)
 @bp.route('/become_seller', methods=['GET', 'POST'])
@@ -233,14 +264,16 @@ def become_seller():
 def search_user():
     ##add nonetype error handling- reroute to page 'No names found'
     user_to_search = request.form['query']
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
     try:
         users = User.search_user(user_to_search)
         if len(users) == 0:
             #Display 'no users found' if nothing matches
-            return render_template('search_user_results.html')
+            return render_template('search_user_results.html', categories=clean_text)
     except Exception:
         return 'No names found'
-    return render_template('search_user_results.html', users=users)
+    return render_template('search_user_results.html', users=users, categories=clean_text)
 
 # Route for displaying public profile
 @bp.route('/user_profile/<int:account_id>', methods=['GET', 'POST'])

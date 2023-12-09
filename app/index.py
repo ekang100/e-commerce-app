@@ -1,8 +1,10 @@
-from flask import render_template, request
+from flask import render_template, request, session
 from flask_login import current_user
 import datetime
 import re
 import math
+
+from app.models.productsforsale import ProductsForSale
 
 from .models.product import Product
 from .models.purchase import Purchase
@@ -12,7 +14,18 @@ from .models.user import User
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
-@bp.route('/')
+# check sorting preferences to prohibit vulnerability and assign new variable to something more easily passed to a query
+def sort_assignment(sort_by):
+    allowed_sort_columns = {
+        "priceLow": "price ASC",
+        "priceHigh": "price DESC",
+        "popularityLow": "ASC",
+        "popularityHigh": "DESC"
+    }
+    
+    return allowed_sort_columns.get(sort_by, None)
+
+@bp.route('/', methods=['POST', 'GET'])
 def index():
     # get page for pagination
     page = int(request.args.get('page', 1))
@@ -93,10 +106,11 @@ def index2():
 
         # check if verified and display total saved from verification since verification date
         if current_user.isVerified:
-            result = Purchase.get_all_by_uid_price_since(current_user.id, current_user.verifiedDate)
+            result = Purchase.get_all_by_uid_price_since_saved(current_user.id, current_user.verifiedDate)
             print(result)
             if len(result) > 0:
                 total_saved = sum(item['price'] for item in result)
+                total_saved = round(float(total_saved)*0.1, 2)
             else:
                 #if nothing bought since verification return 0
                 total_saved = 0.00

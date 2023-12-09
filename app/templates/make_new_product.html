@@ -1,0 +1,69 @@
+<!-- add_product_form.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="split-container">
+        <div class="add-product-container">
+            <h2>Make Your Own Products!</h2>
+            <form method="post" action="{{ url_for('sellers.make_new_product') }}">
+                <div class="form-group">
+                    <label for="name">Product Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" class="form-control" id="price" name="price" step="0.01" required min="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select class="form-control" id="category" name="category" required>
+                        {% for category in categories %}
+                            {% if category == selected_category %}
+                                <option value="{{ selected_category }}" selected>{{ selected_category }}</option>
+                            {% else %}
+                                <option value="{{ category }}">{{ category }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="image_path">Image Path</label>
+                    <input type="text" class="form-control" id="image_path" name="image_path" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" required min="0">
+                </div>
+                
+                <button type="submit" class="btn btn-success flash-green" id="flash-button" style="border: 1px solid #FFFF00; color: #FFFF00;">Add Product</button>
+            </form>
+        </div>
+
+    </div>
+
+    <style>
+        /* CSS for flashing effect on hover */
+        @keyframes flash-green {
+            from {
+                background-color: #00FF00;
+                color: #FFFF00;
+            }
+            to {
+                background-color: #007700;
+                color: #FFFF00;
+            }
+        }
+
+        /* Apply the flashing effect on hover */
+        .flash-green:hover {
+            animation: flash-green 0.5s infinite alternate;
+        }
+
+    </style>
+{% endblock %}
+

@@ -3,6 +3,7 @@ from flask_login import current_user
 import datetime
 from flask import jsonify
 from decimal import Decimal
+import re
 
 from .models.user import User
 from .models.product import Product
@@ -19,6 +20,8 @@ bp = Blueprint('cart', __name__)
 
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart():
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
 
     if request.method == 'POST': 
         action_type = request.form.get('action')
@@ -74,7 +77,7 @@ def cart():
                         
         updateCartQuantity = Cart.update_number_unique_items(Cart.get_cartID_from_buyerid(current_user.id))
         singleCart = Cart.get_cart_from_buyerid(current_user.id)
-        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = False, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
+        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = False, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved, categories=clean_text)
     else:
          return jsonify({}), 404
     
@@ -90,7 +93,8 @@ def buyerOrder():
         # for order in allOrderIDs:
         #     lineitems.append(LineItem.get_all_lineitems_by_orderid(order))
 
-
+        categories = Product.get_categories() # get categories to display in dropdown
+        clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories] # reformat categories
 
         #post for submitting entire cart
         if request.method == 'POST': 
@@ -124,7 +128,7 @@ def buyerOrder():
                         print(errorMessageString)
                         can_order = True
                         errorMessageString = 'Please input a valid dollar tip amount.'
-                        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
+                        return render_template('cart.html', categories=clean_text, singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
                         
 
                     can_order = True
@@ -187,7 +191,7 @@ def buyerOrder():
                         singleCart = Cart.get_cart_from_buyerid(current_user.id)
                         print(errorMessageString)
                         can_order = True
-                        return render_template('cart.html', singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
+                        return render_template('cart.html', categories=clean_text, singleCart = singleCart, ItemsInCart=allItemsInCart, ErrorMessageCheck = True, errorMessageString = errorMessageString, isVerified = User.get(current_user.id).isVerified, moneySaved = moneySaved)
                 
                 #if constraints have been met
                     else:
@@ -254,11 +258,24 @@ def buyerOrder():
                     allFulfilled = False
             if allFulfilled:
                 Orders.update_entireOrderFulfillmentStatus(orderID)
-        
+         
+         #update availability for ellie's additional feature
+        for lineitem in allItemsBought:
+            all_sellers_for_product = ProductsForSale.get_all_sellers_for_product(int(lineitem['productid']))
+            available = False
+            for seller in all_sellers_for_product:
+                if(ProductsForSale.get_quantity(int(lineitem['productid']), seller['sid']) != 0):
+                    available = True
+            
+            if(not available):
+                Product.update_availability(lineitem['productid'], False)
+                print ("availability changed")
+
+
         allOrdersByUser = Orders.get_all_orderIDs_by_buyerid(current_user.id)
 
 
-        return render_template('buyer-order.html', allItemsBought = allItemsBought, allOrdersByUser = allOrdersByUser)
+        return render_template('buyer-order.html', categories=clean_text, allItemsBought = allItemsBought, allOrdersByUser = allOrdersByUser)
     else:
         return jsonify({}), 404
     
