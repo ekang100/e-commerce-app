@@ -30,37 +30,6 @@ def get_recent_reviews_by_uid(uid):
         raise ValueError(f"Error fetching reviews: {str(e)}")
 
 
-# # Posts the review and then redirects 
-# @bp.route('/post_review', methods=['POST'])
-# def post_review():
-#     if request.method == 'POST':
-#         product_id = request.form.get('product_id')
-#         seller_id = request.form.get('seller_id')
-#         user_id = request.form.get('user_id')
-#         rating = int(request.form.get('rating'))
-#         comments = request.form.get('comments')
-#         review_type = 'product' if product_id else 'seller'
-
-#         if not all([user_id, rating, (product_id or seller_id)]):
-#             flash('Missing data', 'error')
-#             return redirect(url_for('product.product_detail', productid=product_id))
-
-#         try:
-#             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)
-
-#             if review_type == 'seller' and rating == 5:
-#                 current_five_star_count = User.get_five_star_review_count(seller_id)
-#                 User.update_five_star_review_count(seller_id, current_five_star_count + 1)
-#             if review_type == 'product':
-#                 return redirect(url_for('products.product_detail', productid=product_id))
-#             else:
-#                 return redirect(url_for('users.public_profile', account_id=seller_id))
-#         except Exception as e:
-#             flash(str(e), 'error')
-
-#     return redirect(url_for('products.product_detail', productid=product_id))
-
-
 @bp.route('/post_review', methods=['POST'])
 def post_review():
     if request.method == 'POST':
@@ -79,7 +48,9 @@ def post_review():
             # Check if a review already exists
             existing_review = Reviews.check_review_exists(review_type, product_id, seller_id, user_id)
             if existing_review:
+                print("HERE IS THE ERROR")
                 flash('You have already posted a review for this entity.')
+                print("HERE IS THE ERROR")
                 return redirect(url_for('products.product_detail', productid=product_id) if product_id else url_for('users.public_profile', account_id=seller_id))
 
             Reviews.insert_product_review(review_type, product_id, seller_id, user_id, rating, comments)
@@ -139,17 +110,17 @@ def delete_review(review_id):
     return "Uh oh"
 
 
-@bp.route('/vote_review/<int:review_id>/<int:vote>', methods=['POST'])
-def vote_review(review_id, vote):
-    if not current_user.is_authenticated:
-        flash("You need to be logged in to vote.", "error")
-        return redirect(url_for('users.login'))
+# @bp.route('/vote_review/<int:review_id>/<int:vote>', methods=['POST'])
+# def vote_review(review_id, vote):
+#     if not current_user.is_authenticated:
+#         flash("You need to be logged in to vote.", "error")
+#         return redirect(url_for('users.login'))
 
-    try:
-        Reviews.add_vote(review_id, current_user.id, vote)
-        flash("Your vote has been recorded.", "success")
-    except ValueError as e:
-        flash(str(e), "error")
-    return redirect(request.referrer)
+#     try:
+#         Reviews.add_vote(review_id, current_user.id, vote)
+#         flash("Your vote has been recorded.", "success")
+#     except ValueError as e:
+#         flash(str(e), "error")
+#     return redirect(request.referrer)
 
 

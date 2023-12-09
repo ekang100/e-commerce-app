@@ -218,30 +218,30 @@ ORDER BY R.date DESC
             raise ValueError(f"Error fetching user reviews: {str(e)}")
 
 
-    @staticmethod
-    def add_vote(review_id, user_id, vote):
-        try:
-            query = '''
-            INSERT INTO ReviewVotes (review_id, user_id, vote)
-            VALUES (:review_id, :user_id, :vote)
-            ON CONFLICT (review_id, user_id) DO UPDATE
-            SET vote = EXCLUDED.vote;
-            '''
-            app.db.execute(query, review_id=review_id, user_id=user_id, vote=vote)
-        except Exception as e:
-            raise ValueError(f"Error adding vote: {str(e)}")
+    # @staticmethod
+    # def add_vote(review_id, user_id, vote):
+    #     try:
+    #         query = '''
+    #         INSERT INTO ReviewVotes (review_id, user_id, vote)
+    #         VALUES (:review_id, :user_id, :vote)
+    #         ON CONFLICT (review_id, user_id) DO UPDATE
+    #         SET vote = EXCLUDED.vote;
+    #         '''
+    #         app.db.execute(query, review_id=review_id, user_id=user_id, vote=vote)
+    #     except Exception as e:
+    #         raise ValueError(f"Error adding vote: {str(e)}")
 
-    @staticmethod
-    def get_votes_by_review_id(review_id):
-        try:
-            query = '''
-            SELECT COUNT(*) FROM ReviewVotes
-            WHERE review_id = :review_id AND vote = TRUE;
-            '''
-            result = app.db.execute(query, review_id=review_id)
-            return result[0][0] if result else 0
-        except Exception as e:
-            raise ValueError(f"Error fetching votes: {str(e)}")
+    # @staticmethod
+    # def get_votes_by_review_id(review_id):
+    #     try:
+    #         query = '''
+    #         SELECT COUNT(*) FROM ReviewVotes
+    #         WHERE review_id = :review_id AND vote = TRUE;
+    #         '''
+    #         result = app.db.execute(query, review_id=review_id)
+    #         return result[0][0] if result else 0
+    #     except Exception as e:
+    #         raise ValueError(f"Error fetching votes: {str(e)}")
     
     
     @staticmethod

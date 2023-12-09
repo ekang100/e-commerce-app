@@ -118,7 +118,6 @@
               <th scope="col">Rating</th>
               <th scope="col">Comments</th>
               <th scope="col">Date</th>
-              <th scope="col">Helpful</th>
               <th scope="col">Edit</th>
           </tr>
           </thead>
@@ -136,15 +135,6 @@
                   </td>
                   <td>{{ review.comments }}</td>
                   <td>{{ review.date }}</td>
-                  <td>
-                      {% if current_user.is_authenticated %}
-                          <form action="{{ url_for('feedback.vote_review', review_id=review.id, vote=1) }}" method="post">
-                              <button type="submit">Helpful {{ review.helpful_count }}</button>
-                          </form>
-                      {% else %}
-                          Helpful: {{ review.helpful_count }}
-                      {% endif %}
-                  </td>
                   <td>
                       {% if review.user_id == current_user.id %}
                           <form action="{{ url_for('feedback.update_review', review_id=review.id, review_type=review.type) }}" method="post">
@@ -185,6 +175,17 @@
             </div>
   
             <input type="submit" value="Post Review" class="btn btn-primary">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+        
+            <ul>
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+        
+            {% endif %}
+            {% endwith %}
         </form>
       {% else %}
         <p><a href="{{ url_for('users.login') }}">Log in</a> to add reviews</p>
