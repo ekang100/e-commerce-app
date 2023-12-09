@@ -62,6 +62,7 @@
     {% if sell_stat %}
     <hr style="clear: both; margin-top: 70px;">
     <h1><span style="color: yellow;">Seller Profile</span></h1>
+
     <table class='table table-bordered container'>
         <thead class="thead-dark">
             <tr>
@@ -86,23 +87,107 @@
     {% else %}
         <p>No user found</p>
     {% endif %}
-    {% if sell_stat and seller_reviews %}
-    <hr style="border-top: 2px solid #FFD700; margin-top: 70px;">
-    <h2 style="color: #FFD700; margin-bottom: 20px;">{{ user[0]['name'] }}'s Seller Reviews</h2>
-
-    <div style="margin-top: 20px;">
-        {% for review in seller_reviews %}
-            <div style="background-color: #1e1e1e; padding: 20px; border-radius: 10px; margin-bottom: 15px; color: #eee;">
-                <p style="margin-bottom: 5px;"><strong>Rating:</strong> {{ review.rating }} / 5</p>
-                <p style="margin-bottom: 5px;"><strong>Comments:</strong> {{ review.comments }}</p>
-                <p style="margin-bottom: 5px;"><strong>Date:</strong> {{ review.date }}</p>
-            </div>
-        {% else %}
-            <p style="color: #FFD700;">No reviews yet.</p>
-        {% endfor %}
-    </div>
-{% endif %}
 
 </body>
 </html>
+{% if sell_stat %}
+    <hr style="border-top: 2px solid #FFD700; margin-top: 70px;">
+    <h1><span style="color: yellow;">Seller Profile</span></h1>
+    {% if five_star_review_count >= 1 %}
+    <img src="/static/super_seller.png" alt="Super Seller" style="width: 5%; height: 5%; object-fit: cover;">
+    {% endif %}
+    <div class="star-rating">
+      <div class="empty-stars" style="position: relative;">
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <div class="filled-stars" style="position: absolute; top: 0; left: 0; overflow: hidden; white-space: nowrap; width: {{ (seller_rating_summary.average_rating or 0) / 5 * 100 }}%;">
+              <i class="fas fa-star" style="color: yellow;"></i>
+              <i class="fas fa-star" style="color: yellow;"></i>
+              <i class="fas fa-star" style="color: yellow;"></i>
+              <i class="fas fa-star" style="color: yellow;"></i>
+              <i class="fas fa-star" style="color: yellow;"></i>
+          </div>
+      </div>
+  </div>
+  <p>Number of Ratings: {{ seller_rating_summary.number_of_ratings }}</p>
+</div>
+  
+
+    <!-- Seller Reviews Section -->
+    <div class="container">
+        <h2>Reviews</h2>
+        <table class='table table-hover table-bordered'>
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Reviewer</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Comments</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in seller_reviews %}
+                <tr>
+                    <td>{{ review.name }}</td>
+                    <td>
+                        {% for star in range(review.rating) %}
+                            <i class="fas fa-star" style="color: yellow; font-size: 12px;"></i>
+                        {% endfor %}
+                        {% for blank_star in range(5 - review.rating) %}
+                            <i class="far fa-star" style="color: gray; font-size: 12px;"></i>
+                        {% endfor %}
+                    </td>
+                    <td>{{ review.comments }}</td>
+                    <td>{{ review.date }}</td>
+                    {% if review.user_id == current_user.id %}
+                        <td>
+                            <form action="{{ url_for('feedback.update_review', review_id=review.id,) }}" method="post">
+                                <input type="number" name="rating" value="{{ review.rating }}" min="1" max="5">
+                                <input type="text" name="comments" value="{{ review.comments }}">
+                                <input type="submit" value="Update">
+                            </form>
+                            <form action="{{ url_for('feedback.delete_review', review_id=review.id) }}" method="post">
+                                <input type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% else %}
+                <tr><td colspan="5">No reviews found for this seller.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        {% if current_user.is_authenticated %}
+        <!-- Post Review Form -->
+        <form action="{{ url_for('feedback.post_review') }}" method="post">
+            <input type="hidden" name="user_id" value="{{ current_user.id }}"/>
+            <input type="hidden" name="seller_id" value="{{ user[0]['account_id'] }}"/>          
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments" class="form-control" rows="3"></textarea>
+            </div>
+            <input type="submit" value="Post Review" class="btn btn-primary">
+        </form>
+        {% else %}
+        <p><a href="{{ url_for('users.login') }}">Log in</a> to post a review.</p>
+        {% endif %}
+    </div>
+{% endif %}
+
+<!-- Other content -->
 {% endblock %}

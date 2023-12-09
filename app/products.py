@@ -113,7 +113,14 @@ def product_detail(productid):
     product = Product.get(productid) # get product info
     inventory = ProductsForSale.get_all_sellers_for_product(int(productid)) # get a list of sellers for the product
     reviews = Reviews.get_reviews_by_product_id(productid)
+    product_rating_summary = Reviews.get_product_rating_summary(productid)  
+    if product_rating_summary is None:
+        product_rating_summary = {
+        'average_rating': 0,
+        'number_of_ratings': 0
+    }
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
+    return render_template('product_detail.html', product=product, inventory=inventory, reviews=reviews, product_rating_summary=product_rating_summary, categories=clean_text)
 
     return render_template('product_detail.html', product=product, inventory=inventory, categories=clean_text, reviews=reviews)

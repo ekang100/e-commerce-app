@@ -206,7 +206,9 @@
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
 <div class="d-flex justify-content-between">
   <h1><span style="color: #FFD700;">{{current_user.firstname}}'s Seller Profile</span></h1>
-
+  {% if five_star_review_count >= 1 %}
+  <img src="/static/super_seller.png" alt="Super Seller" style="width: 5%; height: 5%; object-fit: cover;">
+  {% endif %}
   <!-- Products for Sale Button with flashing yellow effect -->
   <a href="{{ url_for('sellers.get_seller_inventory', seller_id=current_user.id) }}" class="btn btn-info flash-blue" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
     Products for Sale
@@ -217,41 +219,61 @@
     Unfulfilled Orders History
   </a>
 
-  <!-- Fulfilled Orders Button with flashing green effect -->
-  <a href="{{ url_for('sellers.get_fulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-success flash-green" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-    Fulfilled Orders History
+  <!-- Unfulfilled Orders Button with flashing red effect -->
+  <a href="{{ url_for('sellers.get_unfulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-danger flash-red" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
+    Unfulfilled Orders History
   </a>
 </div>
+{% endif %}
+
 
 
 <hr style="border: none; border-top: 2px solid black; clear: both; margin-top: 70px;">
-<h1><span style="color: #FFD700;">{{ current_user.firstname }}'s Seller Reviews</span></h1>
+<h1><span style="color: #FFD700;">{{ current_user.firstname }}'s Reviews</span></h1>
 
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Type</th>
-      <th scope="col">Entity Name</th>
-      <th scope="col">User ID</th>
-      <th scope="col">Rating</th>
-      <th scope="col">Comments</th>
-      <th scope="col">Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for feedback in feedbacks %}
-      <tr>
-        <td>{{ feedback.type }}</td>
-        <td>{{ feedback.entity_name }}</td>
-        <td>{{ feedback.uid }}</td>
-        <td>{{ feedback.rating }}</td>
-        <td>{{ feedback.comments }}</td>
-        <td>{{ feedback.date }}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="container">
+    <table class='table table-hover table-bordered'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Product/Seller</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Comments</th>
+                <th scope="col">Date</th>
+                <th scope="col">Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in user_reviews %}
+                <tr>
+                    <td>{{ review.product_or_seller_name }}</td>
+                    <td>
+                        {% for star in range(review.rating) %}
+                            <i class="fas fa-star" style="color: yellow; font-size: 12px;"></i>
+                        {% endfor %}
+                        {% for blank_star in range(5 - review.rating) %}
+                            <i class="far fa-star" style="color: gray; font-size: 12px;"></i>
+                        {% endfor %}
+                    </td>
+                    <td>{{ review.comments }}</td>
+                    <td>{{ review.date }}</td>
+                    <td>
+                        <form action="{{ url_for('feedback.update_review', review_id=review.id, review_type=review.type) }}" method="post">
+                            <input type="number" name="rating" value="{{ review.rating }}" min="1" max="5">
+                            <input type="text" name="comments" value="{{ review.comments }}">
+                            <input type="submit" value="Update">
+                        </form>
+                        <form action="{{ url_for('feedback.delete_review', review_id=review.id, review_type=review.type) }}" method="post">
+                            <input type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">No reviews found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-{% endif %}
+
 {% endblock %}
 {% endif %}

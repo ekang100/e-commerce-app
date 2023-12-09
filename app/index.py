@@ -8,6 +8,8 @@ from app.models.productsforsale import ProductsForSale
 
 from .models.product import Product
 from .models.purchase import Purchase
+from .models.review import Reviews
+from .models.user import User
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -25,7 +27,6 @@ def sort_assignment(sort_by):
 
 @bp.route('/', methods=['POST', 'GET'])
 def index():
-
     # get page for pagination
     page = int(request.args.get('page', 1))
     per_page = 10 # can make this adjustable in the future, displays given amount of products on a page
@@ -62,7 +63,6 @@ def index():
     max_page = int(math.ceil(total / per_page)) # calculate the last page of pagination
     categories = Product.get_categories() # get a list of categories to display in the dropdown
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories] # remove formatting from category list
-
     if current_user.is_authenticated:
         buy_again = Product.get_purchases_by_uid(current_user.id)
         product_ids = [product.get("productid") for product in buy_again]
@@ -71,15 +71,13 @@ def index():
 
 
 
-    # render the page by adding information to the index.html file
-    return render_template('index.html',
-                           rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
-
 @bp.route('/account')
 def index2():
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
     # find the products current user has bought:
+    user_reviews = Reviews.get_all_reviews_by_user_id(current_user.id)
+    five_star_review_count = User.get_five_star_review_count(current_user.id)
     if current_user.is_authenticated:
         # Get all products depending on how user specifies sorting
         if request.args.get('sort', 'date_desc') is not None:
@@ -123,4 +121,4 @@ def index2():
         purchases = None
         total_saved = 0.00
     return render_template('account.html',
-                           purchase_history=purchases, total_saved=total_saved, categories=clean_text)
+                           purchase_history=purchases, total_saved=total_saved, user_reviews=user_reviews, five_star_review_count=five_star_review_count, categories=clean_text)
