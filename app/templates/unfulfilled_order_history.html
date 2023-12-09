@@ -59,6 +59,7 @@
         }
 </style>
 
+<!-- if a new sale was made by the seller -->
 {% if new_sale_flag %}
     <div class="supernova">
         <p>Congrats Superstar! You've Sold a Product!</p>
@@ -70,6 +71,7 @@
 
 <form action="{{ url_for('sellers.get_unfulfilled_order_history', seller_id=current_user.id) }}" method="get">
 
+    <!-- Sorting Categories -->
     <label for="sort">Sort by:</label>
     <select name="sort" id="sort" onchange="this.form.submit()">
         <option value="date_desc" {% if request.args.get('sort') == 'date_desc' %}selected{% endif %}>Most Recent Date</option>
