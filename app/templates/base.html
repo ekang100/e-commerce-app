@@ -228,17 +228,6 @@ p {
   <div class="twinkling-star" style="top: 10%; left: 15%;"></div>
   <div class="twinkling-star" style="top: 40%; left: 60%; animation-delay: 0.5s;"></div>
   <div class="twinkling-star" style="top: 70%; left: 30%; animation-delay: 0.7s;"></div>
-
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div class="flash-messages">
-      {% for message in messages %}
-        <p>{{ message }}</p>
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endwith %}
-
   <div class="sidenav">
     {% block msg %}
     <h1>Welcome to BoxML!</h1>
