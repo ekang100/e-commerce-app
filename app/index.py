@@ -72,7 +72,6 @@ def index():
                            product_ids=None, rating=rating, avail_products=products, per_page=per_page, page=page, max_page=max_page, categories=clean_text, total=total, sort_by=sort_by, in_stock=in_stock)
 
 
-
 @bp.route('/account')
 def index2():
     categories = Product.get_categories()
@@ -125,3 +124,4 @@ def index2():
         total_saved = 0.00
     return render_template('account.html',
                            purchase_history=purchases, total_saved=total_saved, user_reviews=user_reviews, five_star_review_count=five_star_review_count, categories=clean_text)
+
