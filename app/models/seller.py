@@ -130,27 +130,32 @@ class Seller:
         quantity = int(quantity)
         available = quantity > 0
 
-        # Insert the new product into the Products table
-        app.db.execute('''
-            INSERT INTO Products (name, price, description, category, image_path, available, avg_rating)
-            VALUES (:name, :price, :description, :category, :image_path, :available, :avg_rating)
-        ''', name=name, price=price, description=description, category=category, image_path=image_path, available=available, avg_rating=avg_rating)
+        try: 
+            # Insert the new product into the Products table
+            app.db.execute('''
+                INSERT INTO Products (name, price, description, category, image_path, available, avg_rating)
+                VALUES (:name, :price, :description, :category, :image_path, :available, :avg_rating)
+            ''', name=name, price=price, description=description, category=category, image_path=image_path, available=available, avg_rating=avg_rating)
 
-        # Execute the SELECT query
-        result = app.db.execute('''
-            SELECT productid
-            FROM Products
-            WHERE name = :name
-        ''', name=name)
-        
-        # Fetch the first row from the result
-        productid = result[0][0]
+            # Execute the SELECT query
+            result = app.db.execute('''
+                SELECT productid
+                FROM Products
+                WHERE name = :name
+            ''', name=name)
+            
+            # Fetch the first row from the result
+            productid = result[0][0]
 
-        # Insert the product into the ProductsForSale table
-        app.db.execute('''
-            INSERT INTO ProductsForSale (productid, uid, quantity)
-            VALUES (:productid, :seller_id, :quantity)
-        ''', productid=productid, seller_id=self.uid, quantity=quantity)
+            # Insert the product into the ProductsForSale table
+            app.db.execute('''
+                INSERT INTO ProductsForSale (productid, uid, quantity)
+                VALUES (:productid, :seller_id, :quantity)
+            ''', productid=productid, seller_id=self.uid, quantity=quantity)
+
+            return True
+        except: 
+            return False
 
     def add_existing_product(self, productid, quantity):
 

@@ -76,35 +76,35 @@ def get_unfulfilled_order_history(seller_id):
     if request.args.get('sort') is not None:
         sort_order = request.args.get('sort')
         if sort_order == 'date_desc':
-            order_history = seller.order_fulfilledOrder_history_desc()
+            order_history = seller.order_unfulfilledOrder_history_desc()
         #sort by ascending date
         elif sort_order == 'date_asc':
-            order_history = seller.order_fulfilledOrder_history_asc()
+            order_history = seller.order_unfulfilledOrder_history_asc()
         #sort by quantity
         elif sort_order == 'quantityLow':
-            order_history = seller.order_fulfilledOrder_history_quantitiesLH()
+            order_history = seller.order_unfulfilledOrder_history_quantitiesLH()
         elif sort_order == 'quantityHigh':
-            order_history = seller.order_fulfilledOrder_history_quantitiesHL()
+            order_history = seller.order_unfulfilledOrder_history_quantitiesHL()
         #sort by price
         elif sort_order == 'priceLow':
-            order_history = seller.order_fulfilledOrder_history_pricesLH()
+            order_history = seller.order_unfulfilledOrder_history_pricesLH()
         elif sort_order == 'priceHigh':
-            order_history = seller.order_fulfilledOrder_history_pricesHL()
+            order_history = seller.order_unfulfilledOrder_history_pricesHL()
         #sort by the various product categories below
         elif sort_order == 'Home Improvement':
-            order_history = seller.get_fulfilledOrder_history_category('Home Improvement')
+            order_history = seller.get_unfulfilledOrder_history_category('Home Improvement')
         elif sort_order == 'Electronics':
-            order_history = seller.get_fulfilledOrder_history_category('Electronics')
+            order_history = seller.get_unfulfilledOrder_history_category('Electronics')
         elif sort_order == 'Health&Personal Care':
-            order_history = seller.get_fulfilledOrder_history_category('Health&Personal Care')
+            order_history = seller.get_unfulfilledOrder_history_category('Health&Personal Care')
         elif sort_order == 'Office Products':
-            order_history = seller.get_fulfilledOrder_history_category('Office Products')
+            order_history = seller.get_unfulfilledOrder_history_category('Office Products')
         elif sort_order == 'Computers&Accessories':
-            order_history = seller.get_fulfilledOrder_history_category('Computers&Accessories')
+            order_history = seller.get_unfulfilledOrder_history_category('Computers&Accessories')
         elif sort_order == 'Toys & Games':
-            order_history = seller.get_fulfilledOrder_history_category('Toys & Games')
+            order_history = seller.get_unfulfilledOrder_history_category('Toys & Games')
         elif sort_order == 'Home&Kitchen':
-            order_history = seller.get_fulfilledOrder_history_category('Home&Kitchen')
+            order_history = seller.get_unfulfilledOrder_history_category('Home&Kitchen')
 
     if order_history:
         # Handle the case when there's fulfilled order history
@@ -139,7 +139,6 @@ def make_new_product():
         # Create a Seller object to add the product to the inventory
         seller = Seller(seller_id)
 
-        # Call the add_product method with the form data
         seller.make_new_product(name, price, description, category, quantity, image_path)
 
         return redirect(url_for('sellers.get_seller_inventory', categories=clean_text, seller_id=seller_id))
@@ -163,9 +162,6 @@ def add_existing_product():
         productid = request.form.get('product_id')
 
         seller.add_existing_product(productid, quantity)
-
-        #redirects to the inventory page upon adding a new product
-        return redirect(url_for('sellers.get_seller_inventory', seller_id=seller_id))
 
     #go to the add existing product page to view and add products already being sold
     return render_template('add_existing_product.html', categories=clean_text, products = products)
