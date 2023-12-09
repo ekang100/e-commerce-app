@@ -294,3 +294,5 @@ def change_avatar():
         return redirect(url_for('users.account'))
     except:
         raise ValidationError('Could not update avatar')
+
+
