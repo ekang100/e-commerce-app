@@ -14,26 +14,25 @@ bp = Blueprint('index', __name__)
 
 @bp.route('/')
 def index():
-
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
     # get all available products for sale:
     page = int(request.args.get('page', 1))
     per_page = 10 # can make this adjustable in the future
     all_products = Product.get_all()
-
     sort_by = request.args.get('sort_by', default='None')
-
     products = Product.get_paginated(True, page, per_page, sort_by)
     max_page = int(math.ceil(len(all_products) / per_page))
     categories = Product.get_categories()
     clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
-
-
     # render the page by adding information to the index.html file
     return render_template('index.html',
                            avail_products=products, page=page, max_page=max_page, categories=clean_text)
 
 @bp.route('/account')
 def index2():
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
     # find the products current user has bought:
     user_reviews = Reviews.get_all_reviews_by_user_id(current_user.id)
     five_star_review_count = User.get_five_star_review_count(current_user.id)
@@ -79,4 +78,4 @@ def index2():
         purchases = None
         total_saved = 0.00
     return render_template('account.html',
-                           purchase_history=purchases, total_saved=total_saved, user_reviews=user_reviews, five_star_review_count=five_star_review_count)
+                           purchase_history=purchases, total_saved=total_saved, user_reviews=user_reviews, five_star_review_count=five_star_review_count, categories=clean_text)

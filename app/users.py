@@ -8,9 +8,11 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from .models.user import User
 from .models.purchase import Purchase
 from .models.review import Reviews
+from .models.product import Product
 
 import os
 import random
+import re
 
 from flask import Blueprint
 # Create a Blueprint for the users module. This helps in organizing the app into components.
@@ -251,7 +253,9 @@ def public_profile(account_id):
         seller_reviews_summary = Reviews.get_seller_rating_summary(account_id)
         # is_super_seller = User.is_super_seller(account_id)
         five_star_review_count = Reviews.get_five_star_review_count(account_id)
-        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat, seller_reviews=seller_reviews, seller_rating_summary=seller_reviews_summary, five_star_review_count=five_star_review_count[0])
+        categories = Product.get_categories() # get categories to display in dropdown
+        clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories] # reformat categories
+        return render_template('user_profile.html', user=info, sell_stat=sell_stat, ver_stat=ver_stat, seller_reviews=seller_reviews, seller_rating_summary=seller_reviews_summary, five_star_review_count=five_star_review_count[0], categories=clean_text)
     return redirect(url_for('users.account'))
 
 #Added isVerified feature costing $500 and get 10% off 

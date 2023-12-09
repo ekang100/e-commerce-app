@@ -59,5 +59,7 @@ def product_detail(productid):
         'average_rating': 0,
         'number_of_ratings': 0
     }
-    return render_template('product_detail.html', product=product, inventory=inventory, reviews=reviews, product_rating_summary=product_rating_summary)
+    categories = Product.get_categories()
+    clean_text = [re.sub(r"\('([^']+)',\)", r"\1", text) for text in categories]
+    return render_template('product_detail.html', product=product, inventory=inventory, reviews=reviews, product_rating_summary=product_rating_summary, categories=clean_text)
 

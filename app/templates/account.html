@@ -176,20 +176,20 @@
   {% if five_star_review_count >= 1 %}
   <img src="/static/super_seller.png" alt="Super Seller" style="width: 5%; height: 5%; object-fit: cover;">
   {% endif %}
-  <!-- Products for Sale Button -->
-<a href="{{ url_for('sellers.get_seller_inventory', seller_id=current_user.id) }}" class="btn btn-info" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-  Products for Sale
-</a>
+  <!-- Products for Sale Button with flashing yellow effect -->
+  <a href="{{ url_for('sellers.get_seller_inventory', seller_id=current_user.id) }}" class="btn btn-info flash-blue" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
+    Products for Sale
+  </a>
 
 <!-- Fulfilled Orders Button -->
 <a href="{{ url_for('sellers.get_fulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-success" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
   Fulfilled Orders History
 </a>
 
-<!-- Unfulfilled Orders Button -->
-<a href="{{ url_for('sellers.get_unfulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-danger" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
-  Unfulfilled Orders History 
-</a>
+  <!-- Unfulfilled Orders Button with flashing red effect -->
+  <a href="{{ url_for('sellers.get_unfulfilled_order_history', seller_id=current_user.id) }}" class="btn btn-danger flash-red" style="border: 1px solid #FFD700; color: #FFD700; font-size: 0.9em;">
+    Unfulfilled Orders History
+  </a>
 </div>
 {% endif %}
 
