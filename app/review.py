@@ -110,17 +110,17 @@ def delete_review(review_id):
     return "Uh oh"
 
 
-@bp.route('/vote_review/<int:review_id>/<int:vote>', methods=['POST'])
-def vote_review(review_id, vote):
-    if not current_user.is_authenticated:
-        flash("You need to be logged in to vote.", "error")
-        return redirect(url_for('users.login'))
+# @bp.route('/vote_review/<int:review_id>/<int:vote>', methods=['POST'])
+# def vote_review(review_id, vote):
+#     if not current_user.is_authenticated:
+#         flash("You need to be logged in to vote.", "error")
+#         return redirect(url_for('users.login'))
 
-    try:
-        Reviews.add_vote(review_id, current_user.id, vote)
-        flash("Your vote has been recorded.", "success")
-    except ValueError as e:
-        flash(str(e), "error")
-    return redirect(request.referrer)
+#     try:
+#         Reviews.add_vote(review_id, current_user.id, vote)
+#         flash("Your vote has been recorded.", "success")
+#     except ValueError as e:
+#         flash(str(e), "error")
+#     return redirect(request.referrer)
 
 
